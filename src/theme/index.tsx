@@ -55,11 +55,12 @@ export function colors(darkMode: boolean): Colors {
     bg5: darkMode ? '#A1A1A1' : '#888D9B',
 
     //specialty colors
+    mainBG: '#F2F5FA',
     modalBG: darkMode ? 'rgba(0,0,0,.7)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#B2F355' : '#FF007A',
+    primary1: darkMode ? '#B2F355' : '#31B047',
     primary2: darkMode ? '#B2F355' : '#FF8CC3',
     primary3: darkMode ? '#B2F355' : '#FF99C9',
     primary4: darkMode ? '#739A3B' : '#F6DDE8',
@@ -117,7 +118,7 @@ export function theme(darkMode: boolean): DefaultTheme {
       ${mediaWidthTemplates.upToSmall`display:none;`}
     `,
     mobileHeaderHeight: '90px',
-    headerHeight: '82px',
+    headerHeight: '80px',
 
     // css snippets
     flexColumnNoWrap: css`
@@ -215,7 +216,7 @@ body {
 }
 
  a {
-   color: ${colors(false).blue1}; 
+   color: ${colors(false).blue1};
  }
 
 * {
@@ -233,7 +234,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
-  
+
 }
 `
 

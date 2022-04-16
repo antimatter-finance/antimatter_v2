@@ -170,8 +170,7 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  border-bottom: 1px solid ${({ theme }) => theme.text5};
-  padding: 27px 0 0;
+  padding: 24px 0 0;
   z-index: 99;
   background-color: ${({ theme }) => theme.bg1};
   height: ${({ theme }) => theme.headerHeight};
@@ -316,7 +315,7 @@ const NetworkCard = styled.div<{ color?: string }>`
   color: #000000;
   cursor: pointer;
   display: flex;
-  padding: 0 8px;
+  padding: 8px 10px;
   height: 32px;
   margin-right: 12px;
   margin-left: 19px;
@@ -327,6 +326,8 @@ const NetworkCard = styled.div<{ color?: string }>`
   font-size: 13px;
   font-weight: 500;
   position: relative;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
   & > svg:first-child {
     height: 20px;
     width: 20px;
@@ -373,7 +374,7 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.text5};
   font-size: 14px;
   width: fit-content;
   margin: 0 18px;
@@ -383,8 +384,8 @@ const StyledNavLink = styled(NavLink).attrs({
   transition: 0.5s;
   ${({ theme }) => theme.flexRowNoWrap}
   &.${activeClassName} {
-    color: ${({ theme }) => theme.primary1};
-    border-bottom: 1px solid ${({ theme }) => theme.primary1};
+    color: ${({ theme }) => theme.text1};
+    border-bottom: 1px solid ${({ theme }) => theme.text1};
   }
 
   :hover,
@@ -401,7 +402,7 @@ const StyledDropdown = styled.div`
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.text5};
   font-size: 14px;
   width: fit-content;
   margin: 0 18px;
@@ -528,8 +529,8 @@ const UserMenuItem = styled.button`
 `
 
 const UserButton = styled(ButtonText)<{ isOpen: boolean; size?: string }>`
-  height: ${({ size }) => size ?? '44px'};
-  width: ${({ size }) => size ?? '44px'};
+  height: ${({ size }) => size ?? '36px'};
+  width: ${({ size }) => size ?? 'px'};
   border-radius: 50%;
   background: ${({ isOpen }) =>
     isOpen
@@ -620,6 +621,7 @@ const MobileHeader = styled.header`
 `
 
 export default function Header() {
+  const theme = useTheme()
   const { account, chainId, library } = useActiveWeb3React()
   const [, setChain] = useState<any>(undefined)
   const aggregateBalance = useETHBalances([account ?? undefined])[account ?? '']
@@ -716,7 +718,7 @@ export default function Header() {
               {NetworkInfo[chainId].selectedIcon ? NetworkInfo[chainId].selectedIcon : NetworkInfo[chainId].icon}
               <span style={{ marginRight: 4 }} />
               {NetworkInfo[chainId].title}
-              <ChevronDown size={18} style={{ marginLeft: '5px' }} />
+              <ChevronDown size={18} style={{ marginLeft: '5px', color: theme.text5 }} />
               <div className="dropdown_wrapper">
                 <Dropdown>
                   {Object.keys(NetworkInfo).map(key => {
