@@ -333,6 +333,7 @@ export default function Search({
               id="cap"
               hideBalance={true}
               intOnly={true}
+              placeholder={'Enter option ID'}
             />
           </div>
 

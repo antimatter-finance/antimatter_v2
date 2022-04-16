@@ -140,7 +140,7 @@ export default function NumberInputPanel({
         )}
         <InputRow disabled={disabled}>
           <CustomNumericalInput
-            placeholder={intOnly ? '0' : placeholder ?? undefined}
+            placeholder={placeholder || ''}
             disabled={disabled}
             className="token-amount-input"
             value={value}
