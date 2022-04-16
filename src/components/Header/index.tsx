@@ -243,7 +243,6 @@ const HeaderRow = styled(RowFixed)`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     height: ${({ theme }) => theme.headerHeight};
     background-color: rgb(25, 25, 25);
-    border-top: 1px solid rgb(48, 48, 48);
     align-items: center;
     position: fixed;
     bottom: 0;
@@ -273,7 +272,8 @@ const AccountElement = styled.div<{ active: boolean }>`
   white-space: nowrap;
   padding: ${({ active }) => (active ? '14px 16px' : 'unset')};
   padding-right: 0;
-  height: 44px;
+  height: 36px;
+  background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
   width:100%`}
 `
@@ -287,7 +287,7 @@ const UNIAmount = styled.div`
   background-color: transparent;
   &:after {
     content: '';
-    border-right: 2px solid ${({ theme }) => theme.text2};
+    border-right: 1px solid ${({ theme }) => theme.text5};
     margin-left: 16px;
     height: 20px;
   }
@@ -778,9 +778,10 @@ export default function Header() {
               <UNIWrapper>
                 <UNIAmount style={{ pointerEvents: 'none' }}>
                   {account && (
-                    <TYPE.gray
+                    <p
                       style={{
-                        paddingRight: '.4rem'
+                        paddingRight: '.4rem',
+                        color: theme.text1
                       }}
                     >
                       <CountUp
@@ -791,9 +792,9 @@ export default function Header() {
                         thousandsSeparator={','}
                         duration={1}
                       />
-                    </TYPE.gray>
+                    </p>
                   )}
-                  {Symbol[chainId ?? 1]}
+                  <span style={{ color: theme.text1 }}> {Symbol[chainId ?? 1]}</span>
                 </UNIAmount>
               </UNIWrapper>
             )}
