@@ -12,6 +12,7 @@ const Card = styled(Box)<{
   border?: string
   borderRadius?: string
   maxWidth?: string
+  margin?: string
 }>`
   width: ${({ width }) => width ?? '100%'};
   max-width: ${({ maxWidth }) => maxWidth};
@@ -21,6 +22,7 @@ const Card = styled(Box)<{
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
   background: ${({ theme }) => theme.bg1};
+  margin: ${({ margin }) => margin};
 `
 export default Card
 

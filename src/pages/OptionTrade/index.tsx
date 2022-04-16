@@ -28,6 +28,7 @@ import { formatUnderlying } from 'utils/option/utils'
 import Pagination from 'components/Pagination'
 import { Skeleton } from '@material-ui/lab'
 import Card from 'components/Card'
+import Tab from 'components/Tab'
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -63,11 +64,18 @@ export enum Type {
   PUT = 'put'
 }
 
+export enum TabOptions {
+  BTC,
+  ETH
+}
+
 const Wrapper = styled.div`
   width: 100%;
-  margin-bottom: auto;
+  max-width: 1110px;
+  margin: auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   padding-top: 48px;
 `
 
@@ -138,6 +146,7 @@ export default function OptionTrade({
   const history = useHistory()
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
   const { page, data: currentIds, firstLoading } = useOptionList(searchParams)
+  const [tab, setTab] = useState(TabOptions.BTC)
 
   useEffect(() => {
     setFilteredIndexes(currentIds)
@@ -184,7 +193,8 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <Card maxWidth="1110px">
+          <Tab current={tab} options={['BTC', 'ETH']} setTab={setTab} />
+          <Card margin="24px 0 auto">
             <Search
               // optionTypeQuery={optionTypeQuery}
               // onOptionType={handleSelectOptionType}
