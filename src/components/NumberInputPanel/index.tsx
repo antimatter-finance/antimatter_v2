@@ -12,7 +12,7 @@ const InputRow = styled.div<{ disabled?: boolean }>`
   align-items: center;
   padding: 0 0.5rem 0 1rem;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.mainBG};
   border-radius: 14px;
   height: 3rem;
   ${({ theme }) => theme.flexRowNoWrap}
@@ -21,7 +21,7 @@ const InputRow = styled.div<{ disabled?: boolean }>`
 const CustomNumericalInput = styled(NumericalInput)<{ disabled?: boolean }>`
   font-size: 16px;
   background-color: transparent;
-  color: ${({ theme, disabled }) => (disabled ? darken(0.6, theme.white) : theme.white)};
+  color: ${({ theme, disabled }) => (disabled ? darken(0.6, theme.text1) : theme.text1)};
 `
 
 const LabelRow = styled.div`

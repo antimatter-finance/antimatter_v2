@@ -27,6 +27,7 @@ import { Axios } from 'utils/option/axios'
 import { formatUnderlying } from 'utils/option/utils'
 import Pagination from 'components/Pagination'
 import { Skeleton } from '@material-ui/lab'
+import Card from 'components/Card'
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -65,6 +66,9 @@ export enum Type {
 const Wrapper = styled.div`
   width: 100%;
   margin-bottom: auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 48px;
 `
 
 export const ContentWrapper = styled.div`
@@ -180,45 +184,47 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <Search
-            // optionTypeQuery={optionTypeQuery}
-            // onOptionType={handleSelectOptionType}
-            onClear={handleClearSearch}
-            onSearch={handleSearch}
-            tokenList={tokenList}
-          />
-          {filteredIndexes && (
-            <ContentWrapper>
-              {filteredIndexes.map((optionId, idx) =>
-                optionId ? (
-                  <OptionCard
-                    optionId={optionId}
-                    key={optionId}
-                    buttons={
-                      <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
-                        Trade/More Info
-                      </ButtonPrimary>
-                    }
-                  />
-                ) : (
-                  <OptionCardSkeleton key={optionId + idx} />
-                )
-              )}
-            </ContentWrapper>
-          )}
-          {page.totalPages !== 0 && (
-            <Pagination
-              page={page.currentPage}
-              count={page.totalPages}
-              setPage={page.setCurrentPage}
-              onChange={setPage}
+          <Card maxWidth="1110px">
+            <Search
+              // optionTypeQuery={optionTypeQuery}
+              // onOptionType={handleSelectOptionType}
+              onClear={handleClearSearch}
+              onSearch={handleSearch}
+              tokenList={tokenList}
             />
-          )}
-          <AlternativeDisplay
-            loading={firstLoading}
-            optionIndexes={optionTypeIndexes}
-            filteredIndexes={filteredIndexes}
-          />
+            {filteredIndexes && (
+              <ContentWrapper>
+                {filteredIndexes.map((optionId, idx) =>
+                  optionId ? (
+                    <OptionCard
+                      optionId={optionId}
+                      key={optionId}
+                      buttons={
+                        <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
+                          Trade/More Info
+                        </ButtonPrimary>
+                      }
+                    />
+                  ) : (
+                    <OptionCardSkeleton key={optionId + idx} />
+                  )
+                )}
+              </ContentWrapper>
+            )}
+            {page.totalPages !== 0 && (
+              <Pagination
+                page={page.currentPage}
+                count={page.totalPages}
+                setPage={page.setCurrentPage}
+                onChange={setPage}
+              />
+            )}
+            <AlternativeDisplay
+              loading={firstLoading}
+              optionIndexes={optionTypeIndexes}
+              filteredIndexes={filteredIndexes}
+            />
+          </Card>
         </Wrapper>
       )}
     </>

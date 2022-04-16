@@ -32,14 +32,13 @@ const ALL = {
 }
 
 const WrapperSearch = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.text5};
+  height: 300px;
 `
 
 const StyledSearch = styled.div`
   margin: auto;
-  padding: 23px 42px;
+  padding: 23px 0;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-wrap: nowrap;
   max-width: 1280px;
@@ -65,7 +64,7 @@ const StyledSearch = styled.div`
 `
 
 const ButtonWrapper = styled(RowFixed)`
-  margin-left: 32px;
+  margin-left: 16px;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-left: 0;
   `}
@@ -345,11 +344,11 @@ export default function Search({
             disabled={!assetTypeQuery}
           /> */}
           <ButtonWrapper>
-            <ButtonPrimary width="186px" onClick={handleSearch}>
+            <ButtonPrimary width="160px" onClick={handleSearch}>
               <SearchIcon style={{ marginRight: 10 }} />
               Search
             </ButtonPrimary>
-            <div style={{ width: 10 }} />
+            {/* <div style={{ width: 10 }} /> */}
             {/* <ButtonOutlinedPrimary width="186px" onClick={handleClear}>
               Show All
             </ButtonOutlinedPrimary> */}

@@ -6,13 +6,21 @@ import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
 
-const Card = styled(Box)<{ width?: string; padding?: string; border?: string; borderRadius?: string }>`
+const Card = styled(Box)<{
+  width?: string
+  padding?: string
+  border?: string
+  borderRadius?: string
+  maxWidth?: string
+}>`
   width: ${({ width }) => width ?? '100%'};
+  max-width: ${({ maxWidth }) => maxWidth};
   border-radius: 16px;
   padding: 1.25rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
+  background: ${({ theme }) => theme.bg1};
 `
 export default Card
 
