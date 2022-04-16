@@ -3,19 +3,20 @@ import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { RowFixed } from 'components/Row'
 import { Currency, Token } from '@uniswap/sdk'
-import { ButtonOutlinedPrimary, ButtonPrimary } from 'components/Button'
+import { /* ButtonOutlinedPrimary, */ ButtonPrimary } from 'components/Button'
 import { ReactComponent as SearchIcon } from '../../assets/svg/search.svg'
-import { currencyNameHelper } from 'utils/marketStrategyUtils'
+// import { currencyNameHelper } from 'utils/marketStrategyUtils'
 // import { TextValueInput } from 'components/TextInput'
-import { /*CloseIcon, MEDIA_WIDTHS,*/ TYPE } from 'theme'
+// import { /*CloseIcon, MEDIA_WIDTHS,*/ TYPE } from 'theme'
 // import { ButtonSelectRange, Range } from 'components/Button/ButtonSelectRange'
-import { ButtonSelectNumericalInput } from 'components/Button/ButtonSelectNumericalInput'
+// import { ButtonSelectNumericalInput } from 'components/Button/ButtonSelectNumericalInput'
 // import useMediaWidth from 'hooks/useMediaWidth'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import ButtonSelect from 'components/Button/ButtonSelect'
-import useTheme from 'hooks/useTheme'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { useActiveWeb3React } from 'hooks'
+// import ButtonSelect from 'components/Button/ButtonSelect'
+// import useTheme from 'hooks/useTheme'
+// import CurrencyLogo from 'components/CurrencyLogo'
+// import { useActiveWeb3React } from 'hooks'
+import NumberInputPanel from 'components/NumberInputPanel'
 
 export interface SearchQuery {
   optionIndex?: number | string
@@ -243,7 +244,7 @@ export default function Search({
   const [currencySearchOpen, setCurrencySearchOpen] = useState(false)
 
   const handleDismissSearch = useCallback(() => setCurrencySearchOpen(false), [])
-  const handleOpenAssetSearch = useCallback(() => setCurrencySearchOpen(true), [])
+  // const handleOpenAssetSearch = useCallback(() => setCurrencySearchOpen(true), [])
   const handleSearch = useCallback(() => {
     const body = {} as SearchQuery
     if (optionIdQuery) {
@@ -274,18 +275,18 @@ export default function Search({
 
     onSearch(body)
   }, [assetTypeQuery, onSearch, optionIdQuery])
-  const handleClear = useCallback(() => {
-    onClear && onClear()
-    setAssetTypeQuery(undefined)
-    setOptionIdQuery('')
-    // setRangeQuery({
-    //   floor: undefined,
-    //   cap: undefined
-    // })
-  }, [onClear])
+  // const handleClear = useCallback(() => {
+  //   onClear && onClear()
+  //   setAssetTypeQuery(undefined)
+  //   setOptionIdQuery('')
+  // setRangeQuery({
+  //   floor: undefined,
+  //   cap: undefined
+  // })
+  // }, [onClear])
 
-  const theme = useTheme()
-  const { chainId } = useActiveWeb3React()
+  // const theme = useTheme()
+  // const { chainId } = useActiveWeb3React()
 
   return (
     <>
@@ -297,7 +298,7 @@ export default function Search({
       />
       <WrapperSearch>
         <StyledSearch>
-          <ButtonSelect onClick={handleOpenAssetSearch}>
+          {/* <ButtonSelect onClick={handleOpenAssetSearch}>
             <TYPE.body color={assetTypeQuery ? theme.text1 : theme.text3}>
               <RowFixed>
                 {assetTypeQuery && assetTypeQuery.symbol !== ALL.id && (
@@ -306,7 +307,7 @@ export default function Search({
                 {currencyNameHelper(assetTypeQuery, 'Select asset type', chainId)}
               </RowFixed>
             </TYPE.body>
-          </ButtonSelect>
+          </ButtonSelect> */}
           {/* {onOptionType && (
             <ButtonSelect
               placeholder="Select option type"
@@ -319,11 +320,23 @@ export default function Search({
               ]}
             />
           )} */}
-          <ButtonSelectNumericalInput
+          {/* <ButtonSelectNumericalInput
             placeholder="Select option ID"
             value={optionIdQuery}
             onSetValue={setOptionIdQuery}
-          />
+          /> */}
+          <div style={{ width: '256px' }}>
+            <NumberInputPanel
+              // label="Option ID"
+              value={optionIdQuery}
+              onUserInput={setOptionIdQuery}
+              showMaxButton={false}
+              id="cap"
+              hideBalance={true}
+              intOnly={true}
+            />
+          </div>
+
           {/* <ButtonSelectRange
             placeholder="Select price range"
             rangeCap={rangeQuery.cap?.toString()}
@@ -337,9 +350,9 @@ export default function Search({
               Search
             </ButtonPrimary>
             <div style={{ width: 10 }} />
-            <ButtonOutlinedPrimary width="186px" onClick={handleClear}>
+            {/* <ButtonOutlinedPrimary width="186px" onClick={handleClear}>
               Show All
-            </ButtonOutlinedPrimary>
+            </ButtonOutlinedPrimary> */}
           </ButtonWrapper>
         </StyledSearch>
       </WrapperSearch>

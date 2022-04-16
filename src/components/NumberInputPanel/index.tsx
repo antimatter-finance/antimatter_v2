@@ -98,7 +98,7 @@ export default function NumberInputPanel({
   disabled = false,
   value,
   onMax,
-  label = 'Input',
+  label,
   hideBalance = false,
   hideLabel = false,
   showMaxButton,
@@ -116,26 +116,28 @@ export default function NumberInputPanel({
   return (
     <InputPanel id={id} negativeMarginTop={negativeMarginTop}>
       <Container>
-        <LabelRow>
-          <AutoRow justify="space-between">
-            {!hideLabel && (
-              <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-                {label}
-              </TYPE.body>
-            )}
-            {account && (
-              <TYPE.body
-                onClick={onMax}
-                color={theme.text3}
-                fontWeight={500}
-                fontSize={14}
-                style={{ display: 'inline', cursor: 'pointer' }}
-              >
-                {!hideBalance ? (customBalanceText ?? 'Your balance: ') + '' : ''}
-              </TYPE.body>
-            )}
-          </AutoRow>
-        </LabelRow>
+        {label && (
+          <LabelRow>
+            <AutoRow justify="space-between">
+              {!hideLabel && (
+                <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+                  {label}
+                </TYPE.body>
+              )}
+              {account && (
+                <TYPE.body
+                  onClick={onMax}
+                  color={theme.text3}
+                  fontWeight={500}
+                  fontSize={14}
+                  style={{ display: 'inline', cursor: 'pointer' }}
+                >
+                  {!hideBalance ? (customBalanceText ?? 'Your balance: ') + '' : ''}
+                </TYPE.body>
+              )}
+            </AutoRow>
+          </LabelRow>
+        )}
         <InputRow disabled={disabled}>
           <CustomNumericalInput
             placeholder={intOnly ? '0' : placeholder ?? undefined}
