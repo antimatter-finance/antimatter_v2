@@ -416,7 +416,11 @@ export function ModeSwitch({ current, setMode }: { current: number; setMode: (mo
     <Box display="flex" style={{ gap: '12px' }}>
       {[<CardIcon />, <TableIcon />].map((icon, idx) => {
         return (
-          <ButtonOutlined style={{ width: 60, border: '1px solid rgba(0, 0, 0, 0.1)' }} onClick={() => setMode(idx)}>
+          <ButtonOutlined
+            key={idx}
+            style={{ width: 60, border: '1px solid rgba(0, 0, 0, 0.1)' }}
+            onClick={() => setMode(idx)}
+          >
             <Box opacity={current === idx ? 1 : 0.4}>{icon}</Box>
           </ButtonOutlined>
         )

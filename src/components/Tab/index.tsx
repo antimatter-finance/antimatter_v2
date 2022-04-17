@@ -31,7 +31,7 @@ export default function Tab({
     <Wrapper>
       {options.map((option, idx) => {
         return (
-          <TabWrapper active={idx === current}>
+          <TabWrapper key={idx} active={idx === current}>
             <ButtonEmpty onClick={() => setTab(idx)} style={{ padding: 0 }}>
               {option}
             </ButtonEmpty>
