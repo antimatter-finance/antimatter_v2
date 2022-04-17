@@ -37,6 +37,7 @@ const StyledSearch = styled.div`
   align-items: center;
   flex-wrap: nowrap;
   max-width: 1280px;
+  gap: 16px;
   & > div {
     flex-shrink: 1;
   }
