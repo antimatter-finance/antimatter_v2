@@ -34,6 +34,7 @@ import Logo from 'components/Logo'
 import BtcLogo from 'assets/svg/btc_logo.svg'
 import EthLogo from 'assets/svg/eth_logo.svg'
 import useTheme from 'hooks/useTheme'
+import { usePrice } from 'hooks/usePrice'
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -154,6 +155,9 @@ export default function OptionTrade({
   const { page, data: currentIds, firstLoading } = useOptionList(searchParams)
   const [tab, setTab] = useState(TabOptions.BTC)
 
+  const btcPrice = usePrice('BTC')
+  const ethPrice = usePrice('ETH')
+
   useEffect(() => {
     setFilteredIndexes(currentIds)
   }, [currentIds])
@@ -193,21 +197,24 @@ export default function OptionTrade({
   }, [chainId, errorFunction])
 
   const tabOptions = useMemo(() => {
+    const btcPriceNum = btcPrice && +btcPrice
+    const ethPriceNum = ethPrice && +ethPrice
+
     return [
       <Box display="flex" alignItems="center">
         <Logo srcs={[BtcLogo]} alt="btc logo" style={{ marginRight: 8 }} />
         <Text fontSize={20} color={theme.text1} fontWeight={400}>
-          BTC $48230.02
+          BTC ${btcPriceNum ? btcPriceNum.toFixed(2) : ''}
         </Text>
       </Box>,
       <Box display="flex" alignItems="center">
         <Logo srcs={[EthLogo]} alt="eth logo" style={{ marginRight: 8 }} />
         <Text fontSize={20} color={theme.text1} fontWeight={400}>
-          ETH $48230.02
+          ETH ${ethPriceNum ? ethPriceNum.toFixed(2) : ''}
         </Text>
       </Box>
     ]
-  }, [theme])
+  }, [btcPrice, ethPrice, theme])
 
   return (
     <>
