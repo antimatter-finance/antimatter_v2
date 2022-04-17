@@ -29,6 +29,11 @@ import Pagination from 'components/Pagination'
 import { Skeleton } from '@material-ui/lab'
 import Card from 'components/Card'
 import Tab from 'components/Tab'
+import { Text, Box } from 'rebass'
+import Logo from 'components/Logo'
+import BtcLogo from 'assets/svg/btc_logo.svg'
+import EthLogo from 'assets/svg/eth_logo.svg'
+import useTheme from 'hooks/useTheme'
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -139,6 +144,7 @@ export default function OptionTrade({
     params: { optionId }
   }
 }: RouteComponentProps<{ optionId?: string }>) {
+  const theme = useTheme()
   const { chainId } = useActiveWeb3React()
   const optionCount = useOptionTypeCount()
   const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
@@ -186,6 +192,23 @@ export default function OptionTrade({
       })
   }, [chainId, errorFunction])
 
+  const tabOptions = useMemo(() => {
+    return [
+      <Box display="flex" alignItems="center">
+        <Logo srcs={[BtcLogo]} alt="btc logo" style={{ marginRight: 8 }} />
+        <Text fontSize={20} color={theme.text1} fontWeight={400}>
+          BTC $48230.02
+        </Text>
+      </Box>,
+      <Box display="flex" alignItems="center">
+        <Logo srcs={[EthLogo]} alt="eth logo" style={{ marginRight: 8 }} />
+        <Text fontSize={20} color={theme.text1} fontWeight={400}>
+          ETH $48230.02
+        </Text>
+      </Box>
+    ]
+  }, [theme])
+
   return (
     <>
       <NetworkErrorModal />
@@ -193,7 +216,7 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <Tab current={tab} options={['BTC', 'ETH']} setTab={setTab} />
+          <Tab current={tab} options={tabOptions} setTab={setTab} />
           <Card margin="24px 0 auto">
             <Search
               // optionTypeQuery={optionTypeQuery}
