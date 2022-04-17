@@ -31,12 +31,7 @@ const ALL = {
   title: 'All'
 }
 
-const WrapperSearch = styled.div`
-  height: 300px;
-`
-
 const StyledSearch = styled.div`
-  margin: auto;
   padding: 23px 0;
   display: flex;
   align-items: center;
@@ -295,9 +290,9 @@ export default function Search({
         onCurrencySelect={setAssetTypeQuery}
         tokenList={tokenList ?? []}
       />
-      <WrapperSearch>
-        <StyledSearch>
-          {/* <ButtonSelect onClick={handleOpenAssetSearch}>
+
+      <StyledSearch>
+        {/* <ButtonSelect onClick={handleOpenAssetSearch}>
             <TYPE.body color={assetTypeQuery ? theme.text1 : theme.text3}>
               <RowFixed>
                 {assetTypeQuery && assetTypeQuery.symbol !== ALL.id && (
@@ -307,7 +302,7 @@ export default function Search({
               </RowFixed>
             </TYPE.body>
           </ButtonSelect> */}
-          {/* {onOptionType && (
+        {/* {onOptionType && (
             <ButtonSelect
               placeholder="Select option type"
               selectedId={optionTypeQuery}
@@ -319,43 +314,42 @@ export default function Search({
               ]}
             />
           )} */}
-          {/* <ButtonSelectNumericalInput
+        {/* <ButtonSelectNumericalInput
             placeholder="Select option ID"
             value={optionIdQuery}
             onSetValue={setOptionIdQuery}
           /> */}
-          <div style={{ width: '256px' }}>
-            <NumberInputPanel
-              // label="Option ID"
-              value={optionIdQuery}
-              onUserInput={setOptionIdQuery}
-              showMaxButton={false}
-              id="cap"
-              hideBalance={true}
-              intOnly={true}
-              placeholder={'Enter option ID'}
-            />
-          </div>
+        <div style={{ width: '256px' }}>
+          <NumberInputPanel
+            // label="Option ID"
+            value={optionIdQuery}
+            onUserInput={setOptionIdQuery}
+            showMaxButton={false}
+            id="cap"
+            hideBalance={true}
+            intOnly={true}
+            placeholder={'Enter option ID'}
+          />
+        </div>
 
-          {/* <ButtonSelectRange
+        {/* <ButtonSelectRange
             placeholder="Select price range"
             rangeCap={rangeQuery.cap?.toString()}
             rangeFloor={rangeQuery.floor?.toString()}
             onSetRange={setRangeQuery}
             disabled={!assetTypeQuery}
           /> */}
-          <ButtonWrapper>
-            <ButtonPrimary width="160px" onClick={handleSearch}>
-              <SearchIcon style={{ marginRight: 10 }} />
-              Search
-            </ButtonPrimary>
-            {/* <div style={{ width: 10 }} /> */}
-            {/* <ButtonOutlinedPrimary width="186px" onClick={handleClear}>
+        <ButtonWrapper>
+          <ButtonPrimary width="160px" onClick={handleSearch}>
+            <SearchIcon style={{ marginRight: 10 }} />
+            Search
+          </ButtonPrimary>
+          {/* <div style={{ width: 10 }} /> */}
+          {/* <ButtonOutlinedPrimary width="186px" onClick={handleClear}>
               Show All
             </ButtonOutlinedPrimary> */}
-          </ButtonWrapper>
-        </StyledSearch>
-      </WrapperSearch>
+        </ButtonWrapper>
+      </StyledSearch>
     </>
   )
 }

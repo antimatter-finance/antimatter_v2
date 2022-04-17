@@ -35,6 +35,9 @@ import BtcLogo from 'assets/svg/btc_logo.svg'
 import EthLogo from 'assets/svg/eth_logo.svg'
 import useTheme from 'hooks/useTheme'
 import { usePrice } from 'hooks/usePrice'
+import { ButtonOutlined } from 'components/Button'
+import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
+import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -73,6 +76,11 @@ export enum Type {
 export enum TabOptions {
   BTC,
   ETH
+}
+
+export enum Mode {
+  CARD,
+  TABLE
 }
 
 const Wrapper = styled.div`
@@ -154,6 +162,7 @@ export default function OptionTrade({
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
   const { page, data: currentIds, firstLoading } = useOptionList(searchParams)
   const [tab, setTab] = useState(TabOptions.BTC)
+  const [mode, setMode] = useState(Mode.TABLE)
 
   const btcPrice = usePrice('BTC')
   const ethPrice = usePrice('ETH')
@@ -225,13 +234,17 @@ export default function OptionTrade({
         <Wrapper id="optionTrade">
           <Tab current={tab} options={tabOptions} setTab={setTab} />
           <Card margin="24px 0 auto">
-            <Search
-              // optionTypeQuery={optionTypeQuery}
-              // onOptionType={handleSelectOptionType}
-              onClear={handleClearSearch}
-              onSearch={handleSearch}
-              tokenList={tokenList}
-            />
+            <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Search
+                // optionTypeQuery={optionTypeQuery}
+                // onOptionType={handleSelectOptionType}
+                onClear={handleClearSearch}
+                onSearch={handleSearch}
+                tokenList={tokenList}
+              />
+              <ModeSwitch current={mode} setMode={setMode} />
+            </Box>
+
             {filteredIndexes && (
               <ContentWrapper>
                 {filteredIndexes.map((optionId, idx) =>
@@ -395,5 +408,19 @@ export function AlternativeDisplay({
         )
       )}
     </AutoColumn>
+  )
+}
+
+export function ModeSwitch({ current, setMode }: { current: number; setMode: (mode: number) => void }) {
+  return (
+    <Box display="flex" style={{ gap: '12px' }}>
+      {[<CardIcon />, <TableIcon />].map((icon, idx) => {
+        return (
+          <ButtonOutlined style={{ width: 60, border: '1px solid rgba(0, 0, 0, 0.1)' }} onClick={() => setMode(idx)}>
+            <Box opacity={current === idx ? 1 : 0.4}>{icon}</Box>
+          </ButtonOutlined>
+        )
+      })}
+    </Box>
   )
 }
