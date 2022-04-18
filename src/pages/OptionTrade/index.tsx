@@ -38,6 +38,16 @@ import { usePrice } from 'hooks/usePrice'
 import { ButtonOutlined } from 'components/Button'
 import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
 import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
+import Table from 'components/Table'
+
+const TableHeaders = [
+  'Option ID',
+  'Underlying Asset',
+  'Pool size(USDT)',
+  'Option Price Range',
+  'Your Put Position',
+  'Your Call Position'
+]
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -168,7 +178,8 @@ export default function OptionTrade({
   const ethPrice = usePrice('ETH')
 
   useEffect(() => {
-    setFilteredIndexes(currentIds)
+    // setFilteredIndexes(currentIds)
+    setFilteredIndexes(['1', '2'])
   }, [currentIds])
 
   const setPage = useCallback((event: object, page: number) => {
@@ -225,6 +236,13 @@ export default function OptionTrade({
     ]
   }, [btcPrice, ethPrice, theme])
 
+  const dataRows = useMemo(() => {
+    return [
+      [<>#1234</>, <>ETH</>, <>255.25ETH</>, <>1234USDT</>, <>$1000~$3000</>, <>0</>, <>23</>],
+      [<>#1234</>, <>ETH</>, <>255.25ETH</>, <>1234USDT</>, <>$1000~$3000</>, <>0</>, <>23</>]
+    ]
+  }, [])
+
   return (
     <>
       <NetworkErrorModal />
@@ -247,21 +265,23 @@ export default function OptionTrade({
 
             {filteredIndexes && (
               <ContentWrapper>
-                {filteredIndexes.map((optionId, idx) =>
-                  optionId ? (
-                    <OptionCard
-                      optionId={optionId}
-                      key={optionId}
-                      buttons={
-                        <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
-                          Trade/More Info
-                        </ButtonPrimary>
-                      }
-                    />
-                  ) : (
-                    <OptionCardSkeleton key={optionId + idx} />
-                  )
-                )}
+                {mode === Mode.CARD &&
+                  filteredIndexes.map((optionId, idx) =>
+                    optionId ? (
+                      <OptionCard
+                        optionId={optionId}
+                        key={optionId}
+                        buttons={
+                          <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
+                            Trade/More Info
+                          </ButtonPrimary>
+                        }
+                      />
+                    ) : (
+                      <OptionCardSkeleton key={optionId + idx} />
+                    )
+                  )}
+                {mode === Mode.TABLE && <Table header={TableHeaders} rows={dataRows} />}
               </ContentWrapper>
             )}
             {page.totalPages !== 0 && (

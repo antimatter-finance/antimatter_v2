@@ -7,9 +7,9 @@ import { RowBetween } from 'components/Row'
 import { TYPE } from 'theme'
 export * from './UserTransactionTable'
 
-interface StyleProps {
-  isHeaderGray?: boolean
-}
+// interface StyleProps {
+//   isHeaderGray?: boolean
+// }
 
 const Profile = styled.div`
   display: flex;
@@ -46,47 +46,61 @@ export const useStyles = makeStyles(theme => ({
         marginRight: 8
       },
       '&:first-child': {
-        paddingLeft: 50
+        borderTopLeftRadius: 16,
+        borderBottomLeftRadius: 16
       },
       '&:last-child': {
-        paddingRight: 50
+        borderTopRightRadius: 16,
+        borderBottomRightRadius: 16
       }
     },
     '& table': {
       width: '100%',
-      borderCollapse: 'collapse'
+      borderCollapse: 'separate',
+      borderSpacing: '0 8px'
     }
   },
   tableHeader: {
-    background: ({ isHeaderGray }: StyleProps) => (isHeaderGray ? 'rgba(247, 247, 247, 1)' : 'transparent'),
-    borderRadius: ({ isHeaderGray }: StyleProps) => (isHeaderGray ? 14 : 0),
+    borderRadius: 8,
     overflow: 'hidden',
+
     '& .MuiTableCell-root': {
-      padding: '22px 20px',
       fontSize: '12px',
-      fontWeight: 500,
-      color: 'rgba(255,255,255, 0.6)',
-      borderBottom: ({ isHeaderGray }: StyleProps) => (isHeaderGray ? 'none' : '1px solid #333333'),
-      '&:first-child': {
-        paddingLeft: 50
+      whiteSpace: 'pre',
+      lineHeight: '12px',
+      background: 'rgba(255, 255, 255, 0.08)',
+      padding: '14px 20px',
+      color: 'rgba(0, 0, 0, 1)',
+      opacity: 0.5,
+      borderBottom: 'none',
+      '& .MuiTableSortLabel-root': {
+        fontWeight: 400,
+        opacity: 0.5
+      },
+      '&:first-of-type': {
+        paddingLeft: 20,
+        borderTopLeftRadius: 8
       },
       '&:last-child': {
-        paddingRight: 50
+        paddingRight: 20,
+        borderTopRightRadius: 8
       }
     }
   },
   tableRow: {
-    borderBottom: ({ isHeaderGray }: StyleProps) =>
-      isHeaderGray ? '1px solid rgba(247, 247, 247, 1)' : '1px solid #333',
-    height: 72,
+    backgroundColor: '#F2F5FA',
+    borderRadius: '16px',
+    overflow: 'hidden',
+    height: 80,
     '&:hover': {
-      backgroundColor: ' rgba(255, 255, 255, 0.08)'
+      backgroundColor: '#F2F5FA'
     },
     '& .MuiTableCell-root': {
-      color: '#fff'
+      color: '#000000'
     },
     '&:last-child': {
-      border: 'none'
+      border: 'none',
+      borderRadius: '16px'
     }
   },
   longTitle: {
