@@ -93,7 +93,7 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     height: 80,
     '&:hover': {
-      backgroundColor: '#F2F5FA'
+      backgroundColor: '#E2E7F0'
     },
     '& .MuiTableCell-root': {
       color: '#000000'
@@ -111,8 +111,8 @@ export const useStyles = makeStyles(theme => ({
 }))
 
 const Card = styled.div`
-  background: ${({ theme }) => theme.gradient1};
-  border-radius: 30px;
+  background-color: #f2f5fa;
+  border-radius: 16px;
   padding: 24px;
   > div {
     width: 100%;
