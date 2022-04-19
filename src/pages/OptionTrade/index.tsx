@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router'
 import styled from 'styled-components'
 import { Token } from '@uniswap/sdk'
 import AppBody from 'pages/AppBody'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonPrimary, RoundButton } from 'components/Button'
 import { AnimatedImg, AnimatedWrapper, ExternalLink, TYPE } from 'theme'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { OptionIcon } from 'components/Icons'
@@ -43,6 +43,7 @@ import Table from 'components/Table'
 const TableHeaders = [
   'Option ID',
   'Underlying Asset',
+  'Pool size (ETH)',
   'Pool size(USDT)',
   'Option Price Range',
   'Your Put Position',
@@ -103,21 +104,21 @@ const Wrapper = styled.div`
   padding-top: 48px;
 `
 
-export const ContentWrapper = styled.div`
-  position: relative;
-  max-width: 1280px;
-  margin: auto;
-  display: grid;
-  grid-gap: 24px;
-  grid-template-columns: repeat(auto-fill, 280px);
-  padding: 52px 0;
-  justify-content: center;
-  .MuiSkeleton-root{
-    background-color: rgba(255, 255, 255, 0.15);
-  };
-  /* ${({ theme }) => theme.mediaWidth.upToLarge`padding: 30px`} */
-  ${({ theme }) => theme.mediaWidth.upToSmall`padding: 20px 10px`},
-`
+// export const ContentWrapper = styled.div`
+//   position: relative;
+//   max-width: 1280px;
+//   margin: auto;
+//   display: grid;
+//   grid-gap: 24px;
+//   grid-template-columns: repeat(auto-fill, 280px);
+//   padding: 52px 0;
+//   justify-content: center;
+//   .MuiSkeleton-root{
+//     background-color: rgba(255, 255, 255, 0.15);
+//   };
+//   /* ${({ theme }) => theme.mediaWidth.upToLarge`padding: 30px`} */
+//   ${({ theme }) => theme.mediaWidth.upToSmall`padding: 20px 10px`},
+// `
 
 const Circle = styled.div`
   flex-shrink: 0;
@@ -238,8 +239,26 @@ export default function OptionTrade({
 
   const dataRows = useMemo(() => {
     return [
-      [<>#1234</>, <>ETH</>, <>255.25ETH</>, <>1234USDT</>, <>$1000~$3000</>, <>0</>, <>23</>],
-      [<>#1234</>, <>ETH</>, <>255.25ETH</>, <>1234USDT</>, <>$1000~$3000</>, <>0</>, <>23</>]
+      [
+        <>#1234</>,
+        <>ETH</>,
+        <>255.25ETH</>,
+        <>1234USDT</>,
+        <>$1000~$3000</>,
+        <>0</>,
+        <>23</>,
+        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+      ],
+      [
+        <>#1234</>,
+        <>ETH</>,
+        <>255.25ETH</>,
+        <>1234USDT</>,
+        <>$1000~$3000</>,
+        <>0</>,
+        <>23</>,
+        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+      ]
     ]
   }, [])
 
@@ -264,7 +283,7 @@ export default function OptionTrade({
             </Box>
 
             {filteredIndexes && (
-              <ContentWrapper>
+              <>
                 {mode === Mode.CARD &&
                   filteredIndexes.map((optionId, idx) =>
                     optionId ? (
@@ -282,7 +301,7 @@ export default function OptionTrade({
                     )
                   )}
                 {mode === Mode.TABLE && <Table header={TableHeaders} rows={dataRows} />}
-              </ContentWrapper>
+              </>
             )}
             {page.totalPages !== 0 && (
               <Pagination

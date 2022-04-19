@@ -395,3 +395,11 @@ export function ArrowLeftButton({ onClick }: { onClick: () => void }) {
     </ButtonEmpty>
   )
 }
+
+export function RoundButton({ children, onClick }: { onClick: () => void } & ButtonProps) {
+  return (
+    <ButtonPrimary style={{ borderRadius: '50px', width: 80, height: 36, fontSize: 14 }} onClick={onClick}>
+      {children}
+    </ButtonPrimary>
+  )
+}
