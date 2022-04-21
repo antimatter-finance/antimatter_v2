@@ -73,13 +73,14 @@ const Label = styled.div`
 
 const SwapAppBody = styled(BodyWrapper)`
   background: #ffffff;
-  border-color: ${({ theme }) => theme.text4};
   min-height: 100%;
   margin: -1px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   max-width: unset
   width: calc(100% + 2px)
-  `}
+  `};
+  border: none;
+  box-shadow: none;
 `
 
 export default function Swap({
@@ -478,7 +479,7 @@ export default function Swap({
               disableCurrencySelect={false}
               value={formattedAmounts[Field.PAY]}
               onUserInput={handleTypeOutput}
-              label={auction === Auction.BUY ? 'Payment currency' : 'Receipt currency'}
+              label={'Currency'}
               showMaxButton={false}
               currency={payCurrency}
               onCurrencySelect={handleOutputSelect}
@@ -522,14 +523,14 @@ export default function Swap({
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonPrimary onClick={toggleWalletModal} borderRadius="49px">
+              <ButtonPrimary onClick={toggleWalletModal} borderRadius="16px">
                 Connect Wallet
               </ButtonPrimary>
             ) : statusButton.disabled ? (
               <OutlineCard
                 style={{
                   textAlign: 'center',
-                  borderRadius: '49px',
+                  borderRadius: '16px',
                   padding: '14px',
                   borderColor: theme.primary1,
                   fontSize: '1rem'
