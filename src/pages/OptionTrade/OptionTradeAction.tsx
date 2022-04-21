@@ -50,17 +50,12 @@ const Wrapper = styled.div`
   `}
 `
 
-const ActionWrapper = styled.div`
-  margin-top: 10px;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-  width: 100%;
-  `}
-`
-
-const Elevate = styled.div`
-  z-index: 2;
-  height: 100%;
-`
+// const ActionWrapper = styled.div`
+//   margin-top: 10px;
+//   ${({ theme }) => theme.mediaWidth.upToLarge`
+//   width: 100%;
+//   `}
+// `
 
 // const SwitchTabWrapper = styled.div`
 //   display: flex;
@@ -115,25 +110,25 @@ const Circle = styled.div`
 //   };
 // `
 
-const StyledAppBody = styled(BodyWrapper)`
-  max-width: 1116px;
-  padding: 0;
-  background: black;
-  width: 1116px;
-  overflow: hidden;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-  max-width: 100%;
-  width: 100%;
-  max-height: unset;
-  margin-bottom: 50px
-`}
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  min-height:100%;
-  padding: 0;
-  flex-grow: 1;
-  border-bottom: 0;
-  `}
-`
+// const StyledAppBody = styled(BodyWrapper)`
+//   max-width: 1116px;
+//   padding: 0;
+//   background: #ffffff;
+//   width: 1116px;
+//   overflow: hidden;
+//   ${({ theme }) => theme.mediaWidth.upToLarge`
+//   max-width: 100%;
+//   width: 100%;
+//   max-height: unset;
+//   margin-bottom: 50px
+// `}
+//   ${({ theme }) => theme.mediaWidth.upToSmall`
+//   min-height:100%;
+//   padding: 0;
+//   flex-grow: 1;
+//   border-bottom: 0;
+//   `}
+// `
 
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
@@ -268,15 +263,9 @@ export default function OptionTradeAction({ optionId }: { optionId?: string }) {
               <div style={{ width: 113 }} />
             </HideSmall>
           </RowBetween>
-          <ActionWrapper>
-            {/* <SwitchTab tab={tab} setTab={handleSetTab} /> */}
-            <StyledAppBody isCard={false}>
-              <Elevate>
-                <OptionSwap /*handleOptionType={setOptionType}*/ optionPrice={optionPrice} option={option} />
-                {/*{tab === TABS.LIQUIDITY && <Liquidity currencyA={currencyA} currencyB={currencyB} pair={pair} />}*/}
-              </Elevate>
-            </StyledAppBody>
-          </ActionWrapper>
+          {/* <SwitchTab tab={tab} setTab={handleSetTab} /> */}
+          <OptionSwap optionPrice={optionPrice} option={option} />
+          {/*{tab === TABS.LIQUIDITY && <Liquidity currencyA={currencyA} currencyB={currencyB} pair={pair} />}*/}
         </Wrapper>
       ) : (
         <AppBody style={{ minHeight: '402px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

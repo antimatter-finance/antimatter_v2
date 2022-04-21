@@ -71,6 +71,7 @@ const Label = styled.div`
 `
 
 const SwapAppBody = styled(BodyWrapper)`
+  background: #ffffff;
   border-color: ${({ theme }) => theme.text4};
   min-height: 100%;
   margin: -1px;

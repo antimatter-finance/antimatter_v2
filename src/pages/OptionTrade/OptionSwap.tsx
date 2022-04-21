@@ -4,35 +4,24 @@ import { createChart, IChartApi, ISeriesApi, LineStyle } from 'lightweight-chart
 import styled from 'styled-components'
 import Swap, { OptionField } from '../Swap'
 import { Option, OptionPrice } from '../../state/market/hooks'
-import SwitchTab from 'components/SwitchTab'
+// import SwitchTab from 'components/SwitchTab'
 import { Axios } from 'utils/option/axios'
 import { useActiveWeb3React } from 'hooks'
 import { useNetwork } from 'hooks/useNetwork'
 // import { ButtonOutlinedPrimary } from 'components/Button'
 import { formatDexTradeLineData, DexTradeLineData } from 'utils/option/utils'
 import { TYPE } from 'theme'
-
-const Wrapper = styled.div`
-  display: flex;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  flex-direction: column;
-  gap: 20px
-  `}
-`
+import { Grid } from '@mui/material'
 
 const GraphWrapper = styled.div`
   margin: 20px 40px;
   width: 100%;
   height: 100%;
   position: relative;
-  max-width: 559px;
-  /* ${({ theme }) => theme.mediaWidth.upToMedium`
-  max-width: 50%;
-  `} */
   ${({ theme }) => theme.mediaWidth.upToMedium`
   width: auto;
   margin: 20px 24px 20px 14px;
-  max-width: unset
+  padding-bottom: ${({ theme }) => theme.mobileHeaderHeight}
   `}
 `
 
@@ -111,7 +100,7 @@ export default function OptionSwap({
 }) {
   const transactions = useSelector((store: any) => store.transactions)
   const { chainId } = useActiveWeb3React()
-  const [currentTab, setCurrentTab] = useState<keyof typeof Tabs>('CALL')
+  const [currentTab] = useState<keyof typeof Tabs>('CALL')
   const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
   // const [isMarketPriceChart, setIsMarketPriceChart] = useState(true)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
@@ -276,55 +265,59 @@ export default function OptionSwap({
   // const handleMarketPriceChart = useCallback(() => setIsMarketPriceChart(true), [])
   // const handleModalChart = useCallback(() => setIsMarketPriceChart(false), [])
 
-  const handleTabClick = useCallback(
-    (tab: string) => () => {
-      setCurrentTab(tab as keyof typeof Tabs)
-    },
-    []
-  )
+  // const handleTabClick = useCallback(
+  //   (tab: string) => () => {
+  //     setCurrentTab(tab as keyof typeof Tabs)
+  //   },
+  //   []
+  // )
 
   return (
     <>
       <NetworkErrorModal />
-      <Wrapper>
-        <Swap
-          optionPrice={optionPrice}
-          // handleOptionType={handleOptionType}
-          option={option}
-          setParentTXHash={handleHash}
-        />
-        <GraphWrapper>
-          {graphLoading && <NetworkPendingSpinner paddingTop="0" />}
-          <CurrentPrice>
-            Current price: {'\n'}${' '}
-            {currentTab === OptionField.CALL
-              ? priceCall
-                ? priceCall.toSignificant(6)
-                : '-'
-              : pricePut
-              ? pricePut.toSignificant(6)
-              : '-'}
-          </CurrentPrice>
-          <SwitchTab
+      <Grid maxWidth={1110} container>
+        <Grid item xs={12} md={4}>
+          <Swap
+            optionPrice={optionPrice}
+            // handleOptionType={handleOptionType}
+            option={option}
+            setParentTXHash={handleHash}
+          />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <GraphWrapper>
+            {graphLoading && <NetworkPendingSpinner paddingTop="0" />}
+            <CurrentPrice>
+              Current price: {'\n'}${' '}
+              {currentTab === OptionField.CALL
+                ? priceCall
+                  ? priceCall.toSignificant(6)
+                  : '-'
+                : pricePut
+                ? pricePut.toSignificant(6)
+                : '-'}
+            </CurrentPrice>
+            {/* <SwitchTab
             onTabClick={handleTabClick}
             currentTab={currentTab}
             tabs={Tabs}
             tabStyle={{ fontFamily: 'Futura PT', fontSize: 20, fontWeight: 500 }}
-          />
+          /> */}
 
-          <ButtonGroup>
-            {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
-            <TYPE.body fontWeight="500" fontSize={18}>
-              Market Price
-            </TYPE.body>
-            {/* <Button isActive={!isMarketPriceChart} onClick={handleModalChart}>
+            <ButtonGroup>
+              {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
+              <TYPE.body fontWeight="500" fontSize={18}>
+                Market Price
+              </TYPE.body>
+              {/* <Button isActive={!isMarketPriceChart} onClick={handleModalChart}>
               Price Modeling Prediction
             </Button> */}
-          </ButtonGroup>
+            </ButtonGroup>
 
-          <Chart id="chart" />
-        </GraphWrapper>
-      </Wrapper>
+            <Chart id="chart" />
+          </GraphWrapper>
+        </Grid>
+      </Grid>
     </>
   )
 }
