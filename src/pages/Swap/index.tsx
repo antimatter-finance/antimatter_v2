@@ -66,8 +66,8 @@ const RadioButtonWrapper = styled(AutoColumn)`
   }
 `
 const Label = styled.div`
-  font-size: 14px;
-  color: ${({ theme }) => theme.text3};
+  font-size: 12px;
+  color: ${({ theme }) => theme.text5};
   margin-bottom: 8px;
 `
 
@@ -459,21 +459,6 @@ export default function Swap({
                   onCheck={(option: string) => setAuction(option)}
                 />
               </div>
-              {/* <div>
-                <Label>Choose token type</Label>
-                <TypeRadioButton
-                  name={'option_type'}
-                  options={[
-                    { label: '+ Bull Token', option: OptionField.CALL },
-                    { label: '− Bear Token', option: OptionField.PUT }
-                  ]}
-                  selected={optionType}
-                  onCheck={(option: string) => {
-                    // handleOptionType(option)
-                    setOptionType(option)
-                  }}
-                />
-              </div> */}
             </RadioButtonWrapper>
             <CurrencyInputPanel
               hideSelect

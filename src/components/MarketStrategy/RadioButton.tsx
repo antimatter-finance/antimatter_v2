@@ -4,23 +4,20 @@ import styled from 'styled-components'
 const Label = styled.label<{ checked: boolean }>`
   wrap: nowrap;
   display: flex;
-  align-items:center;
-
+  align-items: center;
   :before {
-  content: '';
-  display: block;
-  width: 6px;
-  height: 6px;
-  background-color: ${({ theme, checked }) => (checked ? theme.primary1 : 'transparent')};
-  border-radius: 50%;
-  margin-right:8px
-  border: 4px solid ${({ theme }) => theme.bg1};
-  box-shadow: 0 0 0 1px ${({ theme, checked }) => (checked ? theme.primary1 : theme.text1)};
-
-}
-& input {
-  display: none;
-}
+    content: '';
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-color: ${({ theme, checked }) => (checked ? theme.text1 : theme.mainBG)};
+    border-radius: 50%;
+    margin-right: 12px;
+    border: 7px solid ${({ theme }) => theme.mainBG};
+  }
+  & input {
+    display: none;
+  }
 `
 
 export function RadioButton({
