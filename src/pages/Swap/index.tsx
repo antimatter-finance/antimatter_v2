@@ -40,9 +40,10 @@ import { ANTIMATTER_ROUTER_ADDRESS, INITIAL_ALLOWED_SLIPPAGE } from '../../const
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import TradePrice from '../../components/swap/TradePrice'
 import { ClickableText } from '../Pool/styleds'
-import SettingsTab from '../../components/Settings'
+// import SettingsTab from '../../components/Settings'
 import QuestionHelper from '../../components/QuestionHelper'
 import { getCurrencySymbol } from 'utils/getCurrencySymbol'
+import Toggle from 'components/Toggle'
 
 enum Field {
   OPTION = 'OPTION',
@@ -402,6 +403,11 @@ export default function Swap({
     chainId
   ])
 
+  const handleSwitchOptionType = useCallback(() => {
+    const type = optionType === OptionField.CALL ? OptionField.PUT : OptionField.CALL
+    setOptionType(type)
+  }, [optionType])
+
   return (
     <>
       <TokenWarningModal
@@ -436,9 +442,10 @@ export default function Swap({
           />
 
           <AutoColumn gap="28px">
-            <div style={{ position: 'absolute', top: -5, right: 0 }}>
+            {/* <div style={{ position: 'absolute', top: -5, right: 0 }}>
               <SettingsTab onlySlippage />
-            </div>
+            </div> */}
+            <Toggle isActive={optionType == OptionField.CALL} toggle={handleSwitchOptionType} />
             <RadioButtonWrapper gap="28px">
               <div>
                 <Label>Choose Action</Label>
@@ -452,7 +459,7 @@ export default function Swap({
                   onCheck={(option: string) => setAuction(option)}
                 />
               </div>
-              <div>
+              {/* <div>
                 <Label>Choose token type</Label>
                 <TypeRadioButton
                   name={'option_type'}
@@ -466,7 +473,7 @@ export default function Swap({
                     setOptionType(option)
                   }}
                 />
-              </div>
+              </div> */}
             </RadioButtonWrapper>
             <CurrencyInputPanel
               hideSelect
