@@ -44,6 +44,8 @@ import { ClickableText } from '../Pool/styleds'
 import QuestionHelper from '../../components/QuestionHelper'
 import { getCurrencySymbol } from 'utils/getCurrencySymbol'
 import Toggle from 'components/Toggle'
+import { NavLink } from 'react-router-dom'
+import { Typography, Box } from '@mui/material'
 
 enum Field {
   OPTION = 'OPTION',
@@ -441,7 +443,6 @@ export default function Swap({
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
           />
-
           <AutoColumn gap="28px">
             {/* <div style={{ position: 'absolute', top: -5, right: 0 }}>
               <SettingsTab onlySlippage />
@@ -619,6 +620,13 @@ export default function Swap({
             {/*) : null}*/}
           </BottomGrouping>
         </Wrapper>
+        <Box width="100%" display="flex" justifyContent="center">
+          <NavLink to={'/option_creation'} style={{ textDecoration: 'none' }}>
+            <Typography component="span" color="#31B047" fontSize={{ xs: 12, md: 14 }}>
+              Option Creation
+            </Typography>
+          </NavLink>
+        </Box>
 
         {/*<AdvancedSwapDetailsDropdown undTrade={underlyingTrade} curTrade={currencyTrade} />*/}
       </SwapAppBody>
