@@ -90,6 +90,7 @@ const BodyWrapper = styled.div`
   overflow-x: hidden;
   position: relative;
   padding-bottom: 100px;
+  background: ${({ theme }) => theme.mainBG};
   /* ${({ theme }) => theme.mediaWidth.upToLarge`
   margin-bottom: ${theme.headerHeight};
   min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight});

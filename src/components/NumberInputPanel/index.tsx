@@ -26,7 +26,7 @@ const CustomNumericalInput = styled(NumericalInput)<{ disabled?: boolean }>`
 
 const LabelRow = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text5};
   font-size: 0.75rem;
   line-height: 1rem;
   span:hover {
@@ -120,7 +120,7 @@ export default function NumberInputPanel({
           <LabelRow>
             <AutoRow justify="space-between">
               {!hideLabel && (
-                <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+                <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
                   {label}
                 </TYPE.body>
               )}

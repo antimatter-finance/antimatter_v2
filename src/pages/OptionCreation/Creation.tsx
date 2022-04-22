@@ -283,11 +283,17 @@ export default function Creation() {
           <AutoColumn gap="15px">
             <TYPE.body>1. Option underlying asset pair:</TYPE.body>
             <RowBetween>
-              <ButtonSelect width="46%" onClick={handleOpenAssetSearch} label="Underlying asset" marginRight="0">
-                <TYPE.body color={asset0 ? theme.text1 : theme.text3}>
+              <ButtonSelect
+                width="46%"
+                onClick={handleOpenAssetSearch}
+                label="Underlying asset"
+                marginRight="0"
+                placeholder="Select token"
+              >
+                <TYPE.body color={asset0 ? theme.text1 : theme.text5}>
                   <RowFixed>
                     {asset0 && <CurrencyLogo currency={asset0} size={'24px'} style={{ marginRight: 20 }} />}
-                    {currencyNameHelper(asset0, 'Select asset')}
+                    {currencyNameHelper(asset0, 'Select token')}
                   </RowFixed>
                 </TYPE.body>
               </ButtonSelect>
@@ -295,7 +301,7 @@ export default function Creation() {
               <ButtonSelect
                 width="46%"
                 label="Asset to create option"
-                placeholder="Select asset"
+                placeholder="Select token"
                 marginRight="0"
                 selectedId={asset1 ? asset1.symbol : ''}
                 onSelection={handleSelectAsset1}
@@ -313,7 +319,7 @@ export default function Creation() {
                 onUserInput={(floor: string) => setFloor(limitDigits(floor, asset1?.decimals))}
                 showMaxButton={false}
                 hideBalance={true}
-                placeholder="Enter Price Floor"
+                placeholder="0.00"
               />
               <NumberInputPanel
                 label="Price Ceiling"
@@ -322,14 +328,18 @@ export default function Creation() {
                 onUserInput={(cap: string) => setCap(limitDigits(cap, asset1?.decimals))}
                 showMaxButton={false}
                 hideBalance={true}
-                placeholder="Enter Price Ceiling"
+                placeholder="0.00"
               />
             </InputWrapper>
           </AutoColumn>
-          <TYPE.body color={theme.primary1} fontSize={14} height={16}>
-            {error}{' '}
-          </TYPE.body>
-          <ButtonPrimary disabled onClick={handleNext}>Coming Soon</ButtonPrimary>
+          {error && (
+            <TYPE.body color={theme.primary1} fontSize={14} height={16}>
+              {error}
+            </TYPE.body>
+          )}
+          <ButtonPrimary disabled onClick={handleNext}>
+            Coming Soon
+          </ButtonPrimary>
         </AutoColumn>
       </AppBody>
     </>

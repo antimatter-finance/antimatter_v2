@@ -23,7 +23,7 @@ export const StyledDropDown = styled(DropDown)`
 export const ButtonSelectStyle = styled(ButtonOutlined)<{ selected?: boolean; width?: string }>`
   width: ${({ width }) => (width ? width : '100%')};
   height: 3rem;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.mainBG};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text3)};
   border-radius: 14px;
   border: unset;
@@ -121,14 +121,16 @@ export default function ButtonSelect({
     <div style={{ position: 'relative', marginRight: marginRight, width: width, flex: 1 }}>
       {label && (
         <AutoRow style={{ marginBottom: '4px' }}>
-          <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+          <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
             {label}
           </TYPE.body>
         </AutoRow>
       )}
       <ButtonSelectStyle onClick={handleClick} selected={!!selectedId} disabled={disabled}>
         <RowBetween>
-          <div style={{ display: 'flex', alignItems: 'center' }}>{buttonContent}</div>
+          <div style={{ display: 'flex', alignItems: 'center', color: theme.text5, fontWeight: 400 }}>
+            {buttonContent}
+          </div>
           {!disabled && <StyledDropDown />}
         </RowBetween>
       </ButtonSelectStyle>
