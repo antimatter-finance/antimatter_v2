@@ -247,7 +247,7 @@ export default function OptionTrade({
         <>$1000~$3000</>,
         <>0</>,
         <>23</>,
-        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+        <RoundButton onClick={() => history.push(`/option_trading/1234`)}>Trade</RoundButton>
       ],
       [
         <>#1234</>,
@@ -257,7 +257,7 @@ export default function OptionTrade({
         <>$1000~$3000</>,
         <>0</>,
         <>23</>,
-        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+        <RoundButton onClick={() => history.push(`/option_trading/1234`)}>Trade</RoundButton>
       ]
     ]
   }, [])

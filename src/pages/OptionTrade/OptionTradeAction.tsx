@@ -25,6 +25,9 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 //import { ChainId, WETH } from '@uniswap/sdk'
 //import { useDerivedMintInfo } from 'state/mint/hooks'
+import { NavLink } from 'react-router-dom'
+import { Typography } from '@mui/material'
+import { ReactComponent as ArrowLeft } from 'assets/svg/arrow_left.svg'
 
 // enum TABS {
 //   SWAP = 'swap',
@@ -211,11 +214,17 @@ export default function OptionTradeAction({ optionId }: { optionId?: string }) {
     <>
       {optionId ? (
         <Wrapper>
-          <RowBetween style={{ padding: '27px 0', maxWidth: 1116 }}>
+          <RowBetween style={{ padding: '27px 0', maxWidth: '1110px' }}>
             {/* <ButtonEmpty width="auto" color={theme.text1} onClick={handleBack} padding="14px 14px 14px 0"> */}
             {/* <ChevronLeft style={{ flexShrink: 0 }} /> */}
             {/* <HideSmall>Go Back</HideSmall> */}
             {/* </ButtonEmpty> */}
+            <NavLink to={'/option_trading'} style={{ textDecoration: 'none' }}>
+              <ArrowLeft />
+              <Typography component="span" color="#000000" fontSize={{ xs: 12, md: 14 }} ml={'16px'}>
+                Go Back
+              </Typography>
+            </NavLink>
 
             <TitleWrapper gap="8px">
               {option && (

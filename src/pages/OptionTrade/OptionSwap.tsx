@@ -14,15 +14,16 @@ import { TYPE } from 'theme'
 import { Grid } from '@mui/material'
 
 const GraphWrapper = styled.div`
-  margin: 20px 40px;
   width: 100%;
   height: 100%;
   position: relative;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  width: auto;
   margin: 20px 24px 20px 14px;
   padding-bottom: ${({ theme }) => theme.mobileHeaderHeight}
   `}
+  background: #ffffff;
+  padding: 32px 24px;
+  border-radius: 20px;
 `
 
 const Chart = styled.div`
@@ -43,7 +44,7 @@ const Chart = styled.div`
 const ButtonGroup = styled.div`
   width: 100%;
   display: flex;
-  margin: 24px 0 36px;
+  margin-bottom: 24px;
   button:first-child {
     margin-right: 10px;
   }
@@ -66,8 +67,8 @@ const ButtonGroup = styled.div`
 
 const CurrentPrice = styled.div`
   position: absolute;
-  right: 0;
-  top: 14px;
+  right: 23px;
+  top: 42px;
   white-space: nowrap;
   font-size: 18px;
   font-weight: 400;
@@ -184,7 +185,7 @@ export default function OptionSwap({
       width: chartElement ? chartElement.offsetWidth : 556,
       height: 328,
       layout: {
-        backgroundColor: '#000000',
+        backgroundColor: '#FFFFFF',
         textColor: '#FFFFFF',
         fontSize: 12,
         fontFamily: 'Roboto'
@@ -275,7 +276,7 @@ export default function OptionSwap({
   return (
     <>
       <NetworkErrorModal />
-      <Grid maxWidth={1110} container>
+      <Grid maxWidth={1120} container spacing={2} padding={0}>
         <Grid item xs={12} md={4}>
           <Swap
             optionPrice={optionPrice}
@@ -288,14 +289,16 @@ export default function OptionSwap({
           <GraphWrapper>
             {graphLoading && <NetworkPendingSpinner paddingTop="0" />}
             <CurrentPrice>
-              Current price: {'\n'}${' '}
-              {currentTab === OptionField.CALL
-                ? priceCall
-                  ? priceCall.toSignificant(6)
-                  : '-'
-                : pricePut
-                ? pricePut.toSignificant(6)
-                : '-'}
+              <TYPE.gray fontSize={16}>
+                Current price: ${' '}
+                {currentTab === OptionField.CALL
+                  ? priceCall
+                    ? priceCall.toSignificant(6)
+                    : '-'
+                  : pricePut
+                  ? pricePut.toSignificant(6)
+                  : '-'}
+              </TYPE.gray>
             </CurrentPrice>
             {/* <SwitchTab
             onTabClick={handleTabClick}
@@ -306,8 +309,8 @@ export default function OptionSwap({
 
             <ButtonGroup>
               {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
-              <TYPE.body fontWeight="500" fontSize={18}>
-                Market Price
+              <TYPE.body fontWeight="700" fontSize={24}>
+                Call Token
               </TYPE.body>
               {/* <Button isActive={!isMarketPriceChart} onClick={handleModalChart}>
               Price Modeling Prediction
