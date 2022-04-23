@@ -33,7 +33,6 @@ import { OptionField } from '../Swap'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { LabeledCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
-import useMediaWidth from 'hooks/useMediaWidth'
 import { isMobile } from 'react-device-detect'
 import { Typography } from '@mui/material'
 
@@ -48,7 +47,6 @@ export default function Generate({
   // const [putTyped, setPutTyped] = useState<string>()
 
   const theme = useContext(ThemeContext)
-  const isUpToSmall = useMediaWidth('upToSmall')
 
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -218,10 +216,7 @@ export default function Generate({
 
   return (
     <>
-      <AppBody
-        maxWidth="560px"
-        style={{ marginTop: isMobile ? 20 : 100, marginBottom: 0, paddingBottom: isUpToSmall ? 30 : 0 }}
-      >
+      <AppBody maxWidth="600px" style={{ marginTop: isMobile ? 40 : 100, marginBottom: isMobile ? 100 : 0 }}>
         <MarketStrategyTabs generation />
         <Typography sx={{ color: '#1F191B', opacity: 0.5, fontSize: 16, mt: '8px', mb: '32px' }}>
           In this section you can generate both call and put tokens at the same time. You need to generate equal amount

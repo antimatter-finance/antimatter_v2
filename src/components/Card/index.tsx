@@ -101,7 +101,7 @@ export function LabeledCard({
           {label}
         </TYPE.body>
       )}
-      <MainCard padding="12px 20px" style={{ height: 48, display: 'flex', alignItems: 'center' }}>
+      <MainCard padding="12px 20px" style={{ height: 60, display: 'flex', alignItems: 'center' }}>
         {content}
       </MainCard>
     </AutoColumn>
