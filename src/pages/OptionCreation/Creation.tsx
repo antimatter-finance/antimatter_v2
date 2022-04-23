@@ -297,7 +297,7 @@ export default function Creation() {
                   </RowFixed>
                 </TYPE.body>
               </ButtonSelect>
-              <Plus size={30} style={{ marginTop: 20 }} color={theme.text3} />
+              <Plus size={18} color={theme.text3} style={{ margin: '20px 10px 0' }} />
               <ButtonSelect
                 width="46%"
                 label="Asset to create option"
