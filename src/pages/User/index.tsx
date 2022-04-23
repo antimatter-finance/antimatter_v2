@@ -7,8 +7,13 @@ import Loader from '../../assets/svg/antimatter_background_logo.svg'
 import Table from '../../components/Table'
 import { useMyTransaction, useMyCreation, useMyPosition } from '../../hooks/useUserFetch'
 import Pagination from '../../components/Pagination'
-import useMediaWidth from 'hooks/useMediaWidth'
+// import useMediaWidth from 'hooks/useMediaWidth'
 import { useActiveWeb3React } from 'hooks'
+import Image from 'components/Image'
+import PositionIcon from 'assets/images/position-icon.png'
+import CreationIcon from 'assets/images/creation-icon.png'
+import HistoryIcon from 'assets/images/history-icon.png'
+import { AutoRow } from 'components/Row'
 
 const Wrapper = styled.div`
   padding: 78px 0 88px;
@@ -51,9 +56,22 @@ export enum UserInfoTabs {
   TRANSACTION = 'my_transaction'
 }
 export const UserInfoTabRoute = {
-  [UserInfoTabs.POSITION]: 'My Position',
-  [UserInfoTabs.CREATION]: 'My Creation',
-  [UserInfoTabs.TRANSACTION]: 'My Transaction'
+  [UserInfoTabs.POSITION]: (
+    <AutoRow>
+      <Image src={PositionIcon} alt="my-position-icon" style={{ marginRight: 12 }} /> My Position
+    </AutoRow>
+  ),
+  [UserInfoTabs.CREATION]: (
+    <AutoRow>
+      <Image src={CreationIcon} alt="my-creation-icon" style={{ marginRight: 12 }} /> My Creation
+    </AutoRow>
+  ),
+  [UserInfoTabs.TRANSACTION]: (
+    <AutoRow>
+      <Image src={HistoryIcon} alt="my-history-icon" style={{ marginRight: 12 }} />
+      History
+    </AutoRow>
+  )
 }
 
 // function randTime() {
@@ -83,7 +101,7 @@ export default function User() {
   const { tab } = useParams<{ tab: string }>()
   const location = useLocation()
   const [currentTab, setCurrentTab] = useState(UserInfoTabs.POSITION)
-  const isUptoSmall = useMediaWidth('upToSmall')
+  // const isUptoSmall = useMediaWidth('upToSmall')
   const { account } = useActiveWeb3React()
 
   useEffect(() => {
@@ -114,11 +132,7 @@ export default function User() {
   return (
     <Wrapper>
       <AppBody>
-        <SwitchTab
-          style={{ padding: isUptoSmall ? '50px 24px 0' : '50px 50px 0' }}
-          onTabClick={handleTabClick}
-          currentTab={currentTab}
-        />
+        <SwitchTab onTabClick={handleTabClick} currentTab={currentTab} />
         {(currentTab === UserInfoTabs.CREATION && myCreation === undefined) ||
         (currentTab === UserInfoTabs.TRANSACTION && myTransactionLoading) ||
         (currentTab === UserInfoTabs.POSITION && myPositionLoading) ? (
@@ -187,7 +201,7 @@ function SwitchTab({
 }: {
   currentTab: UserInfoTabs
   onTabClick: (tab: UserInfoTabs) => () => void
-  style: CSSProperties
+  style?: CSSProperties
 }) {
   return (
     <SwitchTabWrapper style={style}>
