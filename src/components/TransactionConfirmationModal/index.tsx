@@ -46,15 +46,13 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
   return (
     <>
       <LoadingView onDismiss={onDismiss}>
-        <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={400} fontSize={18}>
+        <AutoColumn justify={'center'}>
+          <Text fontWeight={600} fontSize={18}>
             Waiting For Confirmation
           </Text>
-          <AutoColumn gap="12px" justify={'center'}>
-            <Text fontWeight={400} fontSize={14} textAlign="center" color={theme.text2}>
-              {pendingText}
-            </Text>
-          </AutoColumn>
+          <Text fontWeight={400} marginTop={'8px'} fontSize={14} textAlign="center" color={theme.text2} opacity={0.8}>
+            {pendingText}
+          </Text>
         </AutoColumn>
       </LoadingView>
     </>
