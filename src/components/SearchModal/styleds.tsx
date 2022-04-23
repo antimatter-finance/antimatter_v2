@@ -58,11 +58,11 @@ export const Checkbox = styled.input`
 `
 
 export const PaddedColumn = styled(AutoColumn)`
-  padding: 20px;
+  padding: 32px;
 `
 
 export const MenuItem = styled(RowBetween)`
-  padding: 4px 20px;
+  padding: 4px 32px;
   height: 56px;
   display: grid;
   grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
@@ -82,7 +82,7 @@ export const SearchInput = styled.input`
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: ${({ theme }) => theme.translucent};
+  background: ${({ theme }) => theme.mainBG};
   height: 48px;
   border: none;
   outline: none;
