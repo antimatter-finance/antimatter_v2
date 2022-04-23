@@ -222,6 +222,7 @@ export default function Generate({
           In this section you can generate both call and put tokens at the same time. You need to generate equal amount
           of call and put tokens.
         </Typography>
+
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}

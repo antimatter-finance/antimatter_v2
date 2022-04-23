@@ -82,7 +82,6 @@ function TransactionSubmittedContent({
         <Text fontWeight={400} fontSize={18}>
           Transaction Submitted
         </Text>
-
         {currencyToAdd && library?.provider?.isMetaMask && (
           <ButtonGray
             mt="12px"
