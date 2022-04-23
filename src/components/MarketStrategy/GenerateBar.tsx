@@ -9,7 +9,8 @@ import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
 import { currencyNameHelper, isNegative } from 'utils/marketStrategyUtils'
-import useMediaWidth from 'hooks/useMediaWidth'
+import { Typography } from '@mui/material'
+import { LabeledCard } from '../Card'
 
 const TokenPanel = styled.div`
   flex: 1;
@@ -18,21 +19,7 @@ const TokenPanel = styled.div`
   align-items: center;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 14px;
-  padding: 0 16px;
   display: flex;
-`
-
-const RowWrapper = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  flex-direction: column;
-  gap: 20px;
-  & >div:first-child{
-    margin-right: 0
-  };
-  &>div{
-    width: 100%
-  }
-`}
 `
 
 export function GenerateBar({
@@ -55,53 +42,62 @@ export function GenerateBar({
   subTitle?: string
 }) {
   const theme = useTheme()
-  const isUpToSmall = useMediaWidth('upToSmall')
 
   return (
     <AutoColumn>
       {!isNegative(callVol) && !isNegative(putVol) && (
         <RowBetween style={{ padding: '8px 0' }}>
-          <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text3}>
+          <Typography fontWeight={400} fontSize={16} color={theme.text3}>
             {cardTitle}
-          </TYPE.subHeader>
+          </Typography>
         </RowBetween>
       )}
-      <OutlineCard style={{ backgroundColor: 'rgba(0,0,0,.2)', padding: '16px 20px' }}>
-        <RowWrapper>
-          <AutoColumn style={{ flex: 1, maxWidth: isUpToSmall ? '100%' : '45%' }} gap={'8px'}>
-            <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text3}>
+      <OutlineCard style={{ padding: '16px 20px' }}>
+        <RowBetween>
+          <AutoColumn style={{ flex: 1, maxWidth: '45%' }} gap={'8px'}>
+            {/* <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text3}>
               {(!subTitle || callTitle) && callTitle}
               {!callTitle && (subTitle && isNegative(callVol) ? 'You will receive' : 'You will Pay')}
-            </TYPE.subHeader>
-            <TokenPanel>
-              {currency0 && <CurrencyLogo currency={currency0} size={'20px'} />}
-              <TYPE.black fontWeight={500} fontSize={14} marginLeft={'8px'} flex={1}>
-                {currencyNameHelper(currency0, 'Bull Token')}
-              </TYPE.black>
-              <TYPE.black fontWeight={500} fontSize={14} marginLeft={'8px'}>
-                {callVol?.[0] === '-' ? callVol.slice(1) : callVol}
-              </TYPE.black>
-            </TokenPanel>
+            </TYPE.subHeader> */}
+            <LabeledCard
+              label="Input"
+              content={
+                <TokenPanel>
+                  {currency0 && <CurrencyLogo currency={currency0} size={'20px'} />}
+                  <TYPE.black fontWeight={400} fontSize={14} marginLeft={'8px'} flex={1}>
+                    {currencyNameHelper(currency0, 'Bull Token')}
+                  </TYPE.black>
+                  <TYPE.black fontWeight={400} fontSize={14} marginLeft={'8px'}>
+                    {callVol?.[0] === '-' ? callVol.slice(1) : callVol}
+                  </TYPE.black>
+                </TokenPanel>
+              }
+            />
           </AutoColumn>
 
-          <Plus size="24" color={theme.text2} style={{ margin: isUpToSmall ? 0 : '24px 10px 0' }} />
+          <Plus size="24" color={theme.text2} style={{ margin: '20px 10px 0' }} />
 
-          <AutoColumn style={{ flex: 1, maxWidth: isUpToSmall ? '100%' : '45%' }} gap={'8px'}>
-            <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text3}>
+          <AutoColumn style={{ flex: 1, maxWidth: '45%' }} gap={'8px'}>
+            {/* <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text3}>
               {(!subTitle || putTitle) && putTitle}
               {!putTitle && (subTitle && isNegative(putVol) ? 'You will receive' : 'You will Pay')}
-            </TYPE.subHeader>
-            <TokenPanel>
-              {currency1 && <CurrencyLogo currency={currency1} size={'20px'} />}
-              <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text1} marginLeft={'8px'} flex={1}>
-                {currencyNameHelper(currency1, 'Bear Token')}
-              </TYPE.subHeader>
-              <TYPE.black fontWeight={500} fontSize={14} marginLeft={'8px'}>
-                {putVol?.[0] === '-' ? putVol.slice(1) : putVol}
-              </TYPE.black>
-            </TokenPanel>
+            </TYPE.subHeader> */}
+            <LabeledCard
+              label="Input"
+              content={
+                <TokenPanel>
+                  {currency1 && <CurrencyLogo currency={currency1} size={'20px'} />}
+                  <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text1} marginLeft={'8px'} flex={1}>
+                    {currencyNameHelper(currency1, 'Bear Token')}
+                  </TYPE.subHeader>
+                  <TYPE.black fontWeight={500} fontSize={14} marginLeft={'8px'}>
+                    {putVol?.[0] === '-' ? putVol.slice(1) : putVol}
+                  </TYPE.black>
+                </TokenPanel>
+              }
+            />
           </AutoColumn>
-        </RowWrapper>
+        </RowBetween>
       </OutlineCard>
     </AutoColumn>
   )

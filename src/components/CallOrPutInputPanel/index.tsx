@@ -121,7 +121,7 @@ export default function CallOrPutInputPanel({
         {!hideInput && (
           <LabelRow>
             <AutoRow justify="space-between">
-              <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+              <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
                 {label}
               </TYPE.body>
             </AutoRow>
@@ -147,7 +147,11 @@ export default function CallOrPutInputPanel({
             }
           />
 
-          <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} halfWidth={halfWidth} selected>
+          <InputRow
+            style={hideInput ? { padding: '0', borderRadius: '8px' } : { background: theme.mainBG }}
+            halfWidth={halfWidth}
+            selected
+          >
             {!hideInput && (
               <>
                 <CustomNumericalInput

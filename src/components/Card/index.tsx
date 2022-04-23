@@ -40,7 +40,7 @@ export const GreyCard = styled(Card)`
 `
 
 export const OutlineCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.text5};
+  border: 1px solid rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text3};
 `
 
@@ -80,6 +80,10 @@ export const TranslucentCard = styled(Card)`
   background-color: ${({ theme }) => theme.translucent};
 `
 
+export const MainCard = styled(Card)`
+  background-color: ${({ theme }) => theme.mainBG};
+`
+
 export function LabeledCard({
   label,
   content,
@@ -93,13 +97,13 @@ export function LabeledCard({
   return (
     <AutoColumn gap="4px" style={{ width: '100%', ...style }}>
       {label && (
-        <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+        <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
           {label}
         </TYPE.body>
       )}
-      <LightGreyCard padding="12px 20px" style={{ height: 48, display: 'flex', alignItems: 'center' }}>
+      <MainCard padding="12px 20px" style={{ height: 48, display: 'flex', alignItems: 'center' }}>
         {content}
-      </LightGreyCard>
+      </MainCard>
     </AutoColumn>
   )
 }

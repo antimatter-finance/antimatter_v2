@@ -7,7 +7,7 @@ export const BodyWrapper = styled.div<{ maxWidth?: string; gradient1?: boolean; 
   width: 100%;
   border-radius: 32px;
   background: #ffffff;
-  padding: 32px 24px;
+  padding: 32px 24px 36px;
   ${({ theme, isCard }) => theme.mediaWidth.upToSmall`
     min-height:100%;
     padding: 16px 24px;

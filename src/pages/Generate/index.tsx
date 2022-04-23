@@ -4,7 +4,7 @@ import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonOutlined, ButtonPrimary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -22,7 +22,7 @@ import { useIsExpertMode } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin } from '../../utils'
 import AppBody from '../AppBody'
-import { Dots, Wrapper } from '../Pool/styleds'
+import { Dots } from '../Pool/styleds'
 import { ConfirmGenerationModalBottom } from './ConfirmAddModalBottom'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -35,19 +35,7 @@ import { LabeledCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import useMediaWidth from 'hooks/useMediaWidth'
 import { isMobile } from 'react-device-detect'
-
-const RowWrapper = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  flex-direction: column;
-  gap: 20px;
-  & >div:first-child{
-    margin-right: 0
-  };
-  &>div{
-    width: 100%
-  }
-`}
-`
+import { Typography } from '@mui/material'
 
 export default function Generate({
   match: {
@@ -235,152 +223,147 @@ export default function Generate({
         style={{ marginTop: isMobile ? 20 : 100, marginBottom: 0, paddingBottom: isUpToSmall ? 30 : 0 }}
       >
         <MarketStrategyTabs generation />
-        <TYPE.darkGray fontSize={14} style={{ padding: isUpToSmall ? '10px 24px' : '4px 16px 30px' }}>
-          In this section you can generate both bull and bear tokens at the same time. You need to generate equal amount
-          of bull and bear tokens.
-        </TYPE.darkGray>
-        <Wrapper>
-          <TransactionConfirmationModal
-            isOpen={showConfirm}
-            onDismiss={handleDismissConfirmation}
-            attemptingTxn={attemptingTxn}
-            hash={txHash}
-            content={() => (
-              <ConfirmationModalContent
-                title={'Confirmation'}
-                onDismiss={handleDismissConfirmation}
-                topContent={modalHeader}
-                bottomContent={modalBottom}
-              />
-            )}
-            pendingText="Generating"
-          />
-          <AutoColumn gap="20px">
-            <RowWrapper>
-              <LabeledCard
-                label="Option ID"
-                content={optionTypeIndex ?? ''}
-                style={{ marginRight: isUpToSmall ? 0 : 15 }}
-              />
-              <LabeledCard
-                label="Option Type"
-                content={
-                  <RowFixed>
-                    <CurrencyLogo currency={option?.underlying ?? undefined} size="17px" style={{ marginRight: 12 }} />
-                    {optionName}
-                  </RowFixed>
-                }
-              />
-            </RowWrapper>
+        <Typography sx={{ color: '#1F191B', opacity: 0.5, fontSize: 16, mt: '8px', mb: '32px' }}>
+          In this section you can generate both call and put tokens at the same time. You need to generate equal amount
+          of call and put tokens.
+        </Typography>
+        <TransactionConfirmationModal
+          isOpen={showConfirm}
+          onDismiss={handleDismissConfirmation}
+          attemptingTxn={attemptingTxn}
+          hash={txHash}
+          content={() => (
+            <ConfirmationModalContent
+              title={'Confirmation'}
+              onDismiss={handleDismissConfirmation}
+              topContent={modalHeader}
+              bottomContent={modalBottom}
+            />
+          )}
+          pendingText="Generating"
+        />
+        <AutoColumn gap="20px">
+          <RowBetween>
+            <LabeledCard label="Option ID" content={optionTypeIndex ?? ''} style={{ marginRight: 15 }} />
+            <LabeledCard
+              label="Option Type"
+              content={
+                <RowFixed>
+                  <CurrencyLogo currency={option?.underlying ?? undefined} size="17px" style={{ marginRight: 12 }} />
+                  {optionName}
+                </RowFixed>
+              }
+            />
+          </RowBetween>
 
-            <CallOrPutInputPanel
-              value={callTyped ?? ''}
-              onUserInput={setCallTyped}
-              currency={option?.call?.token || undefined}
-              id="generate-output-token"
-              showCommonBases
-              defaultSymbol={option?.call?.token.symbol}
-              halfWidth={true}
-              isCall={true}
-              underlying={option?.underlying}
+          <CallOrPutInputPanel
+            value={callTyped ?? ''}
+            onUserInput={setCallTyped}
+            currency={option?.call?.token || undefined}
+            id="generate-output-token"
+            showCommonBases
+            defaultSymbol={option?.call?.token.symbol}
+            halfWidth={true}
+            isCall={true}
+            underlying={option?.underlying}
+          />
+          <ColumnCenter>
+            <Plus size="28" color={theme.text2} />
+          </ColumnCenter>
+          <CallOrPutInputPanel
+            value={callTyped ?? ''}
+            onUserInput={setCallTyped}
+            currency={option?.put?.token || undefined}
+            id="generate-output-token"
+            showCommonBases
+            halfWidth={true}
+            defaultSymbol={option?.put?.token.symbol}
+            negativeMarginTop={'-20px'}
+            isCall={false}
+            underlying={option?.underlying}
+          />
+
+          {/* <TYPE.body color={theme.red1}>{error}</TYPE.body> */}
+          {!option || !delta ? (
+            <ButtonOutlined style={{ opacity: '0.5' }} disabled={true}>
+              <TYPE.main>Enter Amount</TYPE.main>
+            </ButtonOutlined>
+          ) : !account ? (
+            <ButtonPrimary onClick={toggleWalletModal} borderRadius="49px">
+              Connect Wallet
+            </ButtonPrimary>
+          ) : (
+            <AutoColumn gap={'md'}>
+              {!error &&
+                (approvalA === ApprovalState.NOT_APPROVED ||
+                  approvalA === ApprovalState.PENDING ||
+                  approvalB === ApprovalState.NOT_APPROVED ||
+                  approvalB === ApprovalState.PENDING) && (
+                  <RowBetween>
+                    {approvalA !== ApprovalState.APPROVED && (
+                      <ButtonPrimary
+                        onClick={approveACallback}
+                        disabled={approvalA === ApprovalState.PENDING}
+                        width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                      >
+                        {approvalA === ApprovalState.PENDING ? (
+                          <Dots>Approving {option?.underlying?.symbol}</Dots>
+                        ) : (
+                          'Approve ' + option?.underlying?.symbol
+                        )}
+                      </ButtonPrimary>
+                    )}
+                    {approvalB !== ApprovalState.APPROVED && (
+                      <ButtonPrimary
+                        onClick={approveBCallback}
+                        disabled={approvalB === ApprovalState.PENDING}
+                        width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                      >
+                        {approvalB === ApprovalState.PENDING ? (
+                          <Dots>Approving {option?.currency?.symbol}</Dots>
+                        ) : (
+                          'Approve ' + option?.currency?.symbol
+                        )}
+                      </ButtonPrimary>
+                    )}
+                  </RowBetween>
+                )}
+              <ButtonError
+                onClick={() => {
+                  expertMode ? onGenerate() : setShowConfirm(true)
+                }}
+                disabled={approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED || !!error}
+                error={!callTyped || !!error /*&& !putTyped*/}
+              >
+                <Text fontSize={16} fontWeight={500}>
+                  {error ? error : 'Generate'}
+                </Text>
+              </ButtonError>
+            </AutoColumn>
+          )}
+          {option?.underlying && option?.currency && delta?.dUnd && delta.dCur && (
+            <GenerateBar
+              cardTitle={'You will pay:'}
+              callVol={
+                delta &&
+                parseBalance({
+                  val: delta.dUnd,
+                  token: option?.underlying
+                })
+              }
+              putVol={
+                delta &&
+                parseBalance({
+                  val: delta.dCur,
+                  token: option?.currency
+                })
+              }
+              subTitle="Output Token"
+              currency0={option?.underlying ?? undefined}
+              currency1={option?.currency ?? undefined}
             />
-            <ColumnCenter>
-              <Plus size="28" color={theme.text2} />
-            </ColumnCenter>
-            <CallOrPutInputPanel
-              value={callTyped ?? ''}
-              onUserInput={setCallTyped}
-              currency={option?.put?.token || undefined}
-              id="generate-output-token"
-              showCommonBases
-              halfWidth={true}
-              defaultSymbol={option?.put?.token.symbol}
-              negativeMarginTop={'-20px'}
-              isCall={false}
-              underlying={option?.underlying}
-            />
-            {option?.call?.token && option?.put?.token && delta?.dUnd && delta.dCur && (
-              <GenerateBar
-                cardTitle={``}
-                callVol={
-                  delta &&
-                  parseBalance({
-                    val: delta.dUnd,
-                    token: option?.call?.token
-                  })
-                }
-                putVol={
-                  delta &&
-                  parseBalance({
-                    val: delta.dCur,
-                    token: option?.put?.token
-                  })
-                }
-                subTitle="Output Token"
-                currency0={option?.underlying ?? undefined}
-                currency1={option?.currency ?? undefined}
-              />
-            )}
-            {/* <TYPE.body color={theme.red1}>{error}</TYPE.body> */}
-            {!option || !delta ? (
-              <ButtonOutlined style={{ opacity: '0.5' }} disabled={true}>
-                <TYPE.main>Enter Amount</TYPE.main>
-              </ButtonOutlined>
-            ) : !account ? (
-              <ButtonPrimary onClick={toggleWalletModal} borderRadius="49px">
-                Connect Wallet
-              </ButtonPrimary>
-            ) : (
-              <AutoColumn gap={'md'}>
-                {!error &&
-                  (approvalA === ApprovalState.NOT_APPROVED ||
-                    approvalA === ApprovalState.PENDING ||
-                    approvalB === ApprovalState.NOT_APPROVED ||
-                    approvalB === ApprovalState.PENDING) && (
-                    <RowBetween>
-                      {approvalA !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveACallback}
-                          disabled={approvalA === ApprovalState.PENDING}
-                          width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalA === ApprovalState.PENDING ? (
-                            <Dots>Approving {option?.underlying?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + option?.underlying?.symbol
-                          )}
-                        </ButtonPrimary>
-                      )}
-                      {approvalB !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveBCallback}
-                          disabled={approvalB === ApprovalState.PENDING}
-                          width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalB === ApprovalState.PENDING ? (
-                            <Dots>Approving {option?.currency?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + option?.currency?.symbol
-                          )}
-                        </ButtonPrimary>
-                      )}
-                    </RowBetween>
-                  )}
-                <ButtonError
-                  onClick={() => {
-                    expertMode ? onGenerate() : setShowConfirm(true)
-                  }}
-                  disabled={approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED || !!error}
-                  error={!callTyped || !!error /*&& !putTyped*/}
-                >
-                  <Text fontSize={16} fontWeight={500}>
-                    {error ? error : 'Generate'}
-                  </Text>
-                </ButtonError>
-              </AutoColumn>
-            )}
-          </AutoColumn>
-        </Wrapper>
+          )}
+        </AutoColumn>
       </AppBody>
     </>
   )
