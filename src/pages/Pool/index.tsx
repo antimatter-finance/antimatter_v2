@@ -62,7 +62,7 @@ export default function Pool() {
             <AutoColumn gap="32px" style={{ width: '100%' }}>
               <TitleRow padding={'0'}>
                 <HideSmall>
-                  <TYPE.mediumHeader style={{ justifySelf: 'flex-start' }}>Your liquidity</TYPE.mediumHeader>
+                  <TYPE.mediumHeader style={{ justifySelf: 'flex-start' }}>Your Positions</TYPE.mediumHeader>
                 </HideSmall>
               </TitleRow>
               {/*<ResponsiveButtonPrimary*/}
