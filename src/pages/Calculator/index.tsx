@@ -10,7 +10,7 @@ import NumberInputPanel from 'components/NumberInputPanel'
 import { useCalculatorCallback } from 'hooks/useCalculatorCallback'
 import { tryFormatAmount } from 'state/swap/hooks'
 import useTheme from 'hooks/useTheme'
-import Card from 'components/Card'
+import Card, { OutlineCard } from 'components/Card'
 
 const InputWrapper = styled(RowBetween)`
   & > div {
@@ -86,63 +86,65 @@ export default function Calculator() {
       <AutoColumn gap="20px">
         <AutoColumn gap="8px">
           <BodyHeader title="Option Calculator" />
-          <TYPE.body fontSize={14}>
+          <TYPE.body fontSize={16} opacity={0.4} marginTop={'8px'}>
             The calculator is configured with Antimatter option equation and allows you to estimate bull and bear token
             prices in various options. You can use it as the referral for the potential arbitrage opportunity.
           </TYPE.body>
         </AutoColumn>
-        <Divider />
         <AutoColumn gap="14px">
           <TYPE.smallHeader>Input</TYPE.smallHeader>
-          <NumberInputPanel
-            label="Underlying Target Currency Market Price"
-            onUserInput={price => setPrice(limitDigits(price))}
-            value={price}
-            showMaxButton={false}
-            id="price"
-            unit="USDT"
-            hideBalance
-          />
-          <InputWrapper>
+          <OutlineCard>
             <NumberInputPanel
-              label="Price Floor"
-              onUserInput={priceFloor => setPriceFloor(limitDigits(priceFloor))}
-              value={priceFloor}
+              label="Underlying Target Currency Market Price"
+              onUserInput={price => setPrice(limitDigits(price))}
+              value={price}
               showMaxButton={false}
-              id="pricefloor"
+              id="price"
               unit="USDT"
               hideBalance
             />
-            <NumberInputPanel
-              label="Price Ceiling"
-              onUserInput={priceCap => setPriceCap(limitDigits(priceCap))}
-              value={priceCap}
-              showMaxButton={false}
-              id="priceCeiling"
-              unit="USDT"
-              hideBalance
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <NumberInputPanel
-              label="Bull Issuance"
-              onUserInput={totalCall => setTotalCall(totalCall)}
-              value={totalCall}
-              showMaxButton={false}
-              id="callIssuance"
-              unit="Shares"
-              hideBalance
-            />
-            <NumberInputPanel
-              label="Bear Issuance"
-              onUserInput={totalPut => setTotalPut(totalPut)}
-              value={totalPut}
-              showMaxButton={false}
-              id="putIssuance"
-              unit="Shares"
-              hideBalance
-            />
-          </InputWrapper>
+            <InputWrapper>
+              <NumberInputPanel
+                label="Price Floor"
+                onUserInput={priceFloor => setPriceFloor(limitDigits(priceFloor))}
+                value={priceFloor}
+                showMaxButton={false}
+                id="pricefloor"
+                unit="USDT"
+                hideBalance
+              />
+              <NumberInputPanel
+                label="Price Ceiling"
+                onUserInput={priceCap => setPriceCap(limitDigits(priceCap))}
+                value={priceCap}
+                showMaxButton={false}
+                id="priceCeiling"
+                unit="USDT"
+                hideBalance
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <NumberInputPanel
+                label="Bull Issuance"
+                onUserInput={totalCall => setTotalCall(totalCall)}
+                value={totalCall}
+                showMaxButton={false}
+                id="callIssuance"
+                unit="Shares"
+                hideBalance
+              />
+              <NumberInputPanel
+                label="Bear Issuance"
+                onUserInput={totalPut => setTotalPut(totalPut)}
+                value={totalPut}
+                showMaxButton={false}
+                id="putIssuance"
+                unit="Shares"
+                hideBalance
+              />
+            </InputWrapper>
+          </OutlineCard>
+
           <TYPE.body color={theme.red1} fontSize={14} style={{ height: 16 }}>
             {error}
           </TYPE.body>
