@@ -60,7 +60,6 @@ const StyledSearch = styled.div`
 `
 
 const ButtonWrapper = styled(RowFixed)`
-  margin-left: 16px;
   ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-left: 0;
   `}
