@@ -8,10 +8,10 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   box-sizing: border-box;
+  gap: 32px;
 `
 
 const TabWrapper = styled.div<{ active?: boolean }>`
-  margin-right: 52px;
   border-bottom: ${({ active, theme }) => (active ? `1px solid ${theme.primary1}` : 'none')};
   width: 'fit-content';
   opacity: ${({ active }) => (active ? 1 : 0.4)};

@@ -40,6 +40,7 @@ import { ButtonOutlined } from 'components/Button'
 import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
 import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
 import Table, { Row } from 'components/Table'
+import useMediaWidth from 'hooks/useMediaWidth'
 
 const TableHeaders = [
   'Option ID',
@@ -102,7 +103,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 96px;
+  padding: 96px 20px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 48px 20px;
+`};
 `
 
 // export const ContentWrapper = styled.div`
@@ -179,6 +183,8 @@ export default function OptionTrade({
 
   const btcPrice = usePrice('BTC')
   const ethPrice = usePrice('ETH')
+
+  const match = useMediaWidth('upToSmall')
 
   useEffect(() => {
     setFilteredIndexes(currentIds)
@@ -261,13 +267,13 @@ export default function OptionTrade({
                 onSearch={handleSearch}
                 tokenList={tokenList}
               />
-              <ModeSwitch current={mode} setMode={setMode} />
+              {!match && <ModeSwitch current={mode} setMode={setMode} />}
             </Box>
 
             {filteredIndexes && (
               <>
                 <Grid container mt={'20px'} spacing={'20px'}>
-                  {mode === Mode.CARD &&
+                  {(mode === Mode.CARD || match) &&
                     filteredIndexes.map((optionId, idx) => (
                       <Grid item xs={12} md={4}>
                         {optionId ? (

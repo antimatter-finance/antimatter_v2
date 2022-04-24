@@ -211,6 +211,9 @@ const HeaderRow = styled(RowFixed)`
   height: ${({ theme }) => theme.headerHeight};
   position: fixed;
   z-index: 100;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none
+  `};
 `
 
 const HeaderLinks = styled(Row)`
@@ -565,7 +568,7 @@ const MobileHeader = styled.header`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: flex
-`};
+  `};
 `
 
 export default function Header() {
