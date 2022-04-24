@@ -23,7 +23,7 @@ const TogggleMenuWrapper = styled.nav`
   left: 0;
   width: 100vw;
   border-radius: 32px;
-  background: ${({ theme }) => theme.gradient2};
+  background: ${({ theme }) => theme.bg1};
   top: ${({ theme }) => theme.mobileHeaderHeight};
   height: calc(100vh - ${({ theme }) => theme.mobileHeaderHeight + ' - ' + theme.headerHeight});
   border: 1px solid ${({ theme }) => theme.bg3};
