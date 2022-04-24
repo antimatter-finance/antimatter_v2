@@ -20,7 +20,8 @@ import Pool from '../Pool'
 // `
 const Wrapper = styled(AutoColumn)`
   margin-top: 100px;
-  width: 560px;
+  width: 100%;
+  max-width: 600px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-top: 20px
     width: 100%;
@@ -29,7 +30,8 @@ const Wrapper = styled(AutoColumn)`
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between
+    justify-content: space-between;
+    padding: 0 20px;
   `}
 `
 

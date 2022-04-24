@@ -20,9 +20,9 @@ import { ReactComponent as AntimatterIcon } from 'assets/svg/antimatter_icon.svg
 import Copy from 'components/AccountDetails/Copy'
 
 const Wrapper = styled.div`
-  padding: 78px 0 88px;
-  width: 90vw;
-  max-width: 1284px;
+  padding: 96px 0;
+  width: 100%;
+  max-width: 1110px;
   display: flex;
   justify-content: center;
   min-height: calc(100vh - ${({ theme }) => theme.headerHeight});
