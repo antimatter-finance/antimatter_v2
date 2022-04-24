@@ -4,10 +4,10 @@ import React from 'react'
 import styled from 'styled-components'
 import OptionSwap from './OptionSwap'
 import AppBody, { BodyWrapper } from 'pages/AppBody'
-import { CustomLightSpinner, ExternalLink, TYPE, HideSmall, ShowSmall } from 'theme'
+import { CustomLightSpinner, ExternalLink, TYPE } from 'theme'
 //import Liquidity from './Liquidity'
 // import useTheme from 'hooks/useTheme'
-import { RowBetween, RowFixed } from 'components/Row'
+import { RowBetween } from 'components/Row'
 // import { ButtonEmpty } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 //import { USDT } from '../../constants'
@@ -16,7 +16,7 @@ import { AutoColumn } from 'components/Column'
 //import { OptionInterface } from './'
 import Loader from 'assets/svg/gray_loader.svg'
 import { Option, OptionPrice, useOption, useOptionPrice } from '../../state/market/hooks'
-import CurrencyLogo from 'components/CurrencyLogo'
+// import CurrencyLogo from 'components/CurrencyLogo'
 import { tryFormatAmount } from '../../state/swap/hooks'
 import { getEtherscanLink, shortenAddress } from 'utils'
 import { useActiveWeb3React } from 'hooks'
@@ -68,19 +68,19 @@ const Wrapper = styled.div`
 //   justify-content: flex-end;
 // `
 
-const Circle = styled.div`
-  margin-right: 16px;
-  border-radius: 50%;
-  border: 1px solid ${({ theme }) => theme.bg5};
-  background-color: ${({ theme }) => theme.bg4};
-  min-height: 32px;
-  min-width: 32px;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+// const Circle = styled.div`
+//   margin-right: 16px;
+//   border-radius: 50%;
+//   border: 1px solid ${({ theme }) => theme.bg5};
+//   background-color: ${({ theme }) => theme.bg4};
+//   min-height: 32px;
+//   min-width: 32px;
+//   width: 32px;
+//   height: 32px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `
 
 // const TabStyle = styled.button<{ selected?: boolean; isFirstChild?: boolean }>`
 //   outline: none;
@@ -177,14 +177,14 @@ const InfoAppBodyInner = styled(BodyWrapper)`
   `};
 `
 
-const Title = styled(TYPE.subHeader)`
-  white-space: nowrap;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    white-space: pre-wrap;
-    padding-right: 14px;
-    text-align: right
-  `};
-`
+// const Title = styled(TYPE.subHeader)`
+//   white-space: nowrap;
+//   ${({ theme }) => theme.mediaWidth.upToSmall`
+//     white-space: pre-wrap;
+//     padding-right: 14px;
+//     text-align: right
+//   `};
+// `
 
 // const TitleWrapper = styled(AutoColumn)`
 //   justify-items: center;

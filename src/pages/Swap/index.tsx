@@ -94,9 +94,9 @@ export default function Swap({
 }: {
   option: Option | undefined
   optionPrice: OptionPrice | undefined
-  setOptionType: (option: string) => void
+  setOptionType?: (option: string) => void
   setParentTXHash: (hash: string) => void
-  optionType: string
+  optionType?: string
 }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const { account, chainId } = useActiveWeb3React()
@@ -410,8 +410,8 @@ export default function Swap({
 
   const handleSwitchOptionType = useCallback(() => {
     const type = optionType === OptionField.CALL ? OptionField.PUT : OptionField.CALL
-    setOptionType(type)
-  }, [optionType])
+    setOptionType && setOptionType(type)
+  }, [optionType, setOptionType])
 
   return (
     <>
