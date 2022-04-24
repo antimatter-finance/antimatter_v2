@@ -252,7 +252,7 @@ export default function Redeem({
         <RedeemTokenPanel
           value={callTypedAmount ?? ''}
           onUserInput={setCallTypedAmount}
-          label={'Bull token'}
+          label={'Bear token'}
           currency={option?.put?.token}
           negativeMarginTop="-25px"
           currencyBalance={userPutBalance?.toExact().toString()}

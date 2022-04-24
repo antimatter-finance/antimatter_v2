@@ -16,7 +16,7 @@ const InputRow = styled.div<{ selected: boolean; halfWidth?: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 14px;
-  height: 3rem;
+  height: 60px;
   padding: ${({ selected }) => (selected ? '0 0.5rem 0 1rem' : '0 0.65rem 0 0.75rem')};
   width: ${({ halfWidth }) => (halfWidth ? '50%' : '55%')}};
   ${({ theme }) => theme.flexRowNoWrap}

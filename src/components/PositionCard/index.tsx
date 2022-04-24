@@ -249,18 +249,18 @@ export default function FullPositionCard({ index }: { index: string }) {
           <Box padding="24px 20px 32px">
             <AutoColumn gap="8px">
               <FixedHeightRow>
-                <Text fontSize={12} fontWeight={400} color={theme.text5}>
+                <Text fontSize={16} fontWeight={400} color={theme.text5}>
                   Bull token:
                 </Text>
-                <Text fontSize={12} fontWeight={400}>
+                <Text fontSize={16} fontWeight={400}>
                   {userCallBalance ? userCallBalance.toSignificant(4) : '-'}
                 </Text>
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={12} fontWeight={400} color={theme.text5}>
+                <Text fontSize={16} fontWeight={400} color={theme.text5}>
                   Bear token:
                 </Text>
-                <Text fontSize={12} fontWeight={400}>
+                <Text fontSize={16} fontWeight={400}>
                   {userPutBalance ? userPutBalance.toSignificant(4) : '-'}
                 </Text>
               </FixedHeightRow>

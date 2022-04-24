@@ -44,7 +44,7 @@ export default function Generate({
   const option = useOption(optionTypeIndex)
   // const [optionType, setOptionType] = useState('')
   const [callTyped, setCallTyped] = useState<string>()
-  // const [putTyped, setPutTyped] = useState<string>()
+  const [putTyped, setPutTyped] = useState<string>()
 
   const theme = useContext(ThemeContext)
 
@@ -253,6 +253,7 @@ export default function Generate({
           </RowBetween>
 
           <CallOrPutInputPanel
+            label={'Bull Token'}
             value={callTyped ?? ''}
             onUserInput={setCallTyped}
             currency={option?.call?.token || undefined}
@@ -267,14 +268,14 @@ export default function Generate({
             <Plus size="28" color={theme.text2} />
           </ColumnCenter>
           <CallOrPutInputPanel
-            value={callTyped ?? ''}
-            onUserInput={setCallTyped}
+            label={'Bear token'}
+            value={putTyped ?? ''}
+            onUserInput={setPutTyped}
             currency={option?.put?.token || undefined}
             id="generate-output-token"
             showCommonBases
             halfWidth={true}
             defaultSymbol={option?.put?.token.symbol}
-            negativeMarginTop={'-20px'}
             isCall={false}
             underlying={option?.underlying}
           />
