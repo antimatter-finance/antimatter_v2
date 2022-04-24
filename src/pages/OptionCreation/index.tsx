@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ButtonOutlinedPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
@@ -6,17 +7,17 @@ import { RowBetween } from '../../components/Row'
 import Creation from './Creation'
 import Pool from '../Pool'
 
-enum TAB {
-  CREATION = 'Option Creation',
-  LIQUIDITY = 'Liquidity'
-}
+// enum TAB {
+//   CREATION = 'Option Creation',
+//   LIQUIDITY = 'Liquidity'
+// }
 
-const TabButton = styled(ButtonOutlinedPrimary)<{ active?: boolean }>`
-  border: 1px solid #b2f355;
-  opacity: ${({ active }) => (active ? '1' : '0.5')};
-  width: 264px;
-  height: 48px;
-`
+// const TabButton = styled(ButtonOutlinedPrimary)<{ active?: boolean }>`
+//   border: 1px solid #b2f355;
+//   opacity: ${({ active }) => (active ? '1' : '0.5')};
+//   width: 264px;
+//   height: 48px;
+// `
 const Wrapper = styled(AutoColumn)`
   margin-top: 100px;
   width: 560px;
@@ -33,11 +34,13 @@ const Wrapper = styled(AutoColumn)`
 `
 
 export default function OptionCreation() {
-  const [curTab, setCurTab] = useState(TAB.CREATION)
+  // const [curTab, setCurTab] = useState(TAB.CREATION)
+
+  const { tab } = useParams<{ tab: string }>()
 
   return (
     <Wrapper gap={'28px'}>
-      <RowBetween>
+      {/* <RowBetween>
         <TabButton
           onClick={() => {
             setCurTab(TAB.CREATION)
@@ -55,10 +58,10 @@ export default function OptionCreation() {
         >
           {TAB.LIQUIDITY}
         </TabButton>
-      </RowBetween>
+      </RowBetween> */}
 
-      {curTab === TAB.CREATION && <Creation />}
-      {curTab === TAB.LIQUIDITY && <Pool />}
+      {tab === 'creation' && <Creation />}
+      {tab === 'liquidity' && <Pool />}
     </Wrapper>
   )
 }

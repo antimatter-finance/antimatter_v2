@@ -127,7 +127,14 @@ export default function ButtonSelect({
       )}
       <ButtonSelectStyle onClick={handleClick} selected={!!selectedId} disabled={disabled}>
         <RowBetween>
-          <div style={{ display: 'flex', alignItems: 'center', color: theme.text5, fontWeight: 400 }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              color: selectedId ? theme.text1 : theme.text5,
+              fontWeight: 400
+            }}
+          >
             {buttonContent}
           </div>
           {!disabled && <StyledDropDown />}
