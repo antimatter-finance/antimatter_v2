@@ -15,6 +15,9 @@ import CreationIcon from 'assets/images/creation-icon.png'
 import HistoryIcon from 'assets/images/history-icon.png'
 import { AutoRow } from 'components/Row'
 import Card from 'components/Card'
+import { Box, Typography } from '@mui/material'
+import { ReactComponent as AntimatterIcon } from 'assets/svg/antimatter_icon.svg'
+import Copy from 'components/AccountDetails/Copy'
 
 const Wrapper = styled.div`
   padding: 78px 0 88px;
@@ -117,9 +120,21 @@ export default function User() {
 
   const { data: myPosition, loading: myPositionLoading } = useMyPosition()
 
+  console.log(account)
+
   return (
     <Wrapper>
       <AppBody>
+        <Box display="flex" gap={'20px'} alignItems="center" mb={'60px'}>
+          <AntimatterIcon width="72px" height="72px" />
+          <Box>
+            <Typography sx={{ fontSize: 32, fontWeight: 700 }}>Unnamed</Typography>
+            <AutoRow>
+              <Typography sx={{ opacity: 0.5 }}>{account}</Typography>
+              {account && <Copy toCopy={account} fixedSize />}
+            </AutoRow>
+          </Box>
+        </Box>
         <SwitchTab onTabClick={handleTabClick} currentTab={currentTab} />
         {(currentTab === UserInfoTabs.CREATION && myCreation === undefined) ||
         (currentTab === UserInfoTabs.TRANSACTION && myTransactionLoading) ||
