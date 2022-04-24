@@ -231,13 +231,13 @@ export default function OptionTrade({
     return [
       <Box display="flex" alignItems="center">
         <Logo srcs={[BtcLogo]} alt="btc logo" style={{ marginRight: 8 }} />
-        <Text fontSize={20} color={theme.text1} fontWeight={400}>
+        <Text fontSize={match ? 14 : 20} color={theme.text1} fontWeight={400}>
           BTC ${btcPriceNum ? btcPriceNum.toFixed(2) : ''}
         </Text>
       </Box>,
       <Box display="flex" alignItems="center">
         <Logo srcs={[EthLogo]} alt="eth logo" style={{ marginRight: 8 }} />
-        <Text fontSize={20} color={theme.text1} fontWeight={400}>
+        <Text fontSize={match ? 14 : 20} color={theme.text1} fontWeight={400}>
           ETH ${ethPriceNum ? ethPriceNum.toFixed(2) : ''}
         </Text>
       </Box>
