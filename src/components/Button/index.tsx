@@ -51,10 +51,10 @@ export const ButtonPrimary = styled(Base)`
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.bg4};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.primary4};
+    background-color: ${({ theme }) => theme.primary2};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary2};
   }
   &:disabled {
     cursor: auto;

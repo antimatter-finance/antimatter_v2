@@ -25,11 +25,11 @@ export const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{
     align-items: ${({ alignitems }) => alignitems ?? 'center'};
     justify-content: center;
 
-    background-color: ${({ theme, color }) => color ?? theme.modalBG};
+    background-color: ${({ theme, color }) => color ?? theme.advancedBG};
     ${({ theme }) => theme.mediaWidth.upToSmall`
     height: calc(100% - ${theme.headerHeight});
     justify-content: flex-end;
-    padding-top: 0
+    padding-top: 0;
     `}
   }
 `
