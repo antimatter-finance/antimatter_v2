@@ -265,28 +265,29 @@ export default function OptionTrade({
             </Box>
 
             {filteredIndexes && (
-              <Grid container mt={'24px'}>
-                {mode === Mode.CARD &&
-                  filteredIndexes.map((optionId, idx) => (
-                    <Grid xs={12} md={4}>
-                      {optionId ? (
-                        <OptionCard
-                          optionId={optionId}
-                          key={optionId}
-                          buttons={
-                            <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
-                              Trade
-                            </ButtonPrimary>
-                          }
-                        />
-                      ) : (
-                        <OptionCardSkeleton key={optionId + idx} />
-                      )}
-                    </Grid>
-                  ))}
-
+              <>
+                <Grid container mt={'20px'} spacing={'20px'}>
+                  {mode === Mode.CARD &&
+                    filteredIndexes.map((optionId, idx) => (
+                      <Grid item xs={12} md={4}>
+                        {optionId ? (
+                          <OptionCard
+                            optionId={optionId}
+                            key={optionId}
+                            buttons={
+                              <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
+                                Trade
+                              </ButtonPrimary>
+                            }
+                          />
+                        ) : (
+                          <OptionCardSkeleton key={optionId + idx} />
+                        )}
+                      </Grid>
+                    ))}
+                </Grid>
                 {mode === Mode.TABLE && <Table header={TableHeaders} rowsComponent={rowsComponent} />}
-              </Grid>
+              </>
             )}
             {page.totalPages !== 0 && (
               <Pagination
@@ -338,7 +339,7 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
                   fontSize={20}
                   style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
                 >
-                  {`${option?.underlying?.symbol ?? '-'} Option`}
+                  {`${option?.underlying?.symbol ?? '-'}`}
                 </TYPE.mediumHeader>
 
                 <RowFixed>ID:&nbsp;{option?.underlying ? optionId : '-'}</RowFixed>
@@ -348,7 +349,7 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
             <AutoColumn gap="12px">
               {Object.keys(details).map(key => (
                 <RowBetween key={key}>
-                  <TYPE.smallGray>{key}:</TYPE.smallGray>
+                  <TYPE.body style={{ fontSize: 13, opacity: 0.6 }}>{key}</TYPE.body>
                   <TYPE.main
                     style={{
                       textAlign: 'right',
