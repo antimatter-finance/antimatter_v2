@@ -59,7 +59,7 @@ export default function Pool() {
           <SwapPoolTabs active={'liquidity'} />
 
           <AutoColumn gap="lg" justify="center">
-            <AutoColumn gap="32px" style={{ width: '100%' }}>
+            <AutoColumn gap="8px" style={{ width: '100%' }}>
               <TitleRow padding={'0'}>
                 <HideSmall>
                   <TYPE.mediumHeader style={{ justifySelf: 'flex-start' }}>Your Positions</TYPE.mediumHeader>
