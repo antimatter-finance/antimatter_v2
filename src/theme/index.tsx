@@ -50,7 +50,7 @@ export function colors(darkMode: boolean): Colors {
     // backgrounds / greys
     bg1: darkMode ? '#000000' : '#FFFFFF',
     bg2: darkMode ? '#191919' : '#F7F8FA',
-    bg3: darkMode ? '#252525' : '#EDEEF2',
+    bg3: darkMode ? '#252525' : 'rgba(37, 37, 37, 0.4)',
     bg4: darkMode ? '#303030' : '#CED0D9',
     bg5: darkMode ? '#A1A1A1' : '#888D9B',
 

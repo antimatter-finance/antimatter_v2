@@ -11,7 +11,7 @@ import { useNetwork } from 'hooks/useNetwork'
 // import { ButtonOutlinedPrimary } from 'components/Button'
 import { formatDexTradeLineData, DexTradeLineData } from 'utils/option/utils'
 import { TYPE } from 'theme'
-import { Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 
 const GraphWrapper = styled.div`
   width: 100%;
@@ -69,20 +69,6 @@ const CurrentPrice = styled.div`
   position: absolute;
   right: 23px;
   top: 42px;
-  white-space: nowrap;
-  font-size: 18px;
-  font-weight: 400;
-  font-family: Futura PT;
-  color: ${({ theme }) => theme.text3};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    white-space: pre-wrap;
-    text-align: right;
-    font-size: 14px;
-    font-weight: 400;
-  `}
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-size: 12px;
-  `}
 `
 
 const Tabs = {
@@ -289,15 +275,18 @@ export default function OptionSwap({
           <GraphWrapper>
             {graphLoading && <NetworkPendingSpinner paddingTop="0" />}
             <CurrentPrice>
-              <TYPE.gray fontSize={16}>
-                Current price: ${' '}
-                {currentTab === OptionField.CALL
-                  ? priceCall
-                    ? priceCall.toSignificant(6)
-                    : '-'
-                  : pricePut
-                  ? pricePut.toSignificant(6)
-                  : '-'}
+              <TYPE.gray fontSize={16} fontWeight={400}>
+                Current price:{' '}
+                <span style={{ color: '#000000' }}>
+                  $
+                  {currentTab === OptionField.CALL
+                    ? priceCall
+                      ? priceCall.toSignificant(6)
+                      : '-'
+                    : pricePut
+                    ? pricePut.toSignificant(6)
+                    : '-'}
+                </span>
               </TYPE.gray>
             </CurrentPrice>
             {/* <SwitchTab
