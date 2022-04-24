@@ -17,7 +17,7 @@ import { ReactComponent as BSCInvert } from '../../assets/svg/binance.svg'
 import { ReactComponent as BSCSelected } from '../../assets/svg/bsc_logo_selected.svg'
 import { ReactComponent as Arbitrum } from '../../assets/svg/arbitrum_logo.svg'
 import { ReactComponent as AVAX } from '../../assets/svg/avax_logo.svg'
-import { ReactComponent as Plus } from '../../assets/svg/plus.svg'
+// import { ReactComponent as Plus } from '../../assets/svg/plus.svg'
 import useTheme from 'hooks/useTheme'
 import ToggleMenu from './ToggleMenu'
 import { ReactComponent as AntimatterIcon } from 'assets/svg/antimatter_icon.svg'
@@ -44,19 +44,21 @@ interface Tab extends TabContent {
 export const tabs: Tab[] = [
   { title: 'Option Trading', route: 'option_trading' },
   { title: 'Option Creation', route: 'option_creation' },
+  { title: 'Governance', link: 'https://governance.antimatter.finance' },
+  { title: 'Calculator', route: 'calculator' },
   // { title: 'Farm', route: 'farm' },
-  {
-    title: 'Tools',
-    subTab: [
-      { title: 'Calculator', route: '/calculator' },
-      { title: 'Statistics', route: '/statistics' }
-    ]
-  },
+  // {
+  //   title: 'Tools',
+  //   subTab: [
+  // { title: 'Calculator', route: '/calculator' },
+  // { title: 'Statistics', route: '/statistics' }
+  //   ]
+  // },
   {
     title: 'About',
     subTab: [
       { title: 'Docs', link: 'https://docs.antimatter.finance/' },
-      { title: 'Governance', link: 'https://governance.antimatter.finance' },
+      // { title: 'Governance', link: 'https://governance.antimatter.finance' },
       {
         title: 'Auditing Report',
         link:
@@ -170,7 +172,7 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  padding: 24px 0 0;
+  padding: 24px 0;
   z-index: 99;
   background-color: ${({ theme }) => theme.bg1};
   height: ${({ theme }) => theme.headerHeight};
@@ -180,7 +182,6 @@ const HeaderFrame = styled.div`
     width: 100%;
     position: relative;
   `};
-
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         padding: 0.5rem 1rem;
   `}
@@ -195,50 +196,10 @@ const HeaderControls = styled.div`
   margin-right: 2rem;
 `
 
-// ${({ theme }) => theme.mediaWidth.upToSmall`
-// height: ${theme.headerHeight};
-// flex-direction: row;
-// align-items: center;
-// justify-self: center;
-// padding: 1rem;
-// position: fixed;
-// bottom: 0px;
-// left: 0px;
-// width: 100%;
-// z-index: 99;
-// background-color: ${theme.bg2};
-// justify-content: center;
-// border-top: 1px solid;
-// border-top-color: #303030;
-// `}
-
-// const HeaderElement = styled.div<{
-//   show?: boolean
-// }>`
-//   display: flex;
-
-//   /* addresses safari's lack of support for "gap" */
-//   & > *:not(:first-child) {
-//     margin-left: 8px;
-//   }
-
-//   ${({ theme }) => theme.mediaWidth.upToLarge`
-//     align-items: center;
-//   `};
-//   & > div {
-//     border: 1px solid ${({ theme, show }) => (show ? theme.text1 : 'transparent')};
-//     border-radius: 4px;
-//     height: 32px;
-//     display: flex;
-//     align-items: center;
-//     font-size: 13px;
-//   }
-// `
-
 const HeaderRow = styled(RowFixed)`
   width: 100%;
   padding-left: 2rem;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     height: ${({ theme }) => theme.headerHeight};
@@ -254,7 +215,9 @@ const HeaderRow = styled(RowFixed)`
 `
 
 const HeaderLinks = styled(Row)`
+  margin-left: 80px;
   justify-content: center;
+  align-items: center;
   width: auto;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 1rem 0 1rem 1rem;
@@ -275,7 +238,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   height: 36px;
   background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  width:100%`}
+width:100%`}
 `
 
 const UNIAmount = styled.div`
@@ -297,19 +260,6 @@ const UNIWrapper = styled.span`
   width: fit-content;
   position: relative;
 `
-
-// const HideLarge = styled(RowFixed)`
-//   display: none;
-//   ${({ theme }) => theme.mediaWidth.upToLarge`
-//     display: inherit;
-//   `};
-// `
-
-// const ShowLarge = styled(RowFixed)`
-//   ${({ theme }) => theme.mediaWidth.upToLarge`
-//     display: none;
-//   `};
-// `
 
 const NetworkCard = styled.div<{ color?: string }>`
   color: #000000;
@@ -370,16 +320,15 @@ const activeClassName = 'ACTIVE'
 const StyledNavLink = styled(NavLink).attrs({
   activeClassName
 })`
-  align-items: flex-start;
+  align-items: center;
   outline: none;
   cursor: pointer;
   text-decoration: none;
   color: ${({ theme }) => theme.text5};
   font-size: 14px;
   width: fit-content;
-  margin: 0 18px;
   font-weight: 400;
-  padding: 10px 0 27px;
+  padding: 32px 0;
   white-space: nowrap;
   transition: 0.5s;
   ${({ theme }) => theme.flexRowNoWrap}
@@ -387,14 +336,16 @@ const StyledNavLink = styled(NavLink).attrs({
     color: ${({ theme }) => theme.text1};
     border-bottom: 1px solid ${({ theme }) => theme.text1};
   }
-
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.primary1)};
-  }
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin: 0 10px;
-  `};
+  };
+  margin: 0 22px;
+`
+
+const StyledExternalHeaderLink = styled(ExternalHeaderLink)`
+  margin: 0 22px;
+  padding: 32px 0;
 `
 
 const StyledDropdown = styled.div`
@@ -407,7 +358,7 @@ const StyledDropdown = styled.div`
   width: fit-content;
   margin: 0 18px;
   font-weight: 400;
-  padding: 10px 0 27px;
+  padding: 32px 0;
   transition: 0.5s;
   position: relative;
   ${({ theme }) => theme.flexRowNoWrap}
@@ -434,7 +385,7 @@ const StyledDropdown = styled.div`
     }
   }
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin: 0 10px;
+    margin: 0 22px;
   `};
 `
 const Dropdown = styled.div<{ width?: string }>`
@@ -447,8 +398,8 @@ const Dropdown = styled.div<{ width?: string }>`
   flex-direction: column;
   width: ${({ width }) => width ?? '172px'};
   a {
-    color: #ffffff;
-    background-color: ${({ theme }) => theme.bg2};
+    color: #000000;
+    background-color: ${({ theme }) => theme.mainBG};
     text-decoration: none;
     padding: 14px 17px;
     border-bottom: 1px solid ${({ theme }) => theme.text5}
@@ -491,9 +442,6 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const StyledLogo = styled(Logo)`
-  margin-top: 5px;
-`
 const UserButtonWrap = styled.div`
   margin-left: 5px;
   position: relative;
@@ -692,9 +640,9 @@ export default function Header() {
                 return (
                   <React.Fragment key={title}>
                     {link ? (
-                      <ExternalHeaderLink href={link} key={title}>
+                      <StyledExternalHeaderLink href={link} key={title}>
                         {title}
-                      </ExternalHeaderLink>
+                      </StyledExternalHeaderLink>
                     ) : (
                       <StyledNavLink id={`stake-nav-link`} to={'/' + route} key={route}>
                         {title}
@@ -822,11 +770,11 @@ export default function Header() {
 
 function LogoButton() {
   return (
-    <RowFlat style={{ alignItems: 'flex-start' }}>
+    <RowFlat style={{ alignItems: 'center' }}>
       <Link to={'/'}>
-        <StyledLogo />
+        <Logo />
       </Link>
-      <StyledDropdown style={{ color: '#ffffff', padding: '6px 25px 18px 20px', margin: 0 }}>
+      {/* <StyledDropdown style={{ color: '#ffffff', padding: '6px 25px 18px 20px', margin: 0 }}>
         <Plus style={{ margin: 'auto auto' }} />
         <Dropdown>
           <ExternalLink href={'https://v1.antimatter.finance'}>Antimatter Option V1</ExternalLink>
@@ -834,7 +782,7 @@ function LogoButton() {
             <span style={{ whiteSpace: 'nowrap' }}>Antimatter NFT</span>
           </ExternalLink>
         </Dropdown>
-      </StyledDropdown>
+      </StyledDropdown> */}
     </RowFlat>
   )
 }
