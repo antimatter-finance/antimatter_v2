@@ -14,6 +14,7 @@ import PositionIcon from 'assets/images/position-icon.png'
 import CreationIcon from 'assets/images/creation-icon.png'
 import HistoryIcon from 'assets/images/history-icon.png'
 import { AutoRow } from 'components/Row'
+import Card from 'components/Card'
 
 const Wrapper = styled.div`
   padding: 78px 0 88px;
@@ -153,10 +154,10 @@ export default function User() {
             </ShowSmall>
           </>
         ) : (
-          <>
+          <Card margin="24px 0 auto" minHeight={480}>
             {currentTab === UserInfoTabs.POSITION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT \nADDRESS', '']} rows={myPosition} />
+                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT ADDRESS', '']} rows={myPosition} />
                 {myPosition !== undefined && !myPosition.length && (
                   <p style={{ margin: 50 }}>You have no position at the moment</p>
                 )}
@@ -164,7 +165,7 @@ export default function User() {
             )}
             {currentTab === UserInfoTabs.CREATION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT \nADDRESS', '']} rows={myCreation ?? []} />
+                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT ADDRESS', '']} rows={myCreation ?? []} />
 
                 {myCreation !== undefined && !myCreation.length && (
                   <p style={{ margin: 50 }}>You have no creation at the moment</p>
@@ -187,7 +188,7 @@ export default function User() {
                 )}
               </>
             )}
-          </>
+          </Card>
         )}
       </AppBody>
     </Wrapper>
