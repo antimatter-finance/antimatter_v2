@@ -4,7 +4,7 @@ import { ButtonEmpty } from 'components/Button'
 
 const Wrapper = styled.div`
   width: 100%;
-  border-bottom: 1px solid ${({ theme }) => theme.advancedBG};
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   box-sizing: border-box;
@@ -15,7 +15,7 @@ const TabWrapper = styled.div<{ active?: boolean }>`
   border-bottom: ${({ active, theme }) => (active ? `1px solid ${theme.primary1}` : 'none')};
   width: 'fit-content';
   opacity: ${({ active }) => (active ? 1 : 0.4)};
-  padding: 28px 0;
+  padding: 30px 0;
 `
 
 export default function Tab({
