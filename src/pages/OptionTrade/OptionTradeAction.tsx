@@ -186,13 +186,13 @@ const Title = styled(TYPE.subHeader)`
   `};
 `
 
-const TitleWrapper = styled(AutoColumn)`
-  justify-items: center;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-items: end;
-    padding-right: 14px
-  `};
-`
+// const TitleWrapper = styled(AutoColumn)`
+//   justify-items: center;
+//   ${({ theme }) => theme.mediaWidth.upToSmall`
+//     justify-items: end;
+//     padding-right: 14px
+//   `};
+// `
 
 export default function OptionTradeAction({ optionId }: { optionId?: string }) {
   //const { chainId } = useActiveWeb3React()
@@ -226,7 +226,7 @@ export default function OptionTradeAction({ optionId }: { optionId?: string }) {
               </Typography>
             </NavLink>
 
-            <TitleWrapper gap="8px">
+            {/* <TitleWrapper gap="8px">
               {option && (
                 <RowFixed>
                   <HideSmall>
@@ -267,13 +267,13 @@ export default function OptionTradeAction({ optionId }: { optionId?: string }) {
                   </StyledExternalLink>
                 </RowFixed>
               )}
-            </TitleWrapper>
-            <HideSmall>
+            </TitleWrapper> */}
+            {/* <HideSmall>
               <div style={{ width: 113 }} />
-            </HideSmall>
+            </HideSmall> */}
           </RowBetween>
           {/* <SwitchTab tab={tab} setTab={handleSetTab} /> */}
-          <OptionSwap optionPrice={optionPrice} option={option} />
+          <OptionSwap optionPrice={optionPrice} option={option} optionId={optionId} />
           {/*{tab === TABS.LIQUIDITY && <Liquidity currencyA={currencyA} currencyB={currencyB} pair={pair} />}*/}
         </Wrapper>
       ) : (

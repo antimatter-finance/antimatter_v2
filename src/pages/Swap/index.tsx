@@ -88,13 +88,15 @@ const SwapAppBody = styled(BodyWrapper)`
 export default function Swap({
   option,
   optionPrice,
-  // handleOptionType,
-  setParentTXHash
+  setOptionType,
+  setParentTXHash,
+  optionType
 }: {
   option: Option | undefined
   optionPrice: OptionPrice | undefined
-  // handleOptionType: (option: string) => void
+  setOptionType: (option: string) => void
   setParentTXHash: (hash: string) => void
+  optionType: string
 }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const { account, chainId } = useActiveWeb3React()
@@ -120,7 +122,7 @@ export default function Swap({
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [auction, setAuction] = useState<string>(Auction.BUY)
-  const [optionType, setOptionType] = useState<string>(OptionField.CALL)
+  // const [optionType, setOptionType] = useState<string>(OptionField.CALL)
 
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],

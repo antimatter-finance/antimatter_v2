@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { createChart, IChartApi, ISeriesApi, LineStyle } from 'lightweight-charts'
 import styled from 'styled-components'
@@ -11,7 +11,11 @@ import { useNetwork } from 'hooks/useNetwork'
 // import { ButtonOutlinedPrimary } from 'components/Button'
 import { formatDexTradeLineData, DexTradeLineData } from 'utils/option/utils'
 import { TYPE } from 'theme'
-import { Grid, Typography } from '@mui/material'
+import { Grid } from '@mui/material'
+import { useTotalSupply } from '../../data/TotalSupply'
+import { tryFormatAmount } from '../../state/swap/hooks'
+import { Typography, Box } from '@mui/material'
+import { shortenAddress } from 'utils'
 
 const GraphWrapper = styled.div`
   width: 100%;
@@ -41,19 +45,19 @@ const Chart = styled.div`
 //   position: relative;
 // `
 
-const ButtonGroup = styled.div`
-  width: 100%;
-  display: flex;
-  margin-bottom: 24px;
-  button:first-child {
-    margin-right: 10px;
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  button{
-    font-size: 14px
-  }
-  `}
-`
+// const ButtonGroup = styled.div`
+//   width: 100%;
+//   display: flex;
+//   margin-bottom: 24px;
+//   button:first-child {
+//     margin-right: 10px;
+//   }
+//   ${({ theme }) => theme.mediaWidth.upToMedium`
+//   button{
+//     font-size: 14px
+//   }
+//   `}
+// `
 // const Button = styled(ButtonOutlinedPrimary)<{ isActive: boolean }>`
 //   flex-grow: 0;
 //   padding: 6px 14px;
@@ -71,23 +75,20 @@ const CurrentPrice = styled.div`
   top: 42px;
 `
 
-const Tabs = {
-  CALL: 'Bull Token',
-  PUT: 'Bear Token'
-}
-
 export default function OptionSwap({
+  optionId,
   option,
   // handleOptionType,
   optionPrice
 }: {
+  optionId: string
   option?: Option
   // handleOptionType: (option: string) => void
   optionPrice: OptionPrice | undefined
 }) {
   const transactions = useSelector((store: any) => store.transactions)
   const { chainId } = useActiveWeb3React()
-  const [currentTab] = useState<keyof typeof Tabs>('CALL')
+  const [currentTab, setCurrentTab] = useState<string>('CALL')
   const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
   // const [isMarketPriceChart, setIsMarketPriceChart] = useState(true)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
@@ -101,6 +102,8 @@ export default function OptionSwap({
 
   const priceCall = optionPrice?.priceCall
   const pricePut = optionPrice?.pricePut
+  const callTotalSupply = useTotalSupply(option?.call?.token)
+  const putTotalSupply = useTotalSupply(option?.put?.token)
 
   const {
     httpHandlingFunctions: { errorFunction, pendingFunction, pendingCompleteFunction },
@@ -172,18 +175,18 @@ export default function OptionSwap({
       height: 328,
       layout: {
         backgroundColor: '#FFFFFF',
-        textColor: '#FFFFFF',
+        textColor: '#000000',
         fontSize: 12,
         fontFamily: 'Roboto'
       },
       grid: {
         vertLines: {
           style: LineStyle.Dotted,
-          color: 'rgba(255, 255, 255, 0.4)'
+          color: 'rgba(0, 0, 0, 0.4)'
         },
         horzLines: {
           style: LineStyle.Dotted,
-          color: 'rgba(255, 255, 255, 0.4)'
+          color: 'rgba(0, 0, 0, 0.4)'
         }
       }
     })
@@ -252,12 +255,29 @@ export default function OptionSwap({
   // const handleMarketPriceChart = useCallback(() => setIsMarketPriceChart(true), [])
   // const handleModalChart = useCallback(() => setIsMarketPriceChart(false), [])
 
-  // const handleTabClick = useCallback(
-  //   (tab: string) => () => {
-  //     setCurrentTab(tab as keyof typeof Tabs)
-  //   },
-  //   []
-  // )
+  const optionInformation = useMemo(() => {
+    if (!option || !priceCall || !pricePut) return
+
+    const range = {
+      cap: tryFormatAmount(option?.priceCap, option?.currency ?? undefined),
+      floor: tryFormatAmount(option?.priceFloor, option?.currency ?? undefined)
+    }
+
+    const address = currentTab === 'CALL' ? option?.callToken?.address : option?.putToken?.address
+
+    return {
+      ['Pool ID']: optionId || '-',
+      [`${currentTab} Token Contract Address`]: address && shortenAddress(address, 6),
+      ['Option Price Range']: `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` || '',
+      [`${currentTab} Token Issuance`]:
+        currentTab === 'CALL'
+          ? '$' + callTotalSupply?.toFixed(2).toString()
+          : '$' + putTotalSupply?.toFixed(2).toString(),
+      ['Underlying Assets']: `${option.underlying?.symbol}, ${option.currency?.symbol}` || '-',
+      [`${currentTab} Token Market Price`]:
+        currentTab === 'CALL' ? '$' + priceCall.toSignificant(6) : '$' + pricePut.toSignificant(6)
+    }
+  }, [optionId, currentTab, option, callTotalSupply, putTotalSupply, priceCall, pricePut])
 
   return (
     <>
@@ -269,6 +289,8 @@ export default function OptionSwap({
             // handleOptionType={handleOptionType}
             option={option}
             setParentTXHash={handleHash}
+            optionType={currentTab}
+            setOptionType={setCurrentTab}
           />
         </Grid>
         <Grid item xs={12} md={8}>
@@ -289,24 +311,33 @@ export default function OptionSwap({
                 </span>
               </TYPE.gray>
             </CurrentPrice>
-            {/* <SwitchTab
-            onTabClick={handleTabClick}
-            currentTab={currentTab}
-            tabs={Tabs}
-            tabStyle={{ fontFamily: 'Futura PT', fontSize: 20, fontWeight: 500 }}
-          /> */}
-
-            <ButtonGroup>
-              {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
-              <TYPE.body fontWeight="700" fontSize={24}>
-                Call Token
-              </TYPE.body>
-              {/* <Button isActive={!isMarketPriceChart} onClick={handleModalChart}>
+            {/* <ButtonGroup> */}
+            {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
+            <TYPE.body fontWeight="700" fontSize={24} marginBottom={24}>
+              {currentTab} Token
+            </TYPE.body>
+            {/* <Button isActive={!isMarketPriceChart} onClick={handleModalChart}>
               Price Modeling Prediction
             </Button> */}
-            </ButtonGroup>
+            {/* </ButtonGroup> */}
 
             <Chart id="chart" />
+            <Box mt={'24px'}>
+              <Typography fontSize={12} fontWeight={600} mb="12px">
+                Option Information
+              </Typography>
+              <Grid container rowSpacing={'8px'}>
+                {optionInformation &&
+                  Object.keys(optionInformation).map((key, idx) => (
+                    <Grid key={idx} item xs={6}>
+                      <Typography fontSize={12}>
+                        <span style={{ opacity: 0.4 }}>{key}: </span>
+                        {optionInformation[key]}
+                      </Typography>
+                    </Grid>
+                  ))}
+              </Grid>
+            </Box>
           </GraphWrapper>
         </Grid>
       </Grid>
