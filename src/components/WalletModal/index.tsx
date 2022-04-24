@@ -42,7 +42,7 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   width: 100%;
-  background: ${({ theme }) => theme.gradient1};
+  background: ${({ theme }) => theme.bg1};
 `
 
 const HeaderRow = styled.div`
