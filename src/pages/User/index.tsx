@@ -157,7 +157,7 @@ export default function User() {
           <Card margin="24px 0 auto" minHeight={480}>
             {currentTab === UserInfoTabs.POSITION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT ADDRESS', '']} rows={myPosition} />
+                <Table header={['Option', 'Type', 'Amount', 'Contract Address', '']} rows={myPosition} />
                 {myPosition !== undefined && !myPosition.length && (
                   <p style={{ margin: 50 }}>You have no position at the moment</p>
                 )}
@@ -165,7 +165,7 @@ export default function User() {
             )}
             {currentTab === UserInfoTabs.CREATION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT ADDRESS', '']} rows={myCreation ?? []} />
+                <Table header={['Option', 'Type', 'Amount', 'Contract Address', '']} rows={myCreation ?? []} />
 
                 {myCreation !== undefined && !myCreation.length && (
                   <p style={{ margin: 50 }}>You have no creation at the moment</p>
@@ -175,7 +175,7 @@ export default function User() {
 
             {currentTab === UserInfoTabs.TRANSACTION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'PRICE', 'ACTION']} rows={myTransaction} />
+                <Table header={['Option', 'Type', 'Amount', 'Price', 'Action']} rows={myTransaction} />
                 {myTransactionPage.totalPages !== 0 && (
                   <Pagination
                     page={myTransactionPage.currentPage}
