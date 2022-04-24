@@ -57,22 +57,9 @@ export enum UserInfoTabs {
   TRANSACTION = 'my_transaction'
 }
 export const UserInfoTabRoute = {
-  [UserInfoTabs.POSITION]: (
-    <AutoRow>
-      <Image src={PositionIcon} alt="my-position-icon" style={{ marginRight: 12 }} /> My Position
-    </AutoRow>
-  ),
-  [UserInfoTabs.CREATION]: (
-    <AutoRow>
-      <Image src={CreationIcon} alt="my-creation-icon" style={{ marginRight: 12 }} /> My Creation
-    </AutoRow>
-  ),
-  [UserInfoTabs.TRANSACTION]: (
-    <AutoRow>
-      <Image src={HistoryIcon} alt="my-history-icon" style={{ marginRight: 12 }} />
-      History
-    </AutoRow>
-  )
+  [UserInfoTabs.POSITION]: 'My Position',
+  [UserInfoTabs.CREATION]: 'My Creation',
+  [UserInfoTabs.TRANSACTION]: 'History'
 }
 
 // function randTime() {
@@ -154,7 +141,7 @@ export default function User() {
             </ShowSmall>
           </>
         ) : (
-          <Card margin="24px 0 auto" minHeight={480}>
+          <Card margin="24px 0 auto" minHeight={480} padding="40px 25px">
             {currentTab === UserInfoTabs.POSITION && (
               <>
                 <Table header={['Option', 'Type', 'Amount', 'Contract Address', '']} rows={myPosition} />
@@ -204,13 +191,26 @@ function SwitchTab({
   onTabClick: (tab: UserInfoTabs) => () => void
   style?: CSSProperties
 }) {
+  const accountIcons = {
+    [UserInfoTabs.POSITION]: PositionIcon,
+    [UserInfoTabs.CREATION]: CreationIcon,
+    [UserInfoTabs.TRANSACTION]: HistoryIcon
+  }
+
   return (
     <SwitchTabWrapper style={style}>
       {Object.keys(UserInfoTabRoute).map(tab => {
         const tabName = UserInfoTabRoute[tab as keyof typeof UserInfoTabRoute]
         return (
           <Tab key={tab} onClick={onTabClick(tab as UserInfoTabs)} selected={currentTab === tab}>
-            {tabName}
+            <AutoRow>
+              <Image
+                src={accountIcons[tab as keyof typeof UserInfoTabRoute]}
+                alt="my-position-icon"
+                style={{ marginRight: '12px' }}
+              />
+              {tabName}
+            </AutoRow>
           </Tab>
         )
       })}

@@ -19,7 +19,7 @@ export const Tab = styled.button<{ selected: boolean }>`
   font-weight: 400;
   color: ${({ theme }) => theme.text1};
   opacity: ${({ selected, theme }) => (selected ? 1 : 0.4)};
-  border-bottom: 2px solid ${({ selected, theme }) => (selected ? theme.primary4 : 'transparent')};
+  border-bottom: 1px solid ${({ selected, theme }) => (selected ? theme.primary1 : 'transparent')};
   margin-bottom: -1px;
   transition: 0.3s;
   cursor: pointer;
