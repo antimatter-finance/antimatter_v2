@@ -72,6 +72,7 @@ const StyledUnit = styled.div`
   font-size: 16px;
   font-weight: 400;
   margin-right: 6px;
+  color: #000000;
 `
 
 const Container = styled.div``

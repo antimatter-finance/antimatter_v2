@@ -18,12 +18,12 @@ const InputWrapper = styled(RowBetween)`
   }
 `
 
-export const Divider = styled.div`
-  width: calc(100% + 48px);
-  height: 0;
-  margin-left: -24px;
-  border-bottom: 1px solid ${({ theme }) => theme.bg4};
-`
+// export const Divider = styled.div`
+//   width: calc(100% + 48px);
+//   height: 0;
+//   margin-left: -24px;
+//   border-bottom: 1px solid ${({ theme }) => theme.bg4};
+// `
 
 enum ERROR {
   EMPTY_PRICE = 'Price cannot be 0',
@@ -92,8 +92,8 @@ export default function Calculator() {
           </TYPE.body>
         </AutoColumn>
         <AutoColumn gap="14px">
-          <TYPE.smallHeader>Input</TYPE.smallHeader>
-          <OutlineCard>
+          <TYPE.body>Input</TYPE.body>
+          <OutlineCard padding="24px 20px">
             <NumberInputPanel
               label="Underlying Target Currency Market Price"
               onUserInput={price => setPrice(limitDigits(price))}
@@ -103,7 +103,7 @@ export default function Calculator() {
               unit="USDT"
               hideBalance
             />
-            <InputWrapper>
+            <InputWrapper style={{ marginTop: 24 }}>
               <NumberInputPanel
                 label="Price Floor"
                 onUserInput={priceFloor => setPriceFloor(limitDigits(priceFloor))}
@@ -123,7 +123,7 @@ export default function Calculator() {
                 hideBalance
               />
             </InputWrapper>
-            <InputWrapper>
+            <InputWrapper style={{ marginTop: 24 }}>
               <NumberInputPanel
                 label="Bull Issuance"
                 onUserInput={totalCall => setTotalCall(totalCall)}
@@ -149,47 +149,50 @@ export default function Calculator() {
             {error}
           </TYPE.body>
         </AutoColumn>
-        <Divider />
         <AutoColumn gap="16px">
-          <TYPE.smallHeader>Output</TYPE.smallHeader>
-          <InputWrapper>
-            <AutoColumn gap="4px">
-              <TYPE.main color={theme.text3} fontSize={14}>
-                Price of Bull token
-              </TYPE.main>
-              <Card
-                style={{
-                  backgroundColor: theme.bg2,
-                  width: '100%',
-                  padding: '1rem',
-                  height: '3rem',
-                  borderRadius: '14px'
-                }}
-              >
-                <RowBetween style={{ height: '100%' }}>
-                  {priceCall ? priceCall : <span style={{ color: theme.text3 }}>0.000000</span>} <span>USDT</span>
-                </RowBetween>
-              </Card>
-            </AutoColumn>
-            <AutoColumn gap="4px">
-              <TYPE.main color={theme.text3} fontSize={14}>
-                Price of Bull token
-              </TYPE.main>
-              <Card
-                style={{
-                  backgroundColor: theme.bg2,
-                  width: '100%',
-                  padding: '1rem',
-                  height: '3rem',
-                  borderRadius: '14px'
-                }}
-              >
-                <RowBetween style={{ height: '100%' }}>
-                  {pricePut ? pricePut : <span style={{ color: theme.text3 }}>0.000000</span>} <span>USDT</span>
-                </RowBetween>
-              </Card>
-            </AutoColumn>
-          </InputWrapper>
+          <TYPE.body>Output</TYPE.body>
+          <OutlineCard padding="24px 20px">
+            <InputWrapper>
+              <AutoColumn gap="4px">
+                <TYPE.body color={theme.text5} fontSize={12}>
+                  Price of Bull token
+                </TYPE.body>
+                <Card
+                  style={{
+                    backgroundColor: theme.bg2,
+                    width: '100%',
+                    padding: '1rem',
+                    height: '3rem',
+                    borderRadius: '14px'
+                  }}
+                >
+                  <RowBetween style={{ height: '100%' }}>
+                    {priceCall ? priceCall : <span style={{ color: theme.text3 }}>0.000000</span>}{' '}
+                    <span style={{ color: '#000000' }}>USDT</span>
+                  </RowBetween>
+                </Card>
+              </AutoColumn>
+              <AutoColumn gap="4px">
+                <TYPE.body color={theme.text5} fontSize={12}>
+                  Price of Bull token
+                </TYPE.body>
+                <Card
+                  style={{
+                    backgroundColor: theme.bg2,
+                    width: '100%',
+                    padding: '1rem',
+                    height: '3rem',
+                    borderRadius: '14px'
+                  }}
+                >
+                  <RowBetween style={{ height: '100%' }}>
+                    {pricePut ? pricePut : <span style={{ color: theme.text3 }}>0.000000</span>}{' '}
+                    <span style={{ color: '#000000' }}>USDT</span>
+                  </RowBetween>
+                </Card>
+              </AutoColumn>
+            </InputWrapper>
+          </OutlineCard>
         </AutoColumn>
       </AutoColumn>
     </AppBody>
