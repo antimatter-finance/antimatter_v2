@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk'
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { Check, ChevronDown } from 'react-feather'
 import { Link, NavLink, useHistory, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
@@ -8,7 +8,7 @@ import { darken } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { ButtonText, ExternalHeaderLink, ExternalLink, HideMedium, StyledLink, TYPE } from '../../theme'
-import Row, { RowFixed, RowBetween, RowFlat } from '../Row'
+import Row, { RowFixed, RowFlat } from '../Row'
 import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
 import { ReactComponent as Logo } from '../../assets/svg/antimatter_logo.svg'
@@ -171,27 +171,27 @@ export const SUPPORTED_NETWORKS: {
 
 export const headerHeightDisplacement = '32px'
 
-const HeaderFrame = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: row;
-  width: 100%;
-  top: 0;
-  position: relative;
-  padding: 24px 0;
-  z-index: 99;
-  background-color: ${({ theme }) => theme.bg1};
-  height: ${({ theme }) => theme.headerHeight};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    padding: 0 1rem;
-    width: 100%;
-    position: relative;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
-`
+// const HeaderFrame = styled.div`
+//   display: flex;
+//   justify-content: flex-start;
+//   flex-direction: row;
+//   width: 100%;
+//   top: 0;
+//   position: relative;
+//   padding: 24px 0;
+//   z-index: 99;
+//   background-color: ${({ theme }) => theme.bg1};
+//   height: ${({ theme }) => theme.headerHeight};
+//   ${({ theme }) => theme.mediaWidth.upToMedium`
+//     grid-template-columns: 1fr;
+//     padding: 0 1rem;
+//     width: 100%;
+//     position: relative;
+//   `};
+//   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+//         padding: 0.5rem 1rem;
+//   `}
+// `
 
 const HeaderControls = styled.div`
   display: flex;
@@ -207,17 +207,10 @@ const HeaderRow = styled(RowFixed)`
   padding-left: 2rem;
   align-items: center;
   justify-content: space-between;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    height: ${({ theme }) => theme.headerHeight};
-    background-color: rgb(25, 25, 25);
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    left:0 ;
-    z-index: 100;
-    padding: 0;
-    justify-content: center
-  `};
+  background-color: ${({ theme }) => theme.bg1};
+  height: ${({ theme }) => theme.headerHeight};
+  position: fixed;
+  z-index: 100;
 `
 
 const HeaderLinks = styled(Row)`
@@ -225,6 +218,7 @@ const HeaderLinks = styled(Row)`
   justify-content: center;
   align-items: center;
   width: auto;
+  z-index: 99;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
@@ -561,7 +555,7 @@ const MobileHeader = styled.header`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 13px;
   background-color: ${({ theme }) => theme.bg1};
   height: ${({ theme }) => theme.mobileHeaderHeight};
   position: fixed;
@@ -599,8 +593,66 @@ export default function Header() {
     })
   }, [chainId])
 
+  const NetworkSelect = useMemo(() => {
+    return (
+      account &&
+      chainId &&
+      NetworkInfo[chainId] && (
+        <NetworkCard title={NetworkInfo[chainId].title} color={NetworkInfo[chainId as number]?.color}>
+          {NetworkInfo[chainId].selectedIcon ? NetworkInfo[chainId].selectedIcon : NetworkInfo[chainId].icon}
+          <span style={{ marginRight: 4 }} />
+          {NetworkInfo[chainId].title}
+          <ChevronDown size={18} style={{ marginLeft: '5px', color: theme.text5 }} />
+          <div className="dropdown_wrapper">
+            <Dropdown>
+              {Object.keys(NetworkInfo).map(key => {
+                const info = NetworkInfo[parseInt(key) as keyof typeof NetworkInfo]
+                if (!info) {
+                  return null
+                }
+                return info.link ? (
+                  <ExternalLink href={info.link} key={info.link}>
+                    {parseInt(key) === chainId && (
+                      <span style={{ position: 'absolute', left: '15px' }}>
+                        <Check size={18} />
+                      </span>
+                    )}
+                    {info.icon ?? info.icon}
+                    {info.title}
+                  </ExternalLink>
+                ) : (
+                  <StyledLink
+                    key={info.title}
+                    onClick={() => {
+                      if (parseInt(key) === ChainId.MAINNET) {
+                        library?.send('wallet_switchEthereumChain', [{ chainId: '0x1' }, account])
+                      } else if (parseInt(key) === ChainId.ROPSTEN) {
+                        library?.send('wallet_switchEthereumChain', [{ chainId: '0x3' }, account])
+                      } else {
+                        const params = SUPPORTED_NETWORKS[parseInt(key) as ChainId]
+                        library?.send('wallet_addEthereumChain', [params, account])
+                      }
+                    }}
+                  >
+                    {parseInt(key) === chainId && (
+                      <span style={{ position: 'absolute', left: '15px' }}>
+                        <Check size={18} />
+                      </span>
+                    )}
+                    {info.icon ?? info.icon}
+                    {info.title}
+                  </StyledLink>
+                )
+              })}
+            </Dropdown>
+          </div>
+        </NetworkCard>
+      )
+    )
+  }, [account, chainId])
+
   return (
-    <HeaderFrame>
+    <>
       <ClaimModal />
       <HeaderRow>
         <HideMedium>
@@ -667,7 +719,8 @@ export default function Header() {
               <ToggleMenu padding={0} />
             </HideLarge>
           </HideSmall> */}
-          {account && chainId && NetworkInfo[chainId] && (
+          {NetworkSelect}
+          {/* {account && chainId && NetworkInfo[chainId] && (
             <NetworkCard title={NetworkInfo[chainId].title} color={NetworkInfo[chainId as number]?.color}>
               {NetworkInfo[chainId].selectedIcon ? NetworkInfo[chainId].selectedIcon : NetworkInfo[chainId].icon}
               <span style={{ marginRight: 4 }} />
@@ -717,7 +770,7 @@ export default function Header() {
                 </Dropdown>
               </div>
             </NetworkCard>
-          )}
+          )} */}
 
           {/* </HeaderElement> */}
           {/* <HeaderElementWrap>
@@ -765,12 +818,11 @@ export default function Header() {
         </HeaderControls>
       </HeaderRow>
       <MobileHeader>
-        <RowBetween>
-          <LogoButton />
-          <ToggleMenu />
-        </RowBetween>
+        <LogoButton />
+        {NetworkSelect}
+        <ToggleMenu />
       </MobileHeader>
-    </HeaderFrame>
+    </>
   )
 }
 

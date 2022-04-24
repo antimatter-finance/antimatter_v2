@@ -102,7 +102,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 48px;
+  padding-top: 96px;
 `
 
 // export const ContentWrapper = styled.div`

@@ -120,8 +120,6 @@ export default function User() {
 
   const { data: myPosition, loading: myPositionLoading } = useMyPosition()
 
-  console.log(account)
-
   return (
     <Wrapper>
       <AppBody>

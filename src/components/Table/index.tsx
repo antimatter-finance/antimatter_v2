@@ -145,7 +145,6 @@ export default function Table({
 }) {
   const match = useMediaWidth('upToSmall')
   const classes = useStyles({ isHeaderGray })
-  console.log(rows)
   return (
     <>
       {match ? (
