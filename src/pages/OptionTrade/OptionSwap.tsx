@@ -22,7 +22,6 @@ const GraphWrapper = styled.div`
   height: 100%;
   position: relative;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  margin: 20px 24px 20px 14px;
   padding-bottom: ${({ theme }) => theme.mobileHeaderHeight}
   `}
   background: #ffffff;
