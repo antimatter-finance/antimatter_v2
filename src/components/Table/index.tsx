@@ -135,10 +135,12 @@ const CardRow = styled(RowBetween)`
 export default function Table({
   header,
   rows,
+  rowsComponent,
   isHeaderGray
 }: {
   header: string[]
-  rows: (string | number | JSX.Element)[][]
+  rows?: (string | number | JSX.Element)[][]
+  rowsComponent?: JSX.Element[]
   isHeaderGray?: boolean
 }) {
   const match = useMediaWidth('upToSmall')
@@ -147,18 +149,19 @@ export default function Table({
     <>
       {match ? (
         <AutoColumn gap="20px" style={{ marginTop: 20 }}>
-          {rows.map((data, index) => (
-            <Card key={index}>
-              <AutoColumn gap="16px">
-                {header.map((headerString, index) => (
-                  <CardRow key={index}>
-                    <TYPE.darkGray className={classes.longTitle}>{headerString}</TYPE.darkGray>
-                    <TYPE.body> {data[index] ?? null}</TYPE.body>
-                  </CardRow>
-                ))}
-              </AutoColumn>
-            </Card>
-          ))}
+          {rows &&
+            rows.map((data, index) => (
+              <Card key={index}>
+                <AutoColumn gap="16px">
+                  {header.map((headerString, index) => (
+                    <CardRow key={index}>
+                      <TYPE.darkGray className={classes.longTitle}>{headerString}</TYPE.darkGray>
+                      <TYPE.body> {data[index] ?? null}</TYPE.body>
+                    </CardRow>
+                  ))}
+                </AutoColumn>
+              </Card>
+            ))}
         </AutoColumn>
       ) : (
         <TableContainer className={classes.root}>
@@ -171,17 +174,30 @@ export default function Table({
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row, idx) => (
-                <TableRow key={row[0].toString() + idx} className={classes.tableRow}>
-                  {row.map((data, idx) => (
-                    <TableCell key={idx}>{data}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
+              {rows &&
+                rows.map((row, idx) => (
+                  <TableRow key={row[0].toString() + idx} className={classes.tableRow}>
+                    {row.map((data, idx) => (
+                      <TableCell key={idx}>{data}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              {rowsComponent}
             </TableBody>
           </table>
         </TableContainer>
       )}
     </>
+  )
+}
+
+export function Row({ row }: { row: (string | number | JSX.Element)[] }) {
+  const classes = useStyles()
+  return (
+    <TableRow className={classes.tableRow}>
+      {row.map((data, idx) => (
+        <TableCell key={idx}>{data}</TableCell>
+      ))}
+    </TableRow>
   )
 }

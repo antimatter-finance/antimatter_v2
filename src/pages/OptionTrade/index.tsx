@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { Grid } from '@mui/material'
 import { useHistory } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router'
 import styled from 'styled-components'
@@ -27,7 +28,7 @@ import { Axios } from 'utils/option/axios'
 import { formatUnderlying } from 'utils/option/utils'
 import Pagination from 'components/Pagination'
 import { Skeleton } from '@material-ui/lab'
-import Card from 'components/Card'
+import Card, { MainCard } from 'components/Card'
 import Tab from 'components/Tab'
 import { Text, Box } from 'rebass'
 import Logo from 'components/Logo'
@@ -38,13 +39,13 @@ import { usePrice } from 'hooks/usePrice'
 import { ButtonOutlined } from 'components/Button'
 import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
 import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
-import Table from 'components/Table'
+import Table, { Row } from 'components/Table'
 
 const TableHeaders = [
   'Option ID',
   'Underlying Asset',
-  'Pool size (ETH)',
-  'Pool size(USDT)',
+  // 'Pool size (ETH)',
+  // 'Pool size(USDT)',
   'Option Price Range',
   'Your Put Position',
   'Your Call Position'
@@ -134,21 +135,22 @@ const Circle = styled.div`
 `
 
 const Divider = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.bg4};
+  border-bottom: 1px solid ${({ theme }) => theme.text1};
   width: calc(100% + 40px);
   margin: 0 -20px;
+  opacity: 0.1;
 `
 
 const TitleWrapper = styled(RowFixed)`
   flex-wrap: nowrap;
   width: 100%;
 `
-const OptionId = styled(TYPE.smallGray)`
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.bg4};
-  padding: 3px 6px;
-  margin-right: 10px !important;
-`
+// const OptionId = styled(TYPE.smallGray)`
+//   border-radius: 20px;
+//   background-color: ${({ theme }) => theme.bg4};
+//   padding: 3px 6px;
+//   margin-right: 10px !important;
+// `
 
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
@@ -179,8 +181,7 @@ export default function OptionTrade({
   const ethPrice = usePrice('ETH')
 
   useEffect(() => {
-    // setFilteredIndexes(currentIds)
-    setFilteredIndexes(['1', '2'])
+    setFilteredIndexes(currentIds)
   }, [currentIds])
 
   const setPage = useCallback((event: object, page: number) => {
@@ -237,30 +238,11 @@ export default function OptionTrade({
     ]
   }, [btcPrice, ethPrice, theme])
 
-  const dataRows = useMemo(() => {
-    return [
-      [
-        <>#1234</>,
-        <>ETH</>,
-        <>255.25ETH</>,
-        <>1234USDT</>,
-        <>$1000~$3000</>,
-        <>0</>,
-        <>23</>,
-        <RoundButton onClick={() => history.push(`/option_trading/1234`)}>Trade</RoundButton>
-      ],
-      [
-        <>#1234</>,
-        <>ETH</>,
-        <>255.25ETH</>,
-        <>1234USDT</>,
-        <>$1000~$3000</>,
-        <>0</>,
-        <>23</>,
-        <RoundButton onClick={() => history.push(`/option_trading/1234`)}>Trade</RoundButton>
-      ]
-    ]
-  }, [])
+  const rowsComponent = useMemo(() => {
+    if (!filteredIndexes) return
+
+    return filteredIndexes.map(optionId => <OptionRow key={optionId} optionId={optionId} />)
+  }, [filteredIndexes])
 
   return (
     <>
@@ -270,7 +252,7 @@ export default function OptionTrade({
       ) : (
         <Wrapper id="optionTrade">
           <Tab current={tab} options={tabOptions} setTab={setTab} />
-          <Card margin="24px 0 auto">
+          <Card margin="24px 0 auto" padding="40px 25px">
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Search
                 // optionTypeQuery={optionTypeQuery}
@@ -283,25 +265,28 @@ export default function OptionTrade({
             </Box>
 
             {filteredIndexes && (
-              <>
+              <Grid container mt={'24px'}>
                 {mode === Mode.CARD &&
-                  filteredIndexes.map((optionId, idx) =>
-                    optionId ? (
-                      <OptionCard
-                        optionId={optionId}
-                        key={optionId}
-                        buttons={
-                          <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
-                            Trade/More Info
-                          </ButtonPrimary>
-                        }
-                      />
-                    ) : (
-                      <OptionCardSkeleton key={optionId + idx} />
-                    )
-                  )}
-                {mode === Mode.TABLE && <Table header={TableHeaders} rows={dataRows} />}
-              </>
+                  filteredIndexes.map((optionId, idx) => (
+                    <Grid xs={12} md={4}>
+                      {optionId ? (
+                        <OptionCard
+                          optionId={optionId}
+                          key={optionId}
+                          buttons={
+                            <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
+                              Trade
+                            </ButtonPrimary>
+                          }
+                        />
+                      ) : (
+                        <OptionCardSkeleton key={optionId + idx} />
+                      )}
+                    </Grid>
+                  ))}
+
+                {mode === Mode.TABLE && <Table header={TableHeaders} rowsComponent={rowsComponent} />}
+              </Grid>
             )}
             {page.totalPages !== 0 && (
               <Pagination
@@ -335,14 +320,14 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
   const details = {
     'Option Range': option ? `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` : '',
     'Underlying Assets': option ? `${option.underlying?.symbol}, ${option.currency?.symbol}` : '-',
-    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-',
-    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-'
+    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-',
+    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-'
   }
 
   return (
     <>
       {option ? (
-        <AppBody style={{ position: 'relative', padding: '24px 20px' }} isCard>
+        <MainCard padding="20px 24px 23px">
           <AutoColumn gap="20px">
             <TitleWrapper>
               <Circle>
@@ -356,9 +341,7 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
                   {`${option?.underlying?.symbol ?? '-'} Option`}
                 </TYPE.mediumHeader>
 
-                <RowFixed>
-                  <OptionId>ID:&nbsp;{option?.underlying ? optionId : '-'}</OptionId>
-                </RowFixed>
+                <RowFixed>ID:&nbsp;{option?.underlying ? optionId : '-'}</RowFixed>
               </AutoColumn>
             </TitleWrapper>
             <Divider />
@@ -372,7 +355,9 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
                       overflow: 'hidden',
                       whiteSpace: 'pre-wrap',
                       textOverflow: 'ellipsis',
-                      minHeight: 19
+                      minHeight: 19,
+                      fontWeight: 400,
+                      fontSize: 14
                     }}
                   >
                     {details[key as keyof typeof details]}
@@ -382,7 +367,7 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
             </AutoColumn>
             <RowBetween>{buttons}</RowBetween>
           </AutoColumn>
-        </AppBody>
+        </MainCard>
       ) : (
         <OptionCardSkeleton />
       )}
@@ -465,5 +450,36 @@ export function ModeSwitch({ current, setMode }: { current: number; setMode: (mo
         )
       })}
     </Box>
+  )
+}
+
+export function OptionRow({ optionId }: { optionId: string }) {
+  const option = useOption(optionId)
+  const callTotalSupply = useTotalSupply(option?.call?.token)
+  const putTotalSupply = useTotalSupply(option?.put?.token)
+  const history = useHistory()
+
+  const range = {
+    cap: tryFormatAmount(option?.priceCap, option?.currency ?? undefined),
+    floor: tryFormatAmount(option?.priceFloor, option?.currency ?? undefined)
+  }
+  const data = {
+    'Option Range': option ? `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` : '',
+    'Underlying Assets': option ? `${option.underlying?.symbol}, ${option.currency?.symbol}` : '-',
+    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-',
+    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-'
+  }
+
+  return (
+    <Row
+      row={[
+        <>{optionId}</>,
+        <>{data['Underlying Assets']}</>,
+        <>{data['Option Range']}</>,
+        <>{data['Current Bear Issuance']}</>,
+        <>{data['Current Bull Issuance']}</>,
+        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+      ]}
+    />
   )
 }

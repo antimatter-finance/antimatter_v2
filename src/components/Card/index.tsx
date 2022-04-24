@@ -17,7 +17,6 @@ const Card = styled(Box)<{
   width: ${({ width }) => width ?? '100%'};
   max-width: ${({ maxWidth }) => maxWidth};
   border-radius: 16px;
-  padding: 1.25rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
