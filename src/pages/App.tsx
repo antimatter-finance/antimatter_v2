@@ -151,7 +151,7 @@ export default function App() {
               <>
                 {/* <LocatoinVerification resource={resource}> */}
                 <Switch>
-                  <Route exact strict path="/option_creation" component={OptionCreation} />
+                  <Route exact strict path="/option_creation/:tab" component={OptionCreation} />
                   <Route exact strict path="/option_trading" component={OptionTrade} />
                   <Route exact strict path="/calculator" component={Calculator} />
                   <Route exact strict path="/option_trading/:optionId" component={OptionTrade} />

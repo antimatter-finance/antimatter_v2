@@ -159,7 +159,7 @@ export default function Calculator() {
                 </TYPE.body>
                 <Card
                   style={{
-                    backgroundColor: theme.bg2,
+                    backgroundColor: theme.mainBG,
                     width: '100%',
                     padding: '1rem',
                     height: '3rem',
@@ -178,7 +178,7 @@ export default function Calculator() {
                 </TYPE.body>
                 <Card
                   style={{
-                    backgroundColor: theme.bg2,
+                    backgroundColor: theme.mainBG,
                     width: '100%',
                     padding: '1rem',
                     height: '3rem',

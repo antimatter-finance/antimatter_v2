@@ -41,7 +41,7 @@ export default function Redeem({
   const option = useOption(optionTypeIndex)
 
   const [callTypedAmount, setCallTypedAmount] = useState<string>('')
-  // const [putTypedAmount, setPutTypedAmount] = useState<string>('')
+  const [putTypedAmount, setPutTypedAmount] = useState<string>('')
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false)
@@ -250,8 +250,8 @@ export default function Redeem({
           <Plus size="24" color={theme.text2} />
         </ColumnCenter>
         <RedeemTokenPanel
-          value={callTypedAmount ?? ''}
-          onUserInput={setCallTypedAmount}
+          value={putTypedAmount ?? ''}
+          onUserInput={setPutTypedAmount}
           label={'Bear token'}
           currency={option?.put?.token}
           negativeMarginTop="-25px"

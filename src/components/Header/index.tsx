@@ -408,7 +408,7 @@ const Dropdown = styled.div<{ width?: string }>`
       border: none;
     }
     :hover {
-      background-color: ${({ theme }) => theme.bg4};
+      background-color: ${({ theme }) => theme.mainBG};
       color: ${({ theme }) => darken(0.1, theme.primary1)};
     }
   }
