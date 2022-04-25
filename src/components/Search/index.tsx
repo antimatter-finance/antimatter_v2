@@ -25,13 +25,15 @@ export default function Search({
   // optionTypeQuery,
   onClear,
   onSearch,
-  tokenList
+  tokenList,
+  searchToken
 }: {
   // onOptionType?: (type: string) => void
   // optionTypeQuery?: string
   onClear?: () => void
   onSearch: (query: any) => void
   tokenList?: Token[]
+  searchToken?: Token
 }) {
   const match = useMediaWidth('upToSmall')
   const [assetTypeQuery, setAssetTypeQuery] = useState<Currency | undefined>(undefined)

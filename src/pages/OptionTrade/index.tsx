@@ -31,10 +31,6 @@ import { Skeleton } from '@material-ui/lab'
 import Card, { MainCard } from 'components/Card'
 import Tab from 'components/Tab'
 import { Text, Box } from 'rebass'
-import Logo from 'components/Logo'
-import BtcLogo from 'assets/svg/btc_logo.svg'
-import EthLogo from 'assets/svg/eth_logo.svg'
-import useTheme from 'hooks/useTheme'
 import { usePrice } from 'hooks/usePrice'
 import { ButtonOutlined } from 'components/Button'
 import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
@@ -170,7 +166,6 @@ export default function OptionTrade({
     params: { optionId }
   }
 }: RouteComponentProps<{ optionId?: string }>) {
-  const theme = useTheme()
   const { chainId } = useActiveWeb3React()
   const optionCount = useOptionTypeCount()
   const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
@@ -178,11 +173,8 @@ export default function OptionTrade({
   const history = useHistory()
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
   const { page, data: currentIds, firstLoading } = useOptionList(searchParams)
-  const [tab, setTab] = useState(TabOptions.BTC)
+  const [searchTokenIndex, setSearchTokenIndex] = useState<number | undefined>(undefined)
   const [mode, setMode] = useState(Mode.TABLE)
-
-  const btcPrice = usePrice('BTC')
-  const ethPrice = usePrice('ETH')
 
   const match = useMediaWidth('upToSmall')
 
@@ -225,24 +217,12 @@ export default function OptionTrade({
   }, [chainId, errorFunction])
 
   const tabOptions = useMemo(() => {
-    const btcPriceNum = btcPrice && +btcPrice
-    const ethPriceNum = ethPrice && +ethPrice
+    if (!tokenList) return []
 
-    return [
-      <Box display="flex" alignItems="center">
-        <Logo srcs={[BtcLogo]} alt="btc logo" style={{ marginRight: 8 }} />
-        <Text fontSize={match ? 14 : 20} color={theme.text1} fontWeight={400}>
-          BTC ${btcPriceNum ? btcPriceNum.toFixed(2) : ''}
-        </Text>
-      </Box>,
-      <Box display="flex" alignItems="center">
-        <Logo srcs={[EthLogo]} alt="eth logo" style={{ marginRight: 8 }} />
-        <Text fontSize={match ? 14 : 20} color={theme.text1} fontWeight={400}>
-          ETH ${ethPriceNum ? ethPriceNum.toFixed(2) : ''}
-        </Text>
-      </Box>
-    ]
-  }, [btcPrice, ethPrice, theme])
+    return tokenList.map((token, idx) => {
+      return <TokenTab token={token} key={idx} />
+    })
+  }, [tokenList])
 
   const rowsComponent = useMemo(() => {
     if (!filteredIndexes) return
@@ -257,7 +237,7 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <Tab current={tab} options={tabOptions} setTab={setTab} />
+          <Tab current={searchTokenIndex || 0} options={tabOptions} setTab={setSearchTokenIndex} />
           <Card margin="24px 0 auto" padding="40px 25px">
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Search
@@ -266,6 +246,7 @@ export default function OptionTrade({
                 onClear={handleClearSearch}
                 onSearch={handleSearch}
                 tokenList={tokenList}
+                searchToken={tokenList && searchTokenIndex ? tokenList[searchTokenIndex] : undefined}
               />
               {!match && <ModeSwitch current={mode} setMode={setMode} />}
             </Box>
@@ -488,5 +469,21 @@ export function OptionRow({ optionId }: { optionId: string }) {
         <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
       ]}
     />
+  )
+}
+
+export function TokenTab({ token }: { token: Token }) {
+  const match = useMediaWidth('upToSmall')
+
+  const price = usePrice(token.symbol)
+  const priceNum = price && +price
+
+  return (
+    <Box display="flex" alignItems="center">
+      <CurrencyLogo currency={token} size="28px" style={{ marginRight: 8 }} />
+      <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
+        {token.symbol} {priceNum ? '$' + priceNum.toFixed(2) : ''}
+      </Text>
+    </Box>
   )
 }
