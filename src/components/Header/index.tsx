@@ -29,6 +29,7 @@ import { useWalletModalToggle } from 'state/application/hooks'
 import usePrevious from '../../hooks/usePrevious'
 import { CountUp } from 'use-count-up/lib'
 import { Symbol } from '../../constants'
+import useMediaWidth from 'hooks/useMediaWidth'
 
 interface TabContent {
   title: string
@@ -192,9 +193,10 @@ const HeaderControls = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: 8px;
-  margin-feft: auto;
   margin-right: 2rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin-right: 7px;
+`};
 `
 
 const HeaderRow = styled(RowFixed)`
@@ -236,7 +238,8 @@ const AccountElement = styled.div<{ active: boolean }>`
   height: 36px;
   background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-width:100%`}
+    height: 24px;
+    width:100px`}
 `
 
 const UNIAmount = styled.div`
@@ -265,8 +268,7 @@ const NetworkCard = styled.div<{ color?: string }>`
   display: flex;
   padding: 8px 10px;
   height: 32px;
-  margin-right: 12px;
-  margin-left: 19px;
+  margin-right: 6px;
   justify-content: center;
   border-radius: 4px;
   align-items: center;
@@ -476,7 +478,7 @@ const UserMenuItem = styled.button`
 
 const UserButton = styled(ButtonText)<{ isOpen: boolean; size?: string }>`
   height: ${({ size }) => size ?? '36px'};
-  width: ${({ size }) => size ?? 'px'};
+  width: ${({ size }) => size ?? '36px'};
   border-radius: 50%;
   background: ${({ isOpen }) =>
     isOpen
@@ -574,6 +576,7 @@ export default function Header() {
 
   const countUpValue = aggregateBalance?.toFixed(2) ?? '0'
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
+  const isDownSm = useMediaWidth('upToSmall')
 
   const history = useHistory()
   const match = useRouteMatch('/profile')
@@ -599,7 +602,7 @@ export default function Header() {
         <NetworkCard title={NetworkInfo[chainId].title} color={NetworkInfo[chainId as number]?.color}>
           {NetworkInfo[chainId].selectedIcon ? NetworkInfo[chainId].selectedIcon : NetworkInfo[chainId].icon}
           <span style={{ marginRight: 4 }} />
-          {NetworkInfo[chainId].title}
+          {!isDownSm && NetworkInfo[chainId].title}
           <ChevronDown size={18} style={{ marginLeft: '5px', color: theme.text5 }} />
           <div className="dropdown_wrapper">
             <Dropdown>
@@ -647,7 +650,7 @@ export default function Header() {
         </NetworkCard>
       )
     )
-  }, [account, chainId])
+  }, [account, chainId, isDownSm])
 
   return (
     <>
@@ -711,73 +714,7 @@ export default function Header() {
           </RowFixed>
         </HideMedium>
         <HeaderControls>
-          {/* <HeaderElement show={!!account}> */}
-          {/* <HideSmall>
-            <HideLarge>
-              <ToggleMenu padding={0} />
-            </HideLarge>
-          </HideSmall> */}
           {NetworkSelect}
-          {/* {account && chainId && NetworkInfo[chainId] && (
-            <NetworkCard title={NetworkInfo[chainId].title} color={NetworkInfo[chainId as number]?.color}>
-              {NetworkInfo[chainId].selectedIcon ? NetworkInfo[chainId].selectedIcon : NetworkInfo[chainId].icon}
-              <span style={{ marginRight: 4 }} />
-              {NetworkInfo[chainId].title}
-              <ChevronDown size={18} style={{ marginLeft: '5px', color: theme.text5 }} />
-              <div className="dropdown_wrapper">
-                <Dropdown>
-                  {Object.keys(NetworkInfo).map(key => {
-                    const info = NetworkInfo[parseInt(key) as keyof typeof NetworkInfo]
-                    if (!info) {
-                      return null
-                    }
-                    return info.link ? (
-                      <ExternalLink href={info.link} key={info.link}>
-                        {parseInt(key) === chainId && (
-                          <span style={{ position: 'absolute', left: '15px' }}>
-                            <Check size={18} />
-                          </span>
-                        )}
-                        {info.icon ?? info.icon}
-                        {info.title}
-                      </ExternalLink>
-                    ) : (
-                      <StyledLink
-                        key={info.title}
-                        onClick={() => {
-                          if (parseInt(key) === ChainId.MAINNET) {
-                            library?.send('wallet_switchEthereumChain', [{ chainId: '0x1' }, account])
-                          } else if (parseInt(key) === ChainId.ROPSTEN) {
-                            library?.send('wallet_switchEthereumChain', [{ chainId: '0x3' }, account])
-                          } else {
-                            const params = SUPPORTED_NETWORKS[parseInt(key) as ChainId]
-                            library?.send('wallet_addEthereumChain', [params, account])
-                          }
-                        }}
-                      >
-                        {parseInt(key) === chainId && (
-                          <span style={{ position: 'absolute', left: '15px' }}>
-                            <Check size={18} />
-                          </span>
-                        )}
-                        {info.icon ?? info.icon}
-                        {info.title}
-                      </StyledLink>
-                    )
-                  })}
-                </Dropdown>
-              </div>
-            </NetworkCard>
-          )} */}
-
-          {/* </HeaderElement> */}
-          {/* <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
-          <Menu />
-        </HeaderElementWrap> */}
-
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {!!account && aggregateBalance && (
               <UNIWrapper>
@@ -817,18 +754,33 @@ export default function Header() {
       </HeaderRow>
       <MobileHeader>
         <LogoButton />
-        {NetworkSelect}
-        <ToggleMenu />
+        <HeaderControls>
+          {NetworkSelect}
+          <AccountElement active={!!account} style={{ pointerEvents: 'auto', marginRight: 8 }}>
+            <Web3Status />
+            {account && (
+              <UserButtonWrap>
+                <UserButton id="userButton" onClick={toShowUserPanel} isOpen={!!match} size={'24px'}>
+                  <AntimatterIcon />
+                </UserButton>
+                <UserMenu account={account} />
+              </UserButtonWrap>
+            )}
+          </AccountElement>
+          <ToggleMenu />
+        </HeaderControls>
       </MobileHeader>
     </>
   )
 }
 
 function LogoButton() {
+  const isDownSm = useMediaWidth('upToSmall')
+
   return (
     <RowFlat style={{ alignItems: 'center' }}>
       <Link to={'/'}>
-        <Logo />
+        <Logo width={isDownSm ? 100 : 140} />
       </Link>
       {/* <StyledDropdown style={{ color: '#ffffff', padding: '6px 25px 18px 20px', margin: 0 }}>
         <Plus style={{ margin: 'auto auto' }} />
