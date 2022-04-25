@@ -7,13 +7,22 @@ import Loader from '../../assets/svg/antimatter_background_logo.svg'
 import Table from '../../components/Table'
 import { useMyTransaction, useMyCreation, useMyPosition } from '../../hooks/useUserFetch'
 import Pagination from '../../components/Pagination'
-import useMediaWidth from 'hooks/useMediaWidth'
+// import useMediaWidth from 'hooks/useMediaWidth'
 import { useActiveWeb3React } from 'hooks'
+import Image from 'components/Image'
+import PositionIcon from 'assets/images/position-icon.png'
+import CreationIcon from 'assets/images/creation-icon.png'
+import HistoryIcon from 'assets/images/history-icon.png'
+import { AutoRow } from 'components/Row'
+import Card from 'components/Card'
+import { Box, Typography } from '@mui/material'
+import { ReactComponent as AntimatterIcon } from 'assets/svg/antimatter_icon.svg'
+import Copy from 'components/AccountDetails/Copy'
 
 const Wrapper = styled.div`
-  padding: 78px 0 88px;
-  width: 90vw;
-  max-width: 1284px;
+  padding: 96px 0;
+  width: 100%;
+  max-width: 1110px;
   display: flex;
   justify-content: center;
   min-height: calc(100vh - ${({ theme }) => theme.headerHeight});
@@ -53,7 +62,7 @@ export enum UserInfoTabs {
 export const UserInfoTabRoute = {
   [UserInfoTabs.POSITION]: 'My Position',
   [UserInfoTabs.CREATION]: 'My Creation',
-  [UserInfoTabs.TRANSACTION]: 'My Transaction'
+  [UserInfoTabs.TRANSACTION]: 'History'
 }
 
 // function randTime() {
@@ -83,7 +92,7 @@ export default function User() {
   const { tab } = useParams<{ tab: string }>()
   const location = useLocation()
   const [currentTab, setCurrentTab] = useState(UserInfoTabs.POSITION)
-  const isUptoSmall = useMediaWidth('upToSmall')
+  // const isUptoSmall = useMediaWidth('upToSmall')
   const { account } = useActiveWeb3React()
 
   useEffect(() => {
@@ -114,11 +123,17 @@ export default function User() {
   return (
     <Wrapper>
       <AppBody>
-        <SwitchTab
-          style={{ padding: isUptoSmall ? '50px 24px 0' : '50px 50px 0' }}
-          onTabClick={handleTabClick}
-          currentTab={currentTab}
-        />
+        <Box display="flex" gap={'20px'} alignItems="center" mb={'60px'}>
+          <AntimatterIcon width="72px" height="72px" />
+          <Box>
+            <Typography sx={{ fontSize: 32, fontWeight: 700 }}>Unnamed</Typography>
+            <AutoRow>
+              <Typography sx={{ opacity: 0.5 }}>{account}</Typography>
+              {account && <Copy toCopy={account} fixedSize />}
+            </AutoRow>
+          </Box>
+        </Box>
+        <SwitchTab onTabClick={handleTabClick} currentTab={currentTab} />
         {(currentTab === UserInfoTabs.CREATION && myCreation === undefined) ||
         (currentTab === UserInfoTabs.TRANSACTION && myTransactionLoading) ||
         (currentTab === UserInfoTabs.POSITION && myPositionLoading) ? (
@@ -139,10 +154,10 @@ export default function User() {
             </ShowSmall>
           </>
         ) : (
-          <>
+          <Card margin="24px 0 auto" minHeight={480} padding="40px 25px">
             {currentTab === UserInfoTabs.POSITION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT \nADDRESS', '']} rows={myPosition} />
+                <Table header={['Option', 'Type', 'Amount', 'Contract Address', '']} rows={myPosition} />
                 {myPosition !== undefined && !myPosition.length && (
                   <p style={{ margin: 50 }}>You have no position at the moment</p>
                 )}
@@ -150,7 +165,7 @@ export default function User() {
             )}
             {currentTab === UserInfoTabs.CREATION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'CONTRACT \nADDRESS', '']} rows={myCreation ?? []} />
+                <Table header={['Option', 'Type', 'Amount', 'Contract Address', '']} rows={myCreation ?? []} />
 
                 {myCreation !== undefined && !myCreation.length && (
                   <p style={{ margin: 50 }}>You have no creation at the moment</p>
@@ -160,7 +175,7 @@ export default function User() {
 
             {currentTab === UserInfoTabs.TRANSACTION && (
               <>
-                <Table header={['OPTION', 'TYPE', 'AMOUNT', 'PRICE', 'ACTION']} rows={myTransaction} />
+                <Table header={['Option', 'Type', 'Amount', 'Price', 'Action']} rows={myTransaction} />
                 {myTransactionPage.totalPages !== 0 && (
                   <Pagination
                     page={myTransactionPage.currentPage}
@@ -173,7 +188,7 @@ export default function User() {
                 )}
               </>
             )}
-          </>
+          </Card>
         )}
       </AppBody>
     </Wrapper>
@@ -187,15 +202,28 @@ function SwitchTab({
 }: {
   currentTab: UserInfoTabs
   onTabClick: (tab: UserInfoTabs) => () => void
-  style: CSSProperties
+  style?: CSSProperties
 }) {
+  const accountIcons = {
+    [UserInfoTabs.POSITION]: PositionIcon,
+    [UserInfoTabs.CREATION]: CreationIcon,
+    [UserInfoTabs.TRANSACTION]: HistoryIcon
+  }
+
   return (
     <SwitchTabWrapper style={style}>
       {Object.keys(UserInfoTabRoute).map(tab => {
         const tabName = UserInfoTabRoute[tab as keyof typeof UserInfoTabRoute]
         return (
           <Tab key={tab} onClick={onTabClick(tab as UserInfoTabs)} selected={currentTab === tab}>
-            {tabName}
+            <AutoRow>
+              <Image
+                src={accountIcons[tab as keyof typeof UserInfoTabRoute]}
+                alt="my-position-icon"
+                style={{ marginRight: '12px' }}
+              />
+              {tabName}
+            </AutoRow>
           </Tab>
         )
       })}

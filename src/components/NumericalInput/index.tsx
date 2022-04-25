@@ -33,7 +33,8 @@ export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; al
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.text4};
+    color: ${({ theme }) => theme.text5};
+    font-weight: 400;
   }
 `
 

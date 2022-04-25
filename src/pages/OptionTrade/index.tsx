@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { Grid } from '@mui/material'
 import { useHistory } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router'
 import styled from 'styled-components'
 import { Token } from '@uniswap/sdk'
 import AppBody from 'pages/AppBody'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonPrimary, RoundButton } from 'components/Button'
 import { AnimatedImg, AnimatedWrapper, ExternalLink, TYPE } from 'theme'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { OptionIcon } from 'components/Icons'
@@ -27,6 +28,29 @@ import { Axios } from 'utils/option/axios'
 import { formatUnderlying } from 'utils/option/utils'
 import Pagination from 'components/Pagination'
 import { Skeleton } from '@material-ui/lab'
+import Card, { MainCard } from 'components/Card'
+import Tab from 'components/Tab'
+import { Text, Box } from 'rebass'
+import Logo from 'components/Logo'
+import BtcLogo from 'assets/svg/btc_logo.svg'
+import EthLogo from 'assets/svg/eth_logo.svg'
+import useTheme from 'hooks/useTheme'
+import { usePrice } from 'hooks/usePrice'
+import { ButtonOutlined } from 'components/Button'
+import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
+import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
+import Table, { Row } from 'components/Table'
+import useMediaWidth from 'hooks/useMediaWidth'
+
+const TableHeaders = [
+  'Option ID',
+  'Underlying Asset',
+  // 'Pool size (ETH)',
+  // 'Pool size(USDT)',
+  'Option Price Range',
+  'Your Put Position',
+  'Your Call Position'
+]
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -62,26 +86,44 @@ export enum Type {
   PUT = 'put'
 }
 
+export enum TabOptions {
+  BTC,
+  ETH
+}
+
+export enum Mode {
+  CARD,
+  TABLE
+}
+
 const Wrapper = styled.div`
   width: 100%;
-  margin-bottom: auto;
+  max-width: 1110px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 96px 20px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  padding: 48px 20px;
+`};
 `
 
-export const ContentWrapper = styled.div`
-  position: relative;
-  max-width: 1280px;
-  margin: auto;
-  display: grid;
-  grid-gap: 24px;
-  grid-template-columns: repeat(auto-fill, 280px);
-  padding: 52px 0;
-  justify-content: center;
-  .MuiSkeleton-root{
-    background-color: rgba(255, 255, 255, 0.15);
-  };
-  /* ${({ theme }) => theme.mediaWidth.upToLarge`padding: 30px`} */
-  ${({ theme }) => theme.mediaWidth.upToSmall`padding: 20px 10px`},
-`
+// export const ContentWrapper = styled.div`
+//   position: relative;
+//   max-width: 1280px;
+//   margin: auto;
+//   display: grid;
+//   grid-gap: 24px;
+//   grid-template-columns: repeat(auto-fill, 280px);
+//   padding: 52px 0;
+//   justify-content: center;
+//   .MuiSkeleton-root{
+//     background-color: rgba(255, 255, 255, 0.15);
+//   };
+//   /* ${({ theme }) => theme.mediaWidth.upToLarge`padding: 30px`} */
+//   ${({ theme }) => theme.mediaWidth.upToSmall`padding: 20px 10px`},
+// `
 
 const Circle = styled.div`
   flex-shrink: 0;
@@ -97,21 +139,22 @@ const Circle = styled.div`
 `
 
 const Divider = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.bg4};
+  border-bottom: 1px solid ${({ theme }) => theme.text1};
   width: calc(100% + 40px);
   margin: 0 -20px;
+  opacity: 0.1;
 `
 
 const TitleWrapper = styled(RowFixed)`
   flex-wrap: nowrap;
   width: 100%;
 `
-const OptionId = styled(TYPE.smallGray)`
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.bg4};
-  padding: 3px 6px;
-  margin-right: 10px !important;
-`
+// const OptionId = styled(TYPE.smallGray)`
+//   border-radius: 20px;
+//   background-color: ${({ theme }) => theme.bg4};
+//   padding: 3px 6px;
+//   margin-right: 10px !important;
+// `
 
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
@@ -127,6 +170,7 @@ export default function OptionTrade({
     params: { optionId }
   }
 }: RouteComponentProps<{ optionId?: string }>) {
+  const theme = useTheme()
   const { chainId } = useActiveWeb3React()
   const optionCount = useOptionTypeCount()
   const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
@@ -134,6 +178,13 @@ export default function OptionTrade({
   const history = useHistory()
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
   const { page, data: currentIds, firstLoading } = useOptionList(searchParams)
+  const [tab, setTab] = useState(TabOptions.BTC)
+  const [mode, setMode] = useState(Mode.TABLE)
+
+  const btcPrice = usePrice('BTC')
+  const ethPrice = usePrice('ETH')
+
+  const match = useMediaWidth('upToSmall')
 
   useEffect(() => {
     setFilteredIndexes(currentIds)
@@ -173,6 +224,32 @@ export default function OptionTrade({
       })
   }, [chainId, errorFunction])
 
+  const tabOptions = useMemo(() => {
+    const btcPriceNum = btcPrice && +btcPrice
+    const ethPriceNum = ethPrice && +ethPrice
+
+    return [
+      <Box display="flex" alignItems="center">
+        <Logo srcs={[BtcLogo]} alt="btc logo" style={{ marginRight: 8 }} />
+        <Text fontSize={match ? 14 : 20} color={theme.text1} fontWeight={400}>
+          BTC ${btcPriceNum ? btcPriceNum.toFixed(2) : ''}
+        </Text>
+      </Box>,
+      <Box display="flex" alignItems="center">
+        <Logo srcs={[EthLogo]} alt="eth logo" style={{ marginRight: 8 }} />
+        <Text fontSize={match ? 14 : 20} color={theme.text1} fontWeight={400}>
+          ETH ${ethPriceNum ? ethPriceNum.toFixed(2) : ''}
+        </Text>
+      </Box>
+    ]
+  }, [btcPrice, ethPrice, theme])
+
+  const rowsComponent = useMemo(() => {
+    if (!filteredIndexes) return
+
+    return filteredIndexes.map(optionId => <OptionRow key={optionId} optionId={optionId} />)
+  }, [filteredIndexes])
+
   return (
     <>
       <NetworkErrorModal />
@@ -180,45 +257,58 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <Search
-            // optionTypeQuery={optionTypeQuery}
-            // onOptionType={handleSelectOptionType}
-            onClear={handleClearSearch}
-            onSearch={handleSearch}
-            tokenList={tokenList}
-          />
-          {filteredIndexes && (
-            <ContentWrapper>
-              {filteredIndexes.map((optionId, idx) =>
-                optionId ? (
-                  <OptionCard
-                    optionId={optionId}
-                    key={optionId}
-                    buttons={
-                      <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
-                        Trade/More Info
-                      </ButtonPrimary>
-                    }
-                  />
-                ) : (
-                  <OptionCardSkeleton key={optionId + idx} />
-                )
-              )}
-            </ContentWrapper>
-          )}
-          {page.totalPages !== 0 && (
-            <Pagination
-              page={page.currentPage}
-              count={page.totalPages}
-              setPage={page.setCurrentPage}
-              onChange={setPage}
+          <Tab current={tab} options={tabOptions} setTab={setTab} />
+          <Card margin="24px 0 auto" padding="40px 25px">
+            <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Search
+                // optionTypeQuery={optionTypeQuery}
+                // onOptionType={handleSelectOptionType}
+                onClear={handleClearSearch}
+                onSearch={handleSearch}
+                tokenList={tokenList}
+              />
+              {!match && <ModeSwitch current={mode} setMode={setMode} />}
+            </Box>
+
+            {filteredIndexes && (
+              <>
+                <Grid container mt={'20px'} spacing={'20px'}>
+                  {(mode === Mode.CARD || match) &&
+                    filteredIndexes.map((optionId, idx) => (
+                      <Grid item xs={12} md={4}>
+                        {optionId ? (
+                          <OptionCard
+                            optionId={optionId}
+                            key={optionId}
+                            buttons={
+                              <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
+                                Trade
+                              </ButtonPrimary>
+                            }
+                          />
+                        ) : (
+                          <OptionCardSkeleton key={optionId + idx} />
+                        )}
+                      </Grid>
+                    ))}
+                </Grid>
+                {mode === Mode.TABLE && <Table header={TableHeaders} rowsComponent={rowsComponent} />}
+              </>
+            )}
+            {page.totalPages !== 0 && (
+              <Pagination
+                page={page.currentPage}
+                count={page.totalPages}
+                setPage={page.setCurrentPage}
+                onChange={setPage}
+              />
+            )}
+            <AlternativeDisplay
+              loading={firstLoading}
+              optionIndexes={optionTypeIndexes}
+              filteredIndexes={filteredIndexes}
             />
-          )}
-          <AlternativeDisplay
-            loading={firstLoading}
-            optionIndexes={optionTypeIndexes}
-            filteredIndexes={filteredIndexes}
-          />
+          </Card>
         </Wrapper>
       )}
     </>
@@ -237,14 +327,14 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
   const details = {
     'Option Range': option ? `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` : '',
     'Underlying Assets': option ? `${option.underlying?.symbol}, ${option.currency?.symbol}` : '-',
-    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-',
-    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-'
+    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-',
+    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-'
   }
 
   return (
     <>
       {option ? (
-        <AppBody style={{ position: 'relative', padding: '24px 20px' }} isCard>
+        <MainCard padding="20px 24px 23px">
           <AutoColumn gap="20px">
             <TitleWrapper>
               <Circle>
@@ -255,26 +345,26 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
                   fontSize={20}
                   style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
                 >
-                  {`${option?.underlying?.symbol ?? '-'} Option`}
+                  {`${option?.underlying?.symbol ?? '-'}`}
                 </TYPE.mediumHeader>
 
-                <RowFixed>
-                  <OptionId>ID:&nbsp;{option?.underlying ? optionId : '-'}</OptionId>
-                </RowFixed>
+                <RowFixed>ID:&nbsp;{option?.underlying ? optionId : '-'}</RowFixed>
               </AutoColumn>
             </TitleWrapper>
             <Divider />
             <AutoColumn gap="12px">
               {Object.keys(details).map(key => (
                 <RowBetween key={key}>
-                  <TYPE.smallGray>{key}:</TYPE.smallGray>
+                  <TYPE.body style={{ fontSize: 13, opacity: 0.6 }}>{key}</TYPE.body>
                   <TYPE.main
                     style={{
                       textAlign: 'right',
                       overflow: 'hidden',
                       whiteSpace: 'pre-wrap',
                       textOverflow: 'ellipsis',
-                      minHeight: 19
+                      minHeight: 19,
+                      fontWeight: 400,
+                      fontSize: 14
                     }}
                   >
                     {details[key as keyof typeof details]}
@@ -284,7 +374,7 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
             </AutoColumn>
             <RowBetween>{buttons}</RowBetween>
           </AutoColumn>
-        </AppBody>
+        </MainCard>
       ) : (
         <OptionCardSkeleton />
       )}
@@ -349,5 +439,54 @@ export function AlternativeDisplay({
         )
       )}
     </AutoColumn>
+  )
+}
+
+export function ModeSwitch({ current, setMode }: { current: number; setMode: (mode: number) => void }) {
+  return (
+    <Box display="flex" style={{ gap: '12px' }}>
+      {[<CardIcon />, <TableIcon />].map((icon, idx) => {
+        return (
+          <ButtonOutlined
+            key={idx}
+            style={{ width: 60, border: '1px solid rgba(0, 0, 0, 0.1)' }}
+            onClick={() => setMode(idx)}
+          >
+            <Box opacity={current === idx ? 1 : 0.4}>{icon}</Box>
+          </ButtonOutlined>
+        )
+      })}
+    </Box>
+  )
+}
+
+export function OptionRow({ optionId }: { optionId: string }) {
+  const option = useOption(optionId)
+  const callTotalSupply = useTotalSupply(option?.call?.token)
+  const putTotalSupply = useTotalSupply(option?.put?.token)
+  const history = useHistory()
+
+  const range = {
+    cap: tryFormatAmount(option?.priceCap, option?.currency ?? undefined),
+    floor: tryFormatAmount(option?.priceFloor, option?.currency ?? undefined)
+  }
+  const data = {
+    'Option Range': option ? `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` : '',
+    'Underlying Assets': option ? `${option.underlying?.symbol}, ${option.currency?.symbol}` : '-',
+    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-',
+    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-'
+  }
+
+  return (
+    <Row
+      row={[
+        <>{optionId}</>,
+        <>{data['Underlying Assets']}</>,
+        <>{data['Option Range']}</>,
+        <>{data['Current Bear Issuance']}</>,
+        <>{data['Current Bull Issuance']}</>,
+        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+      ]}
+    />
   )
 }

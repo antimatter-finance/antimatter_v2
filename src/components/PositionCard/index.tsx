@@ -10,13 +10,13 @@ import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonEmpty, ButtonOutlined, ButtonOutlinedPrimary } from '../Button'
+import { ButtonEmpty, ButtonOutlinedPrimary, ButtonPrimary } from '../Button'
 // import { transparentize } from 'polished'
 import { CardNoise } from '../earn/styled'
 
 // import { useColor } from '../../hooks/useColor'
 
-import Card, { /* GreyCard,*/ LightCard, OutlineCard } from '../Card'
+import Card, { /* GreyCard,*/ LightCard } from '../Card'
 import DataCard from '../Card/DataCard'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
@@ -26,6 +26,7 @@ import { Dots } from '../swap/styleds'
 import useTheme from 'hooks/useTheme'
 import { useOption } from '../../state/market/hooks'
 import { Link } from 'react-router-dom'
+import { Box } from '@mui/material'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -37,9 +38,11 @@ export const HoverCard = styled(Card)`
     border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
   }
 `
-const StyledPositionCard = styled(OutlineCard)`
+const StyledPositionCard = styled(Card)`
   position: relative;
   overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 `
 
 interface PositionCardProps {
@@ -196,13 +199,20 @@ export default function FullPositionCard({ index }: { index: string }) {
   const theme = useTheme()
 
   return (
-    <StyledPositionCard style={{ padding: '14px' }}>
+    <StyledPositionCard>
       <CardNoise />
-      <AutoColumn gap="12px">
-        <FixedHeightRow>
+      <AutoColumn>
+        <Box
+          height={60}
+          bgcolor={theme.mainBG}
+          display="flex"
+          justifyContent="space-between"
+          padding="0 20px"
+          borderRadius="16px"
+        >
           <AutoRow gap="8px">
             <CurrencyLogo currency={option?.underlying ?? undefined} size={'20px'} />
-            <Text fontWeight={500} fontSize={16}>
+            <Text fontWeight={400} fontSize={16}>
               {!option || !option.currency || !option.priceCap || !option.priceFloor ? (
                 <Dots>Loading</Dots>
               ) : (
@@ -233,48 +243,50 @@ export default function FullPositionCard({ index }: { index: string }) {
               )}
             </ButtonEmpty>
           </RowFixed>
-        </FixedHeightRow>
+        </Box>
 
         {showMore && (
-          <AutoColumn gap="8px">
-            <FixedHeightRow>
-              <Text fontSize={12} fontWeight={500} color={theme.text3}>
-                Bull token:
-              </Text>
-              <Text fontSize={12} fontWeight={500}>
-                {userCallBalance ? userCallBalance.toSignificant(4) : '-'}
-              </Text>
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={12} fontWeight={500} color={theme.text3}>
-                Bear token:
-              </Text>
-              <Text fontSize={12} fontWeight={500}>
-                {userPutBalance ? userPutBalance.toSignificant(4) : '-'}
-              </Text>
-            </FixedHeightRow>
+          <Box padding="24px 20px 32px">
+            <AutoColumn gap="8px">
+              <FixedHeightRow>
+                <Text fontSize={16} fontWeight={400} color={theme.text5}>
+                  Bull token:
+                </Text>
+                <Text fontSize={16} fontWeight={400}>
+                  {userCallBalance ? userCallBalance.toSignificant(4) : '-'}
+                </Text>
+              </FixedHeightRow>
+              <FixedHeightRow>
+                <Text fontSize={16} fontWeight={400} color={theme.text5}>
+                  Bear token:
+                </Text>
+                <Text fontSize={16} fontWeight={400}>
+                  {userPutBalance ? userPutBalance.toSignificant(4) : '-'}
+                </Text>
+              </FixedHeightRow>
 
-            <RowBetween marginTop="10px">
-              <ButtonOutlined
-                as={Link}
-                to={`/liquidity/add/${index}`}
-                padding="4px"
-                width="48%"
-                style={{ color: theme.primary1, borderColor: theme.primary1 }}
-              >
-                + Add
-              </ButtonOutlined>
-              <ButtonOutlined
-                as={Link}
-                to={`/liquidity/remove/${index}`}
-                style={{ color: theme.primary1, borderColor: theme.primary1 }}
-                padding="4px"
-                width="48%"
-              >
-                - Remove
-              </ButtonOutlined>
-            </RowBetween>
-          </AutoColumn>
+              <RowBetween marginTop="10px">
+                <ButtonPrimary
+                  as={Link}
+                  to={`/liquidity/add/${index}`}
+                  padding="4px"
+                  width="48%"
+                  style={{ color: theme.bg1, borderColor: theme.primary1, height: 48, fontSize: 16, fontWeight: 400 }}
+                >
+                  + Add New
+                </ButtonPrimary>
+                <ButtonPrimary
+                  as={Link}
+                  to={`/liquidity/remove/${index}`}
+                  style={{ color: theme.bg1, borderColor: theme.primary1, height: 48, fontSize: 16, fontWeight: 400 }}
+                  padding="4px"
+                  width="48%"
+                >
+                  - Remove
+                </ButtonPrimary>
+              </RowBetween>
+            </AutoColumn>
+          </Box>
         )}
       </AutoColumn>
     </StyledPositionCard>

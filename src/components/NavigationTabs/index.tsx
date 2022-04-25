@@ -6,18 +6,21 @@ import { NavLink, Link as HistoryLink } from 'react-router-dom'
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
 // import QuestionHelper from '../QuestionHelper'
-import Settings, { SLIPPAGE_TYPE } from '../Settings'
+import Settings /*SLIPPAGE_TYPE*/ from '../Settings'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { resetMintState } from 'state/mint/actions'
 import { TYPE } from 'theme'
-import Setting from '../Settings'
+// import Setting from '../Settings'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   border-radius: 3rem;
   justify-content: space-evenly;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding:0
+  `}
 `
 
 const activeClassName = 'ACTIVE'
@@ -110,17 +113,17 @@ export function MarketStrategyTabs({ generation }: { generation: boolean }) {
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '0rem 1rem 0 1rem' }}>
-        <HistoryLink
+      <RowBetween>
+        {/* <HistoryLink
           to="/option_creation"
           onClick={() => {
             //adding && dispatch(resetMintState())
           }}
-        >
-          <StyledArrowLeft />
-        </HistoryLink>
+        > */}
+        {/* <StyledArrowLeft />
+        </HistoryLink> */}
         <TYPE.mediumHeader>{generation ? 'Add Liquidity Position' : 'Remove Liquidity Position'}</TYPE.mediumHeader>
-        <Setting onlySlippage={true} slippageType={generation ? SLIPPAGE_TYPE.generation : SLIPPAGE_TYPE.redeem} />
+        {/* <Setting onlySlippage={true} slippageType={generation ? SLIPPAGE_TYPE.generation : SLIPPAGE_TYPE.redeem} /> */}
       </RowBetween>
     </Tabs>
   )

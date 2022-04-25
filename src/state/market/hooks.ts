@@ -239,6 +239,7 @@ export function useAllOptionTypes() {
 
 export function useOption(id: string | undefined): Option | undefined {
   const { account } = useActiveWeb3React()
+
   const factoryContract = useAntimatterContract()
 
   const callAddressRes = useSingleCallResult(factoryContract, 'allCalls', id ? [id] : undefined)

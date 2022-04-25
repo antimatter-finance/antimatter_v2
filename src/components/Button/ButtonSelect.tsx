@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useState, useCallback } from 'react'
 import styled from 'styled-components'
-import { darken } from 'polished'
 import { ButtonProps } from 'rebass/styled-components'
 import { ButtonOutlined, Base } from '.'
 import { RowBetween, AutoRow } from '../Row'
@@ -23,7 +22,7 @@ export const StyledDropDown = styled(DropDown)`
 export const ButtonSelectStyle = styled(ButtonOutlined)<{ selected?: boolean; width?: string }>`
   width: ${({ width }) => (width ? width : '100%')};
   height: 3rem;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.mainBG};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text3)};
   border-radius: 14px;
   border: unset;
@@ -32,10 +31,10 @@ export const ButtonSelectStyle = styled(ButtonOutlined)<{ selected?: boolean; wi
 
   :focus,
   :active {
-    border: 1px solid ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+    border: none;
   }
   :hover {
-    border: 1px solid ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.bg5))};
+    border: none;
   }
   &:disabled {
     :hover {
@@ -55,7 +54,7 @@ const OptionWrapper = styled.div<{ isOpen: boolean; width?: string }>`
   overflow: hidden;
   z-index: 2;
   margin-top: 4px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.mainBG};
   & button:last-child {
     border: none;
   }
@@ -70,7 +69,7 @@ const SelectOption = styled(Base)<{ selected: boolean }>`
   :hover,
   :focus,
   :active {
-    background-color: ${({ theme }) => theme.bg3};
+    background-color: ${({ theme }) => theme.bg4};
   }
   justify-content: flex-start;
 `
@@ -121,14 +120,23 @@ export default function ButtonSelect({
     <div style={{ position: 'relative', marginRight: marginRight, width: width, flex: 1 }}>
       {label && (
         <AutoRow style={{ marginBottom: '4px' }}>
-          <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+          <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
             {label}
           </TYPE.body>
         </AutoRow>
       )}
       <ButtonSelectStyle onClick={handleClick} selected={!!selectedId} disabled={disabled}>
         <RowBetween>
-          <div style={{ display: 'flex', alignItems: 'center' }}>{buttonContent}</div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              color: selectedId ? theme.text1 : theme.text5,
+              fontWeight: 400
+            }}
+          >
+            {buttonContent}
+          </div>
           {!disabled && <StyledDropDown />}
         </RowBetween>
       </ButtonSelectStyle>

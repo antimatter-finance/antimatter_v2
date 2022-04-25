@@ -76,7 +76,6 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
     border: 1px solid ${({ theme }) => darken(0.05, theme.text1)};
     color: ${({ theme }) => theme.primaryText1};
   }
-
   ${({ faded }) =>
     faded &&
     css`

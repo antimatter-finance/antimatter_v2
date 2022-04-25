@@ -41,7 +41,7 @@ const AppWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   overflow-x: hidden;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToSmall`
   flex-direction: column;
   height: 100vh;
@@ -84,13 +84,13 @@ const BodyWrapper = styled.div`
   padding-bottom: 100px;
   /* ${({ theme }) => theme.mediaWidth.upToLarge`
   margin-bottom: ${theme.headerHeight};
-  min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight}); 
+  min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight});
   `} */
   ${({ theme }) => theme.mediaWidth.upToSmall`
   padding-bottom: 0;
   min-width: auto;
   margin-top: ${({ theme }) => theme.mobileHeaderHeight}
-  min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight}); 
+  min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight});
   `};
 `
 // const Feedback = styled(ExternalLink)`

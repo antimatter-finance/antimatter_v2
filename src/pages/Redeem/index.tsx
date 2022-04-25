@@ -15,7 +15,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useIsExpertMode } from '../../state/user/hooks'
 import AppBody from '../AppBody'
-import { Wrapper } from '../Pool/styleds'
 import { ConfirmRedeemModalBottom } from './ConfirmRedeemModalBottom'
 import { GenerateBar } from '../../components/MarketStrategy/GenerateBar'
 import { absolute, useDerivedStrategyInfo, useOption } from '../../state/market/hooks'
@@ -31,8 +30,8 @@ import { OptionField } from '../Swap'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { LabeledCard } from '../../components/Card'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { TYPE } from '../../theme'
 import { isMobile } from 'react-device-detect'
+import { Typography } from '@mui/material'
 
 export default function Redeem({
   match: {
@@ -205,134 +204,132 @@ export default function Redeem({
   }, [txHash])
 
   return (
-    <AppBody maxWidth="560px" style={{ marginTop: isMobile ? 40 : 100, marginBottom: isMobile ? 100 : 0 }}>
+    <AppBody maxWidth="600px" style={{ marginTop: isMobile ? 40 : 100, marginBottom: isMobile ? 100 : 0 }}>
       <MarketStrategyTabs generation={false} />
-      <TYPE.darkGray fontSize={14} style={{ padding: '4px 16px 30px' }}>
+      <Typography sx={{ color: '#1F191B', opacity: 0.5, fontSize: 16, mt: '8px', mb: '32px' }}>
         In this section you can remove both bull and bear tokens at the same time.
-      </TYPE.darkGray>
-      <Wrapper>
-        <TransactionConfirmationModal
-          isOpen={showConfirm}
-          onDismiss={handleDismissConfirmation}
-          attemptingTxn={attemptingTxn}
-          hash={txHash}
-          content={() => (
-            <ConfirmationModalContent
-              title="Redemption confirmation"
-              onDismiss={handleDismissConfirmation}
-              topContent={modalHeader}
-              bottomContent={modalBottom}
-            />
-          )}
-          pendingText="Confirm"
+      </Typography>
+      <TransactionConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={handleDismissConfirmation}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={() => (
+          <ConfirmationModalContent
+            title="Redemption confirmation"
+            onDismiss={handleDismissConfirmation}
+            topContent={modalHeader}
+            bottomContent={modalBottom}
+          />
+        )}
+        pendingText="Confirm"
+      />
+
+      <AutoColumn gap="24px">
+        <RowBetween>
+          <LabeledCard label="Option ID" content={optionTypeIndex ?? ''} style={{ marginRight: 15 }} />
+          <LabeledCard
+            label="Option Type"
+            content={
+              <RowFixed>
+                <CurrencyLogo currency={option?.underlying ?? undefined} size="17px" style={{ marginRight: 12 }} />
+                {optionName}
+              </RowFixed>
+            }
+          />
+        </RowBetween>
+        <RedeemTokenPanel
+          value={callTypedAmount ?? ''}
+          onUserInput={setCallTypedAmount}
+          label={'Bull token'}
+          currency={option?.call?.token}
+          currencyBalance={userCallBalance?.toExact().toString()}
+          isCall={true}
         />
+        <ColumnCenter>
+          <Plus size="24" color={theme.text2} />
+        </ColumnCenter>
+        <RedeemTokenPanel
+          value={callTypedAmount ?? ''}
+          onUserInput={setCallTypedAmount}
+          label={'Bear token'}
+          currency={option?.put?.token}
+          negativeMarginTop="-25px"
+          currencyBalance={userPutBalance?.toExact().toString()}
+          isCall={false}
+        />
+        {option?.underlying && option?.currency && delta?.dUnd && delta.dCur && (
+          <GenerateBar
+            cardTitle={`You will receive`}
+            currency0={option.underlying}
+            currency1={option.currency}
+            subTitle="Output Token"
+            callVol={delta && parseBalance({ val: delta.dUnd, token: option.underlying })}
+            putVol={delta && parseBalance({ val: delta.dCur, token: option.currency })}
+          />
+        )}
 
-        <AutoColumn gap="24px">
-          <RowBetween>
-            <LabeledCard label="Option ID" content={optionTypeIndex ?? ''} style={{ marginRight: 15 }} />
-            <LabeledCard
-              label="Option Type"
-              content={
-                <RowFixed>
-                  <CurrencyLogo currency={option?.underlying ?? undefined} size="17px" style={{ marginRight: 12 }} />
-                  {optionName}
-                </RowFixed>
+        {!account ? (
+          <ButtonPrimary onClick={toggleWalletModal}>Connect Wallet</ButtonPrimary>
+        ) : (
+          <AutoColumn gap={'md'}>
+            {(approval1 === ApprovalState.NOT_APPROVED ||
+              approval1 === ApprovalState.PENDING ||
+              approval2 === ApprovalState.NOT_APPROVED ||
+              approval2 === ApprovalState.PENDING) && (
+              <RowBetween>
+                {approval1 !== ApprovalState.APPROVED && (
+                  <ButtonPrimary
+                    onClick={approveACallback}
+                    disabled={approval1 === ApprovalState.PENDING}
+                    width={approval2 !== ApprovalState.APPROVED ? '48%' : '100%'}
+                  >
+                    {approval1 === ApprovalState.PENDING ? (
+                      <Dots>Approving {option?.underlying?.symbol}</Dots>
+                    ) : (
+                      'Approve ' + option?.underlying?.symbol
+                    )}
+                  </ButtonPrimary>
+                )}
+                {approval2 !== ApprovalState.APPROVED && (
+                  <ButtonPrimary
+                    onClick={approveBCallback}
+                    disabled={approval2 === ApprovalState.PENDING}
+                    width={approval1 !== ApprovalState.APPROVED ? '48%' : '100%'}
+                  >
+                    {approval2 === ApprovalState.PENDING ? (
+                      <Dots>Approving {option?.currency?.symbol}</Dots>
+                    ) : (
+                      'Approve ' + option?.currency?.symbol
+                    )}
+                  </ButtonPrimary>
+                )}
+              </RowBetween>
+            )}
+            {/* {redeemError && <ButtonOutlined style={{ opacity: '0.5' }}>{redeemError}</ButtonOutlined>} */}
+            {/* {!redeemError && ( */}
+            <ButtonError
+              onClick={() => {
+                expertMode ? onRedeem() : setShowConfirm(true)
+              }}
+              disabled={
+                !callTypedAmount ||
+                // !putTypedAmount ||
+                !delta ||
+                !!redeemError ||
+                approval1 !== ApprovalState.APPROVED ||
+                approval2 !== ApprovalState.APPROVED
               }
-            />
-          </RowBetween>
-          <RedeemTokenPanel
-            value={callTypedAmount ?? ''}
-            onUserInput={setCallTypedAmount}
-            label={'Bull token'}
-            currency={option?.call?.token}
-            currencyBalance={userCallBalance?.toExact().toString()}
-            isCall={true}
-          />
-          <ColumnCenter>
-            <Plus size="28" color={theme.text2} />
-          </ColumnCenter>
-          <RedeemTokenPanel
-            value={callTypedAmount ?? ''}
-            onUserInput={setCallTypedAmount}
-            label={'Bull token'}
-            currency={option?.put?.token}
-            negativeMarginTop="-25px"
-            currencyBalance={userPutBalance?.toExact().toString()}
-            isCall={false}
-          />
-          {option?.underlying && option?.currency && delta?.dUnd && delta.dCur && (
-            <GenerateBar
-              cardTitle={`You will receive`}
-              currency0={option.underlying}
-              currency1={option.currency}
-              subTitle="Output Token"
-              callVol={delta && parseBalance({ val: delta.dUnd, token: option.underlying })}
-              putVol={delta && parseBalance({ val: delta.dCur, token: option.currency })}
-            />
-          )}
-
-          {!account ? (
-            <ButtonPrimary onClick={toggleWalletModal}>Connect Wallet</ButtonPrimary>
-          ) : (
-            <AutoColumn gap={'md'}>
-              {(approval1 === ApprovalState.NOT_APPROVED ||
-                approval1 === ApprovalState.PENDING ||
-                approval2 === ApprovalState.NOT_APPROVED ||
-                approval2 === ApprovalState.PENDING) && (
-                <RowBetween>
-                  {approval1 !== ApprovalState.APPROVED && (
-                    <ButtonPrimary
-                      onClick={approveACallback}
-                      disabled={approval1 === ApprovalState.PENDING}
-                      width={approval2 !== ApprovalState.APPROVED ? '48%' : '100%'}
-                    >
-                      {approval1 === ApprovalState.PENDING ? (
-                        <Dots>Approving {option?.underlying?.symbol}</Dots>
-                      ) : (
-                        'Approve ' + option?.underlying?.symbol
-                      )}
-                    </ButtonPrimary>
-                  )}
-                  {approval2 !== ApprovalState.APPROVED && (
-                    <ButtonPrimary
-                      onClick={approveBCallback}
-                      disabled={approval2 === ApprovalState.PENDING}
-                      width={approval1 !== ApprovalState.APPROVED ? '48%' : '100%'}
-                    >
-                      {approval2 === ApprovalState.PENDING ? (
-                        <Dots>Approving {option?.currency?.symbol}</Dots>
-                      ) : (
-                        'Approve ' + option?.currency?.symbol
-                      )}
-                    </ButtonPrimary>
-                  )}
-                </RowBetween>
-              )}
-              {/* {redeemError && <ButtonOutlined style={{ opacity: '0.5' }}>{redeemError}</ButtonOutlined>} */}
-              {/* {!redeemError && ( */}
-              <ButtonError
-                onClick={() => {
-                  expertMode ? onRedeem() : setShowConfirm(true)
-                }}
-                disabled={
-                  !callTypedAmount ||
-                  // !putTypedAmount ||
-                  !delta ||
-                  !!redeemError ||
-                  approval1 !== ApprovalState.APPROVED ||
-                  approval2 !== ApprovalState.APPROVED
-                }
-                error={!!redeemError}
-              >
-                <Text fontSize={16} fontWeight={500}>
-                  {redeemError ? redeemError : 'Redeem'}
-                </Text>
-              </ButtonError>
-              {/* )} */}
-            </AutoColumn>
-          )}
-        </AutoColumn>
-      </Wrapper>
+              error={!!redeemError}
+            >
+              <Text fontSize={16} fontWeight={500}>
+                {redeemError ? redeemError : 'Redeem'}
+              </Text>
+            </ButtonError>
+            {/* )} */}
+          </AutoColumn>
+        )}
+      </AutoColumn>
     </AppBody>
   )
 }
