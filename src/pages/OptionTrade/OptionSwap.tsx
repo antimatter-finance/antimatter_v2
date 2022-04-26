@@ -265,14 +265,14 @@ export default function OptionSwap({
     const address = currentTab === 'CALL' ? option?.callToken?.address : option?.putToken?.address
 
     return {
-      ['Pool ID']: optionId || '-',
+      'Pool ID': optionId || '-',
       [`${currentTab} Token Contract Address`]: address && shortenAddress(address, 6),
-      ['Option Price Range']: `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` || '',
+      'Option Price Range': `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` || '',
       [`${currentTab} Token Issuance`]:
         currentTab === 'CALL'
           ? '$' + callTotalSupply?.toFixed(2).toString()
           : '$' + putTotalSupply?.toFixed(2).toString(),
-      ['Underlying Assets']: `${option.underlying?.symbol}, ${option.currency?.symbol}` || '-',
+      'Underlying Assets': `${option.underlying?.symbol}, ${option.currency?.symbol}` || '-',
       [`${currentTab} Token Market Price`]:
         currentTab === 'CALL' ? '$' + priceCall.toSignificant(6) : '$' + pricePut.toSignificant(6)
     }
