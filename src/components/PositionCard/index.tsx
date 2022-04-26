@@ -43,6 +43,9 @@ const StyledPositionCard = styled(Card)`
   overflow: hidden;
   padding: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0;
+  `}
 `
 
 interface PositionCardProps {
@@ -205,10 +208,26 @@ export default function FullPositionCard({ index }: { index: string }) {
         <Box
           height={60}
           bgcolor={theme.mainBG}
-          display="flex"
           justifyContent="space-between"
-          padding="0 20px"
           borderRadius="16px"
+          sx={{
+            display: {
+              xs: 'block',
+              md: 'flex'
+            },
+            height: {
+              xs: 97,
+              md: 60
+            },
+            flexDirection: {
+              xs: 'column',
+              md: 'row'
+            },
+            padding: {
+              xs: '20px',
+              md: '0 20px'
+            }
+          }}
         >
           <AutoRow gap="8px">
             <CurrencyLogo currency={option?.underlying ?? undefined} size={'20px'} />
@@ -223,7 +242,7 @@ export default function FullPositionCard({ index }: { index: string }) {
               )}
             </Text>
           </AutoRow>
-          <RowFixed gap="8px">
+          <RowFixed gap="8px" style={{ marginLeft: 'auto' }}>
             <ButtonEmpty
               padding="6px 8px"
               borderRadius="12px"

@@ -29,7 +29,7 @@ export const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{
     ${({ theme }) => theme.mediaWidth.upToSmall`
     height: calc(100% - ${theme.headerHeight});
     justify-content: flex-end;
-    padding-top: 0;
+    padding-top: ${theme.headerHeight};
     `}
   }
 `
@@ -42,7 +42,6 @@ export const Wrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-top: auto;
     max-height: calc(100% - ${theme.mobileHeaderHeight});
-    overflow-y: auto;
   `}
 `
 
