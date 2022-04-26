@@ -37,6 +37,7 @@ import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
 import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
 import Table, { Row } from 'components/Table'
 import useMediaWidth from 'hooks/useMediaWidth'
+import { WrappedSymbolMap } from 'constants/index'
 
 const TableHeaders = [
   'Option ID',
@@ -256,7 +257,7 @@ export default function OptionTrade({
                 <Grid container mt={'20px'} spacing={'20px'}>
                   {(mode === Mode.CARD || match) &&
                     filteredIndexes.map((optionId, idx) => (
-                      <Grid item xs={12} md={4}>
+                      <Grid key={idx} item xs={12} md={4}>
                         {optionId ? (
                           <OptionCard
                             optionId={optionId}
@@ -474,8 +475,12 @@ export function OptionRow({ optionId }: { optionId: string }) {
 
 export function TokenTab({ token }: { token: Token }) {
   const match = useMediaWidth('upToSmall')
+  const tokenSymbol = token.symbol || ''
 
-  const price = usePrice(token.symbol)
+  const wrappedSymbolMapIndex = Object.values(WrappedSymbolMap).indexOf(tokenSymbol) || -1
+  const targetSymbol = Object.keys(WrappedSymbolMap)[wrappedSymbolMapIndex]
+
+  const price = usePrice(targetSymbol)
   const priceNum = price && +price
 
   return (

@@ -338,3 +338,10 @@ export const Name: { readonly [chainId in ChainId]?: string } = {
 //   [ChainId.Avalanche]: new MainCurrency(18, Symbol[ChainId.Avalanche], Name[ChainId.Avalanche]),
 //   [ChainId.Arbitrum]: ETHER
 // }
+
+export const WrappedSymbolMap = {
+  BTC: 'WBTC',
+  BNB: 'WBNB',
+  ETH: 'WETH',
+  AVAX: 'WAVAX'
+}

@@ -650,7 +650,7 @@ export default function Header() {
         </NetworkCard>
       )
     )
-  }, [account, chainId, isDownSm])
+  }, [account, chainId, isDownSm, library, theme])
 
   return (
     <>

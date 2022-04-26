@@ -116,7 +116,7 @@ export function theme(darkMode: boolean): DefaultTheme {
     desktop: css`
       ${mediaWidthTemplates.upToSmall`display:none;`}
     `,
-    mobileHeaderHeight: '90px',
+    mobileHeaderHeight: '51px',
     headerHeight: '80px',
 
     // css snippets

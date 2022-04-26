@@ -449,7 +449,7 @@ export default function Swap({
             {/* <div style={{ position: 'absolute', top: -5, right: 0 }}>
               <SettingsTab onlySlippage />
             </div> */}
-            <Toggle isActive={optionType == OptionField.CALL} toggle={handleSwitchOptionType} />
+            <Toggle isActive={optionType === OptionField.CALL} toggle={handleSwitchOptionType} />
             <RadioButtonWrapper gap="28px">
               <div>
                 <Label>Choose Action</Label>
