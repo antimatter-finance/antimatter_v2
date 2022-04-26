@@ -40,9 +40,12 @@ import { ANTIMATTER_ROUTER_ADDRESS, INITIAL_ALLOWED_SLIPPAGE } from '../../const
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import TradePrice from '../../components/swap/TradePrice'
 import { ClickableText } from '../Pool/styleds'
-import SettingsTab from '../../components/Settings'
+// import SettingsTab from '../../components/Settings'
 import QuestionHelper from '../../components/QuestionHelper'
 import { getCurrencySymbol } from 'utils/getCurrencySymbol'
+import Toggle from 'components/Toggle'
+import { NavLink } from 'react-router-dom'
+import { Typography, Box } from '@mui/material'
 
 enum Field {
   OPTION = 'OPTION',
@@ -65,31 +68,35 @@ const RadioButtonWrapper = styled(AutoColumn)`
   }
 `
 const Label = styled.div`
-  font-size: 14px;
-  color: ${({ theme }) => theme.text3};
+  font-size: 12px;
+  color: ${({ theme }) => theme.text5};
   margin-bottom: 8px;
 `
 
 const SwapAppBody = styled(BodyWrapper)`
-  border-color: ${({ theme }) => theme.text4};
+  background: #ffffff;
   min-height: 100%;
   margin: -1px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   max-width: unset
   width: calc(100% + 2px)
-  `}
+  `};
+  border: none;
+  box-shadow: none;
 `
 
 export default function Swap({
   option,
   optionPrice,
-  // handleOptionType,
-  setParentTXHash
+  setOptionType,
+  setParentTXHash,
+  optionType
 }: {
   option: Option | undefined
   optionPrice: OptionPrice | undefined
-  // handleOptionType: (option: string) => void
+  setOptionType?: (option: string) => void
   setParentTXHash: (hash: string) => void
+  optionType?: string
 }) {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const { account, chainId } = useActiveWeb3React()
@@ -115,7 +122,7 @@ export default function Swap({
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [auction, setAuction] = useState<string>(Auction.BUY)
-  const [optionType, setOptionType] = useState<string>(OptionField.CALL)
+  // const [optionType, setOptionType] = useState<string>(OptionField.CALL)
 
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
@@ -401,6 +408,11 @@ export default function Swap({
     chainId
   ])
 
+  const handleSwitchOptionType = useCallback(() => {
+    const type = optionType === OptionField.CALL ? OptionField.PUT : OptionField.CALL
+    setOptionType && setOptionType(type)
+  }, [optionType, setOptionType])
+
   return (
     <>
       <TokenWarningModal
@@ -433,11 +445,11 @@ export default function Swap({
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
           />
-
           <AutoColumn gap="28px">
-            <div style={{ position: 'absolute', top: -5, right: 0 }}>
+            {/* <div style={{ position: 'absolute', top: -5, right: 0 }}>
               <SettingsTab onlySlippage />
-            </div>
+            </div> */}
+            <Toggle isActive={optionType === OptionField.CALL} toggle={handleSwitchOptionType} />
             <RadioButtonWrapper gap="28px">
               <div>
                 <Label>Choose Action</Label>
@@ -449,21 +461,6 @@ export default function Swap({
                   ]}
                   selected={auction}
                   onCheck={(option: string) => setAuction(option)}
-                />
-              </div>
-              <div>
-                <Label>Choose token type</Label>
-                <TypeRadioButton
-                  name={'option_type'}
-                  options={[
-                    { label: '+ Bull Token', option: OptionField.CALL },
-                    { label: '− Bear Token', option: OptionField.PUT }
-                  ]}
-                  selected={optionType}
-                  onCheck={(option: string) => {
-                    // handleOptionType(option)
-                    setOptionType(option)
-                  }}
                 />
               </div>
             </RadioButtonWrapper>
@@ -485,7 +482,7 @@ export default function Swap({
               disableCurrencySelect={false}
               value={formattedAmounts[Field.PAY]}
               onUserInput={handleTypeOutput}
-              label={auction === Auction.BUY ? 'Payment currency' : 'Receipt currency'}
+              label={'Currency'}
               showMaxButton={false}
               currency={payCurrency}
               onCurrencySelect={handleOutputSelect}
@@ -529,14 +526,14 @@ export default function Swap({
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonPrimary onClick={toggleWalletModal} borderRadius="49px">
+              <ButtonPrimary onClick={toggleWalletModal} borderRadius="16px">
                 Connect Wallet
               </ButtonPrimary>
             ) : statusButton.disabled ? (
               <OutlineCard
                 style={{
                   textAlign: 'center',
-                  borderRadius: '49px',
+                  borderRadius: '16px',
                   padding: '14px',
                   borderColor: theme.primary1,
                   fontSize: '1rem'
@@ -625,6 +622,13 @@ export default function Swap({
             {/*) : null}*/}
           </BottomGrouping>
         </Wrapper>
+        <Box width="100%" display="flex" justifyContent="center">
+          <NavLink to={'/option_creation'} style={{ textDecoration: 'none' }}>
+            <Typography component="span" color="#31B047" fontSize={{ xs: 12, md: 14 }}>
+              Option Creation
+            </Typography>
+          </NavLink>
+        </Box>
 
         {/*<AdvancedSwapDetailsDropdown undTrade={underlyingTrade} curTrade={currencyTrade} />*/}
       </SwapAppBody>

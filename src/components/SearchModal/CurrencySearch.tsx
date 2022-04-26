@@ -165,7 +165,9 @@ export function CurrencySearch({
       <PaddedColumn gap="16px">
         <RowBetween>
           <div></div>
-          <Text fontSize={18}>Select a token</Text>
+          <Text fontSize={20} opacity={0.6}>
+            Select Token
+          </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <Row>

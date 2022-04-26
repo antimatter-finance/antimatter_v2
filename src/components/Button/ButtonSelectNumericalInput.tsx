@@ -94,7 +94,7 @@ export function ButtonSelectNumericalInput({
 
       <RangeInputWrapper isOpen={isOpen} ref={node as any}>
         <NumberInputPanel
-          label="Option ID"
+          // label="Option ID"
           value={`${value ?? ''}`}
           onUserInput={handleValInput}
           showMaxButton={false}

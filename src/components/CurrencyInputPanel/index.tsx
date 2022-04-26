@@ -17,9 +17,9 @@ import useTheme from '../../hooks/useTheme'
 import { Symbol } from '../../constants'
 const InputRow = styled.div<{ selected: boolean; halfWidth?: boolean; hideSelect?: boolean }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 14px;
-  height: 3rem;
+  background-color: ${({ theme }) => theme.mainBG};
+  border-radius: 16px;
+  height: 59px;
   width: ${({ halfWidth, hideSelect }) => (hideSelect ? '100%' : halfWidth ? '48%' : '55%')}};
   padding: ${({ selected }) => (selected ? '0 0.5rem 0 1rem' : '0 0.65rem 0 0.75rem')};
   ${({ theme }) => theme.flexRowNoWrap}
@@ -30,24 +30,16 @@ const InputRow = styled.div<{ selected: boolean; halfWidth?: boolean; hideSelect
 
 const CurrencySelect = styled.button<{ selected: boolean; halfWidth?: boolean; hideInput?: boolean }>`
   align-items: center;
-  height: 3rem;
+  height: 60px;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.mainBG};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text3)};
   border-radius: 14px;
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
   user-select: none;
   padding: 0 10px;
   border: 1px solid transparent;
-  :focus,
-  :active {
-    border: 1px solid ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
-  }
-  :hover {
-    border: 1px solid ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.bg5))};
-  }
   width: ${({ halfWidth }) => (halfWidth ? '48%' : '100%')}};
   ${({ theme, selected, hideInput }) => theme.mediaWidth.upToSmall`
 ${!hideInput &&
@@ -89,14 +81,14 @@ const Aligner = styled.span`
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   width: 13px;
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke: ${({ theme }) => theme.text1};
     stroke-width: 1.5px;
   }
   ${({ theme, selected }) =>
     selected
       ? ''
       : theme.mediaWidth.upToExtraSmall`
-  display: none
+  display: none;
 `};
 `
 
@@ -198,19 +190,19 @@ export default function CurrencyInputPanel({
       <Container hideInput={hideInput}>
         <LabelRow>
           <AutoRow justify="space-between">
-            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+            <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
               {label}
             </TYPE.body>
             {account && (
               <TYPE.body
                 onClick={onMax}
-                color={theme.text3}
-                fontWeight={500}
+                color={theme.text5}
+                fontWeight={400}
                 fontSize={14}
                 style={{ display: 'inline', cursor: 'pointer' }}
               >
                 {!hideBalance && !!currency && selectedCurrencyBalance
-                  ? (customBalanceText ?? 'Your balance: ') + selectedCurrencyBalance?.toSignificant(6)
+                  ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
                   : ' -'}
               </TYPE.body>
             )}

@@ -18,6 +18,7 @@ import { isTransactionRecent, useAllTransactions } from '../../state/transaction
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { ButtonOutlined } from '../Button'
+import useMediaWidth from 'hooks/useMediaWidth'
 // import Copy from '../AccountDetails/Copy'
 
 // import Identicon from '../Identicon'
@@ -76,7 +77,6 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
     border: 1px solid ${({ theme }) => darken(0.05, theme.text1)};
     color: ${({ theme }) => theme.primaryText1};
   }
-
   ${({ faded }) =>
     faded &&
     css`
@@ -105,7 +105,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   }
   & p {
     margin: 0;
-    margin-left: 16px;
+    margin-left: 8px;
   }
 `
 
@@ -205,6 +205,8 @@ function Web3StatusInner() {
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
   const theme = useTheme()
+  const isDownSm = useMediaWidth('upToSmall')
+
   if (account) {
     return (
       <>
@@ -220,7 +222,9 @@ function Web3StatusInner() {
           ) : (
             <>
               {hasSocks ? SOCK : null}
-              <Text style={{ marginRight: 4 }}>{ENSName || shortenAddress(account)}</Text>
+              <Text style={{ marginRight: 4, fontSize: isDownSm ? '8px' : '14px' }}>
+                {ENSName || shortenAddress(account)}
+              </Text>
             </>
           )}
         </Web3StatusConnected>

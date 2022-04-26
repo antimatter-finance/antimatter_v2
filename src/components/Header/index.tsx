@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk'
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { Check, ChevronDown } from 'react-feather'
 import { Link, NavLink, useHistory, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
@@ -8,7 +8,7 @@ import { darken } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { ButtonText, ExternalHeaderLink, ExternalLink, HideMedium, StyledLink, TYPE } from '../../theme'
-import Row, { RowFixed, RowBetween, RowFlat } from '../Row'
+import Row, { RowFixed, RowFlat } from '../Row'
 import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
 import { ReactComponent as Logo } from '../../assets/svg/antimatter_logo.svg'
@@ -17,7 +17,7 @@ import { ReactComponent as BSCInvert } from '../../assets/svg/binance.svg'
 import { ReactComponent as BSCSelected } from '../../assets/svg/bsc_logo_selected.svg'
 import { ReactComponent as Arbitrum } from '../../assets/svg/arbitrum_logo.svg'
 import { ReactComponent as AVAX } from '../../assets/svg/avax_logo.svg'
-import { ReactComponent as Plus } from '../../assets/svg/plus.svg'
+// import { ReactComponent as Plus } from '../../assets/svg/plus.svg'
 import useTheme from 'hooks/useTheme'
 import ToggleMenu from './ToggleMenu'
 import { ReactComponent as AntimatterIcon } from 'assets/svg/antimatter_icon.svg'
@@ -29,6 +29,7 @@ import { useWalletModalToggle } from 'state/application/hooks'
 import usePrevious from '../../hooks/usePrevious'
 import { CountUp } from 'use-count-up/lib'
 import { Symbol } from '../../constants'
+import useMediaWidth from 'hooks/useMediaWidth'
 
 interface TabContent {
   title: string
@@ -43,20 +44,28 @@ interface Tab extends TabContent {
 
 export const tabs: Tab[] = [
   { title: 'Option Trading', route: 'option_trading' },
-  { title: 'Option Creation', route: 'option_creation' },
-  // { title: 'Farm', route: 'farm' },
   {
-    title: 'Tools',
+    title: 'Option Creation',
     subTab: [
-      { title: 'Calculator', route: '/calculator' },
-      { title: 'Statistics', route: '/statistics' }
+      { title: 'Option Creation', route: '/option_creation/creation' },
+      { title: 'Liquidity', route: '/option_creation/liquidity' }
     ]
   },
+  { title: 'Governance', link: 'https://governance.antimatter.finance' },
+  { title: 'Calculator', route: 'calculator' },
+  // { title: 'Farm', route: 'farm' },
+  // {
+  //   title: 'Tools',
+  //   subTab: [
+  // { title: 'Calculator', route: '/calculator' },
+  // { title: 'Statistics', route: '/statistics' }
+  //   ]
+  // },
   {
     title: 'About',
     subTab: [
       { title: 'Docs', link: 'https://docs.antimatter.finance/' },
-      { title: 'Governance', link: 'https://governance.antimatter.finance' },
+      // { title: 'Governance', link: 'https://governance.antimatter.finance' },
       {
         title: 'Auditing Report',
         link:
@@ -158,101 +167,58 @@ export const SUPPORTED_NETWORKS: {
 
 export const headerHeightDisplacement = '32px'
 
-const HeaderFrame = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: row;
-  width: 100%;
-  top: 0;
-  position: relative;
-  border-bottom: 1px solid ${({ theme }) => theme.text5};
-  padding: 27px 0 0;
-  z-index: 99;
-  background-color: ${({ theme }) => theme.bg1};
-  height: ${({ theme }) => theme.headerHeight};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    padding: 0 1rem;
-    width: 100%;
-    position: relative;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
-`
+// const HeaderFrame = styled.div`
+//   display: flex;
+//   justify-content: flex-start;
+//   flex-direction: row;
+//   width: 100%;
+//   top: 0;
+//   position: relative;
+//   padding: 24px 0;
+//   z-index: 99;
+//   background-color: ${({ theme }) => theme.bg1};
+//   height: ${({ theme }) => theme.headerHeight};
+//   ${({ theme }) => theme.mediaWidth.upToMedium`
+//     grid-template-columns: 1fr;
+//     padding: 0 1rem;
+//     width: 100%;
+//     position: relative;
+//   `};
+//   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+//         padding: 0.5rem 1rem;
+//   `}
+// `
 
 const HeaderControls = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-left: 8px;
-  margin-feft: auto;
   margin-right: 2rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin-right: 7px;
+`};
 `
-
-// ${({ theme }) => theme.mediaWidth.upToSmall`
-// height: ${theme.headerHeight};
-// flex-direction: row;
-// align-items: center;
-// justify-self: center;
-// padding: 1rem;
-// position: fixed;
-// bottom: 0px;
-// left: 0px;
-// width: 100%;
-// z-index: 99;
-// background-color: ${theme.bg2};
-// justify-content: center;
-// border-top: 1px solid;
-// border-top-color: #303030;
-// `}
-
-// const HeaderElement = styled.div<{
-//   show?: boolean
-// }>`
-//   display: flex;
-
-//   /* addresses safari's lack of support for "gap" */
-//   & > *:not(:first-child) {
-//     margin-left: 8px;
-//   }
-
-//   ${({ theme }) => theme.mediaWidth.upToLarge`
-//     align-items: center;
-//   `};
-//   & > div {
-//     border: 1px solid ${({ theme, show }) => (show ? theme.text1 : 'transparent')};
-//     border-radius: 4px;
-//     height: 32px;
-//     display: flex;
-//     align-items: center;
-//     font-size: 13px;
-//   }
-// `
 
 const HeaderRow = styled(RowFixed)`
   width: 100%;
   padding-left: 2rem;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
+  background-color: ${({ theme }) => theme.bg1};
+  height: ${({ theme }) => theme.headerHeight};
+  position: fixed;
+  z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    height: ${({ theme }) => theme.headerHeight};
-    background-color: rgb(25, 25, 25);
-    border-top: 1px solid rgb(48, 48, 48);
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    left:0 ;
-    z-index: 100;
-    padding: 0;
-    justify-content: center
+    display: none
   `};
 `
 
 const HeaderLinks = styled(Row)`
+  margin-left: 80px;
   justify-content: center;
+  align-items: center;
   width: auto;
+  z-index: 99;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
@@ -269,9 +235,11 @@ const AccountElement = styled.div<{ active: boolean }>`
   white-space: nowrap;
   padding: ${({ active }) => (active ? '14px 16px' : 'unset')};
   padding-right: 0;
-  height: 44px;
+  height: 36px;
+  background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  width:100%`}
+    height: 24px;
+    width:100px`}
 `
 
 const UNIAmount = styled.div`
@@ -283,7 +251,7 @@ const UNIAmount = styled.div`
   background-color: transparent;
   &:after {
     content: '';
-    border-right: 2px solid ${({ theme }) => theme.text2};
+    border-right: 1px solid ${({ theme }) => theme.text5};
     margin-left: 16px;
     height: 20px;
   }
@@ -294,27 +262,13 @@ const UNIWrapper = styled.span`
   position: relative;
 `
 
-// const HideLarge = styled(RowFixed)`
-//   display: none;
-//   ${({ theme }) => theme.mediaWidth.upToLarge`
-//     display: inherit;
-//   `};
-// `
-
-// const ShowLarge = styled(RowFixed)`
-//   ${({ theme }) => theme.mediaWidth.upToLarge`
-//     display: none;
-//   `};
-// `
-
 const NetworkCard = styled.div<{ color?: string }>`
   color: #000000;
   cursor: pointer;
   display: flex;
-  padding: 0 8px;
+  padding: 8px 10px;
   height: 32px;
-  margin-right: 12px;
-  margin-left: 19px;
+  margin-right: 6px;
   justify-content: center;
   border-radius: 4px;
   align-items: center;
@@ -322,6 +276,8 @@ const NetworkCard = styled.div<{ color?: string }>`
   font-size: 13px;
   font-weight: 500;
   position: relative;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
   & > svg:first-child {
     height: 20px;
     width: 20px;
@@ -364,31 +320,32 @@ const activeClassName = 'ACTIVE'
 const StyledNavLink = styled(NavLink).attrs({
   activeClassName
 })`
-  align-items: flex-start;
+  align-items: center;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.text5};
   font-size: 14px;
   width: fit-content;
-  margin: 0 18px;
   font-weight: 400;
-  padding: 10px 0 27px;
+  padding: 32px 0;
   white-space: nowrap;
   transition: 0.5s;
   ${({ theme }) => theme.flexRowNoWrap}
   &.${activeClassName} {
-    color: ${({ theme }) => theme.primary1};
-    border-bottom: 1px solid ${({ theme }) => theme.primary1};
+    color: ${({ theme }) => theme.text1};
+    border-bottom: 1px solid ${({ theme }) => theme.text1};
   }
-
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.primary1)};
-  }
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin: 0 10px;
-  `};
+  };
+  margin: 0 22px;
+`
+
+const StyledExternalHeaderLink = styled(ExternalHeaderLink)`
+  margin: 0 22px;
+  padding: 32px 0;
 `
 
 const StyledDropdown = styled.div`
@@ -396,12 +353,12 @@ const StyledDropdown = styled.div`
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.text5};
   font-size: 14px;
   width: fit-content;
   margin: 0 18px;
   font-weight: 400;
-  padding: 10px 0 27px;
+  padding: 32px 0;
   transition: 0.5s;
   position: relative;
   ${({ theme }) => theme.flexRowNoWrap}
@@ -428,7 +385,7 @@ const StyledDropdown = styled.div`
     }
   }
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin: 0 10px;
+    margin: 0 22px;
   `};
 `
 const Dropdown = styled.div<{ width?: string }>`
@@ -441,8 +398,8 @@ const Dropdown = styled.div<{ width?: string }>`
   flex-direction: column;
   width: ${({ width }) => width ?? '172px'};
   a {
-    color: #ffffff;
-    background-color: ${({ theme }) => theme.bg2};
+    color: #000000;
+    background-color: ${({ theme }) => theme.mainBG};
     text-decoration: none;
     padding: 14px 17px;
     border-bottom: 1px solid ${({ theme }) => theme.text5}
@@ -453,7 +410,7 @@ const Dropdown = styled.div<{ width?: string }>`
       border: none;
     }
     :hover {
-      background-color: ${({ theme }) => theme.bg4};
+      background-color: ${({ theme }) => theme.mainBG};
       color: ${({ theme }) => darken(0.1, theme.primary1)};
     }
   }
@@ -485,9 +442,6 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const StyledLogo = styled(Logo)`
-  margin-top: 5px;
-`
 const UserButtonWrap = styled.div`
   margin-left: 5px;
   position: relative;
@@ -523,8 +477,8 @@ const UserMenuItem = styled.button`
 `
 
 const UserButton = styled(ButtonText)<{ isOpen: boolean; size?: string }>`
-  height: ${({ size }) => size ?? '44px'};
-  width: ${({ size }) => size ?? '44px'};
+  height: ${({ size }) => size ?? '36px'};
+  width: ${({ size }) => size ?? '36px'};
   border-radius: 50%;
   background: ${({ isOpen }) =>
     isOpen
@@ -601,7 +555,7 @@ const MobileHeader = styled.header`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px;
+  padding: 0 13px;
   background-color: ${({ theme }) => theme.bg1};
   height: ${({ theme }) => theme.mobileHeaderHeight};
   position: fixed;
@@ -611,16 +565,18 @@ const MobileHeader = styled.header`
   display: none;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: flex
-`};
+  `};
 `
 
 export default function Header() {
+  const theme = useTheme()
   const { account, chainId, library } = useActiveWeb3React()
   const [, setChain] = useState<any>(undefined)
   const aggregateBalance = useETHBalances([account ?? undefined])[account ?? '']
 
   const countUpValue = aggregateBalance?.toFixed(2) ?? '0'
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
+  const isDownSm = useMediaWidth('upToSmall')
 
   const history = useHistory()
   const match = useRouteMatch('/profile')
@@ -638,8 +594,66 @@ export default function Header() {
     })
   }, [chainId])
 
+  const NetworkSelect = useMemo(() => {
+    return (
+      account &&
+      chainId &&
+      NetworkInfo[chainId] && (
+        <NetworkCard title={NetworkInfo[chainId].title} color={NetworkInfo[chainId as number]?.color}>
+          {NetworkInfo[chainId].selectedIcon ? NetworkInfo[chainId].selectedIcon : NetworkInfo[chainId].icon}
+          <span style={{ marginRight: 4 }} />
+          {!isDownSm && NetworkInfo[chainId].title}
+          <ChevronDown size={18} style={{ marginLeft: '5px', color: theme.text5 }} />
+          <div className="dropdown_wrapper">
+            <Dropdown>
+              {Object.keys(NetworkInfo).map(key => {
+                const info = NetworkInfo[parseInt(key) as keyof typeof NetworkInfo]
+                if (!info) {
+                  return null
+                }
+                return info.link ? (
+                  <ExternalLink href={info.link} key={info.link}>
+                    {parseInt(key) === chainId && (
+                      <span style={{ position: 'absolute', left: '15px' }}>
+                        <Check size={18} />
+                      </span>
+                    )}
+                    {info.icon ?? info.icon}
+                    {info.title}
+                  </ExternalLink>
+                ) : (
+                  <StyledLink
+                    key={info.title}
+                    onClick={() => {
+                      if (parseInt(key) === ChainId.MAINNET) {
+                        library?.send('wallet_switchEthereumChain', [{ chainId: '0x1' }, account])
+                      } else if (parseInt(key) === ChainId.ROPSTEN) {
+                        library?.send('wallet_switchEthereumChain', [{ chainId: '0x3' }, account])
+                      } else {
+                        const params = SUPPORTED_NETWORKS[parseInt(key) as ChainId]
+                        library?.send('wallet_addEthereumChain', [params, account])
+                      }
+                    }}
+                  >
+                    {parseInt(key) === chainId && (
+                      <span style={{ position: 'absolute', left: '15px' }}>
+                        <Check size={18} />
+                      </span>
+                    )}
+                    {info.icon ?? info.icon}
+                    {info.title}
+                  </StyledLink>
+                )
+              })}
+            </Dropdown>
+          </div>
+        </NetworkCard>
+      )
+    )
+  }, [account, chainId, isDownSm, library, theme])
+
   return (
-    <HeaderFrame>
+    <>
       <ClaimModal />
       <HeaderRow>
         <HideMedium>
@@ -685,9 +699,9 @@ export default function Header() {
                 return (
                   <React.Fragment key={title}>
                     {link ? (
-                      <ExternalHeaderLink href={link} key={title}>
+                      <StyledExternalHeaderLink href={link} key={title}>
                         {title}
-                      </ExternalHeaderLink>
+                      </StyledExternalHeaderLink>
                     ) : (
                       <StyledNavLink id={`stake-nav-link`} to={'/' + route} key={route}>
                         {title}
@@ -700,80 +714,16 @@ export default function Header() {
           </RowFixed>
         </HideMedium>
         <HeaderControls>
-          {/* <HeaderElement show={!!account}> */}
-          {/* <HideSmall>
-            <HideLarge>
-              <ToggleMenu padding={0} />
-            </HideLarge>
-          </HideSmall> */}
-          {account && chainId && NetworkInfo[chainId] && (
-            <NetworkCard title={NetworkInfo[chainId].title} color={NetworkInfo[chainId as number]?.color}>
-              {NetworkInfo[chainId].selectedIcon ? NetworkInfo[chainId].selectedIcon : NetworkInfo[chainId].icon}
-              <span style={{ marginRight: 4 }} />
-              {NetworkInfo[chainId].title}
-              <ChevronDown size={18} style={{ marginLeft: '5px' }} />
-              <div className="dropdown_wrapper">
-                <Dropdown>
-                  {Object.keys(NetworkInfo).map(key => {
-                    const info = NetworkInfo[parseInt(key) as keyof typeof NetworkInfo]
-                    if (!info) {
-                      return null
-                    }
-                    return info.link ? (
-                      <ExternalLink href={info.link} key={info.link}>
-                        {parseInt(key) === chainId && (
-                          <span style={{ position: 'absolute', left: '15px' }}>
-                            <Check size={18} />
-                          </span>
-                        )}
-                        {info.icon ?? info.icon}
-                        {info.title}
-                      </ExternalLink>
-                    ) : (
-                      <StyledLink
-                        key={info.title}
-                        onClick={() => {
-                          if (parseInt(key) === ChainId.MAINNET) {
-                            library?.send('wallet_switchEthereumChain', [{ chainId: '0x1' }, account])
-                          } else if (parseInt(key) === ChainId.ROPSTEN) {
-                            library?.send('wallet_switchEthereumChain', [{ chainId: '0x3' }, account])
-                          } else {
-                            const params = SUPPORTED_NETWORKS[parseInt(key) as ChainId]
-                            library?.send('wallet_addEthereumChain', [params, account])
-                          }
-                        }}
-                      >
-                        {parseInt(key) === chainId && (
-                          <span style={{ position: 'absolute', left: '15px' }}>
-                            <Check size={18} />
-                          </span>
-                        )}
-                        {info.icon ?? info.icon}
-                        {info.title}
-                      </StyledLink>
-                    )
-                  })}
-                </Dropdown>
-              </div>
-            </NetworkCard>
-          )}
-
-          {/* </HeaderElement> */}
-          {/* <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
-          <Menu />
-        </HeaderElementWrap> */}
-
+          {NetworkSelect}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {!!account && aggregateBalance && (
               <UNIWrapper>
                 <UNIAmount style={{ pointerEvents: 'none' }}>
                   {account && (
-                    <TYPE.gray
+                    <p
                       style={{
-                        paddingRight: '.4rem'
+                        paddingRight: '.4rem',
+                        color: theme.text1
                       }}
                     >
                       <CountUp
@@ -784,9 +734,9 @@ export default function Header() {
                         thousandsSeparator={','}
                         duration={1}
                       />
-                    </TYPE.gray>
+                    </p>
                   )}
-                  {Symbol[chainId ?? 1]}
+                  <span style={{ color: theme.text1 }}> {Symbol[chainId ?? 1]}</span>
                 </UNIAmount>
               </UNIWrapper>
             )}
@@ -803,22 +753,36 @@ export default function Header() {
         </HeaderControls>
       </HeaderRow>
       <MobileHeader>
-        <RowBetween>
-          <LogoButton />
+        <LogoButton />
+        <HeaderControls>
+          {NetworkSelect}
+          <AccountElement active={!!account} style={{ pointerEvents: 'auto', marginRight: 8 }}>
+            <Web3Status />
+            {account && (
+              <UserButtonWrap>
+                <UserButton id="userButton" onClick={toShowUserPanel} isOpen={!!match} size={'24px'}>
+                  <AntimatterIcon />
+                </UserButton>
+                <UserMenu account={account} />
+              </UserButtonWrap>
+            )}
+          </AccountElement>
           <ToggleMenu />
-        </RowBetween>
+        </HeaderControls>
       </MobileHeader>
-    </HeaderFrame>
+    </>
   )
 }
 
 function LogoButton() {
+  const isDownSm = useMediaWidth('upToSmall')
+
   return (
-    <RowFlat style={{ alignItems: 'flex-start' }}>
+    <RowFlat style={{ alignItems: 'center' }}>
       <Link to={'/'}>
-        <StyledLogo />
+        <Logo width={isDownSm ? 100 : 140} />
       </Link>
-      <StyledDropdown style={{ color: '#ffffff', padding: '6px 25px 18px 20px', margin: 0 }}>
+      {/* <StyledDropdown style={{ color: '#ffffff', padding: '6px 25px 18px 20px', margin: 0 }}>
         <Plus style={{ margin: 'auto auto' }} />
         <Dropdown>
           <ExternalLink href={'https://v1.antimatter.finance'}>Antimatter Option V1</ExternalLink>
@@ -826,7 +790,7 @@ function LogoButton() {
             <span style={{ whiteSpace: 'nowrap' }}>Antimatter NFT</span>
           </ExternalLink>
         </Dropdown>
-      </StyledDropdown>
+      </StyledDropdown> */}
     </RowFlat>
   )
 }

@@ -12,7 +12,7 @@ const InputRow = styled.div<{ disabled?: boolean }>`
   align-items: center;
   padding: 0 0.5rem 0 1rem;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.mainBG};
   border-radius: 14px;
   height: 3rem;
   ${({ theme }) => theme.flexRowNoWrap}
@@ -21,12 +21,12 @@ const InputRow = styled.div<{ disabled?: boolean }>`
 const CustomNumericalInput = styled(NumericalInput)<{ disabled?: boolean }>`
   font-size: 16px;
   background-color: transparent;
-  color: ${({ theme, disabled }) => (disabled ? darken(0.6, theme.white) : theme.white)};
+  color: ${({ theme, disabled }) => (disabled ? darken(0.6, theme.text1) : theme.text1)};
 `
 
 const LabelRow = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text5};
   font-size: 0.75rem;
   line-height: 1rem;
   span:hover {
@@ -72,6 +72,7 @@ const StyledUnit = styled.div`
   font-size: 16px;
   font-weight: 400;
   margin-right: 6px;
+  color: #000000;
 `
 
 const Container = styled.div``
@@ -98,7 +99,7 @@ export default function NumberInputPanel({
   disabled = false,
   value,
   onMax,
-  label = 'Input',
+  label,
   hideBalance = false,
   hideLabel = false,
   showMaxButton,
@@ -116,29 +117,31 @@ export default function NumberInputPanel({
   return (
     <InputPanel id={id} negativeMarginTop={negativeMarginTop}>
       <Container>
-        <LabelRow>
-          <AutoRow justify="space-between">
-            {!hideLabel && (
-              <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-                {label}
-              </TYPE.body>
-            )}
-            {account && (
-              <TYPE.body
-                onClick={onMax}
-                color={theme.text3}
-                fontWeight={500}
-                fontSize={14}
-                style={{ display: 'inline', cursor: 'pointer' }}
-              >
-                {!hideBalance ? (customBalanceText ?? 'Your balance: ') + '' : ''}
-              </TYPE.body>
-            )}
-          </AutoRow>
-        </LabelRow>
+        {label && (
+          <LabelRow>
+            <AutoRow justify="space-between">
+              {!hideLabel && (
+                <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
+                  {label}
+                </TYPE.body>
+              )}
+              {account && (
+                <TYPE.body
+                  onClick={onMax}
+                  color={theme.text3}
+                  fontWeight={500}
+                  fontSize={14}
+                  style={{ display: 'inline', cursor: 'pointer' }}
+                >
+                  {!hideBalance ? (customBalanceText ?? 'Your balance: ') + '' : ''}
+                </TYPE.body>
+              )}
+            </AutoRow>
+          </LabelRow>
+        )}
         <InputRow disabled={disabled}>
           <CustomNumericalInput
-            placeholder={intOnly ? '0' : placeholder ?? undefined}
+            placeholder={placeholder || ''}
             disabled={disabled}
             className="token-amount-input"
             value={value}

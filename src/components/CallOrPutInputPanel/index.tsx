@@ -3,12 +3,12 @@ import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import CurrencyLogo from '../CurrencyLogo'
-import { AutoRow } from '../Row'
+import { AutoRow, RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import CallIcon from '../../assets/svg/call_icon.svg'
 import PutIcon from '../../assets/svg/put_icon.svg'
-
+import useMediaWidth from 'hooks/useMediaWidth'
 import useTheme from '../../hooks/useTheme'
 import { LabeledCard } from 'components/Card'
 
@@ -16,7 +16,7 @@ const InputRow = styled.div<{ selected: boolean; halfWidth?: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 14px;
-  height: 3rem;
+  height: 60px;
   padding: ${({ selected }) => (selected ? '0 0.5rem 0 1rem' : '0 0.65rem 0 0.75rem')};
   width: ${({ halfWidth }) => (halfWidth ? '50%' : '55%')}};
   ${({ theme }) => theme.flexRowNoWrap}
@@ -68,6 +68,19 @@ const CallOrPutIcon = styled.img`
   margin-left: 16px;
 `
 
+const RowWrapper = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
+  gap: 20px;
+  & >div:first-child{
+    margin-right: 0
+  };
+  &>div{
+    width: 100%
+  }
+`}
+`
+
 interface CallOrPutInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -100,6 +113,7 @@ export default function CallOrPutInputPanel({
   underlying
 }: CallOrPutInputPanelProps) {
   const theme = useTheme()
+  const upToSmall = useMediaWidth('upToSmall')
 
   return (
     <InputPanel id={id} negativeMarginTop={negativeMarginTop}>
@@ -107,15 +121,15 @@ export default function CallOrPutInputPanel({
         {!hideInput && (
           <LabelRow>
             <AutoRow justify="space-between">
-              <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+              <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
                 {label}
               </TYPE.body>
             </AutoRow>
           </LabelRow>
         )}
-        <Aligner>
+        <RowWrapper>
           <LabeledCard
-            style={{ width: halfWidth ? '50%' : '100%', marginRight: 15 }}
+            style={{ width: halfWidth ? (upToSmall ? '100%' : '50%') : '100%', marginRight: upToSmall ? 0 : 15 }}
             content={
               <Aligner>
                 <CurrencyLogo currency={underlying ?? undefined} size={'24px'} />
@@ -133,7 +147,11 @@ export default function CallOrPutInputPanel({
             }
           />
 
-          <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} halfWidth={halfWidth} selected>
+          <InputRow
+            style={hideInput ? { padding: '0', borderRadius: '8px' } : { background: theme.mainBG }}
+            halfWidth={halfWidth}
+            selected
+          >
             {!hideInput && (
               <>
                 <CustomNumericalInput
@@ -146,7 +164,7 @@ export default function CallOrPutInputPanel({
               </>
             )}
           </InputRow>
-        </Aligner>
+        </RowWrapper>
       </Container>
     </InputPanel>
   )

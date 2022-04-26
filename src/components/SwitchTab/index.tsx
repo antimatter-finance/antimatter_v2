@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 export const SwitchTabWrapper = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.text5};
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     overflow-x: auto;
@@ -15,10 +15,11 @@ export const Tab = styled.button<{ selected: boolean }>`
   background: none;
   padding: 14px 0;
   margin-right: 40px;
-  font-size: 16px;
-  font-weight: 500;
-  color: ${({ selected, theme }) => (selected ? theme.primary1 : theme.white)};
-  border-bottom: 2px solid ${({ selected, theme }) => (selected ? theme.primary4 : 'transparent')};
+  font-size: 20px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.text1};
+  opacity: ${({ selected, theme }) => (selected ? 1 : 0.4)};
+  border-bottom: 1px solid ${({ selected, theme }) => (selected ? theme.primary1 : 'transparent')};
   margin-bottom: -1px;
   transition: 0.3s;
   cursor: pointer;

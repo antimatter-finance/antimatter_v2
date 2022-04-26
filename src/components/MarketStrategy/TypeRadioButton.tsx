@@ -18,7 +18,10 @@ export function TypeRadioButton({
   onCheck: (tokenType: string) => void
 }) {
   return (
-    <fieldset id={name} style={{ border: 'none', display: 'flex', justifyContent: 'space-between', padding: '0' }}>
+    <fieldset
+      id={name}
+      style={{ border: 'none', display: 'flex', justifyContent: 'space-between', padding: '0', width: '100%' }}
+    >
       {options.map(({ label, option }) => {
         return (
           <RadioButton

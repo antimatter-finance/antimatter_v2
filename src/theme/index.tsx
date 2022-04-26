@@ -41,26 +41,26 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: '#FFFFFF',
-    text2: '#CCCCCC',
-    text3: '#999999',
-    text4: '#727272',
-    text5: '#333333',
+    text1: '#000000',
+    text2: '#191919',
+    text3: '#252525',
+    text4: '#303030',
+    text5: '#A1A1A1',
 
     // backgrounds / greys
-    bg1: '#000000',
-    bg2: '#191919',
-    bg3: '#252525',
-    bg4: '#303030',
-    bg5: '#A1A1A1',
-
+    bg1: '#FFFFFF',
+    bg2: '#CCCCCC',
+    bg3: '#999999',
+    bg4: '#727272',
+    bg5: '#333333',
     //specialty colors
+    mainBG: '#F2F5FA',
     modalBG: 'rgba(0,0,0,.7)',
     advancedBG: 'rgba(0,0,0,0.1)',
 
     //primary colors
-    primary1: '#B2F355',
-    primary2: '#B2F355',
+    primary1: '#31B047',
+    primary2: '#129026',
     primary3: '#B2F355',
     primary4: '#739A3B',
     primary5: '#2B3A14',
@@ -116,8 +116,8 @@ export function theme(darkMode: boolean): DefaultTheme {
     desktop: css`
       ${mediaWidthTemplates.upToSmall`display:none;`}
     `,
-    mobileHeaderHeight: '90px',
-    headerHeight: '82px',
+    mobileHeaderHeight: '51px',
+    headerHeight: '80px',
 
     // css snippets
     flexColumnNoWrap: css`
@@ -207,25 +207,20 @@ html, input, textarea, button {
     font-family: 'Roboto', sans-serif;
   }
 }
-
 html,
 body {
   margin: 0;
   padding: 0;
 }
-
  a {
-   color: ${colors(false).blue1}; 
+   color: ${colors(false).blue1};
  }
-
 * {
   box-sizing: border-box;
 }
-
 button {
   user-select: none;
 }
-
 html {
   font-size: 16px;
   font-variant: none;
@@ -233,7 +228,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
-  
 }
 `
 
@@ -242,7 +236,6 @@ html {
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg2};
 }
-
 body {
   min-height: 100vh;
   background-position: 0 -30vh;

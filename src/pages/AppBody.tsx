@@ -5,19 +5,16 @@ import { TYPE } from '../theme'
 export const BodyWrapper = styled.div<{ maxWidth?: string; gradient1?: boolean; isCard?: boolean }>`
   max-width: ${({ maxWidth }) => maxWidth ?? '480px'};
   width: 100%;
-  background: ${({ theme, gradient1 }) => (gradient1 ? theme.gradient1 : theme.gradient2)};
-  border: 1px solid ${({ theme }) => theme.text5};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 32px;
-  padding: 1.5rem;
+  background: #ffffff;
+  padding: 32px 24px 36px;
   ${({ theme, isCard }) => theme.mediaWidth.upToSmall`
     min-height:100%;
     padding: 16px 24px;
     flex-grow: 1;
     ${isCard ? '' : 'border-bottom-left-radius: unset;border-bottom-right-radius: unset;'}
 
-  `}
+  `};
 `
 
 /**
@@ -55,7 +52,7 @@ const StyledSwapHeader = styled.div`
 export function BodyHeader({ title }: { title: string }) {
   return (
     <StyledSwapHeader>
-      <TYPE.mediumHeader fontSize={28}>{title}</TYPE.mediumHeader>
+      <TYPE.mediumHeader fontSize={24}>{title}</TYPE.mediumHeader>
     </StyledSwapHeader>
   )
 }

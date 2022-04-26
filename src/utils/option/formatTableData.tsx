@@ -2,7 +2,7 @@ import CopyHelper from 'components/AccountDetails/Copy'
 import React from 'react'
 import { shortenAddress } from 'utils'
 import { parsePrice } from './utils'
-import { ButtonOutlinedPrimary } from 'components/Button'
+import { ButtonPrimary } from 'components/Button'
 import { RowFixed } from 'components/Row'
 import { MyPositionType } from 'hooks/useUserFetch'
 
@@ -39,15 +39,16 @@ export const formatMyCreation = (
             {shortenAddress(callAddress, 6)}
             <CopyHelper key={callAddress + 'a'} toCopy={callAddress} />
           </RowFixed>,
-          <ButtonOutlinedPrimary
+          <ButtonPrimary
             key={callAddress}
             onClick={() => {
               historyPush(`/option_trading/${optionIndex}`)
             }}
             padding="12px"
+            borderRadius="50px"
           >
             Trade
-          </ButtonOutlinedPrimary>
+          </ButtonPrimary>
         ],
         [
           `${underlyingSymbol}($${parsePrice(priceFloor, currencyDecimals)} ~ $${parsePrice(
@@ -60,15 +61,16 @@ export const formatMyCreation = (
             {shortenAddress(putAddress, 6)}
             <CopyHelper key={putAddress + 'a'} toCopy={putAddress} />
           </RowFixed>,
-          <ButtonOutlinedPrimary
+          <ButtonPrimary
             key={putAddress}
             onClick={() => {
               historyPush(`/option_trading/${optionIndex}`)
             }}
             padding="12px"
+            borderRadius="50px"
           >
             Trade
-          </ButtonOutlinedPrimary>
+          </ButtonPrimary>
         ]
       )
       return acc
@@ -89,15 +91,16 @@ export const formatMyPositionRow = (
       {shortenAddress(address, 6)}
       <CopyHelper toCopy={address} />
     </RowFixed>,
-    <ButtonOutlinedPrimary
+    <ButtonPrimary
       key={id}
       onClick={() => {
         historyPush(`/option_trading/${id}`)
       }}
       padding="12px"
+      borderRadius="50px"
     >
       Trade
-    </ButtonOutlinedPrimary>
+    </ButtonPrimary>
   ]
 }
 

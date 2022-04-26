@@ -6,13 +6,22 @@ import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
 
-const Card = styled(Box)<{ width?: string; padding?: string; border?: string; borderRadius?: string }>`
+const Card = styled(Box)<{
+  width?: string
+  padding?: string
+  border?: string
+  borderRadius?: string
+  maxWidth?: string
+  margin?: string
+}>`
   width: ${({ width }) => width ?? '100%'};
+  max-width: ${({ maxWidth }) => maxWidth};
   border-radius: 16px;
-  padding: 1.25rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
   border-radius: ${({ borderRadius }) => borderRadius};
+  background: ${({ theme }) => theme.bg1};
+  margin: ${({ margin }) => margin};
 `
 export default Card
 
@@ -30,7 +39,7 @@ export const GreyCard = styled(Card)`
 `
 
 export const OutlineCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.text5};
+  border: 1px solid rgba(0, 0, 0, 0.1);
   color: ${({ theme }) => theme.text3};
 `
 
@@ -70,6 +79,10 @@ export const TranslucentCard = styled(Card)`
   background-color: ${({ theme }) => theme.translucent};
 `
 
+export const MainCard = styled(Card)`
+  background-color: ${({ theme }) => theme.mainBG};
+`
+
 export function LabeledCard({
   label,
   content,
@@ -83,13 +96,13 @@ export function LabeledCard({
   return (
     <AutoColumn gap="4px" style={{ width: '100%', ...style }}>
       {label && (
-        <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+        <TYPE.body color={theme.text5} fontWeight={400} fontSize={12}>
           {label}
         </TYPE.body>
       )}
-      <LightGreyCard padding="12px 20px" style={{ height: 48, display: 'flex', alignItems: 'center' }}>
+      <MainCard padding="12px 20px" style={{ height: 60, display: 'flex', alignItems: 'center' }}>
         {content}
-      </LightGreyCard>
+      </MainCard>
     </AutoColumn>
   )
 }

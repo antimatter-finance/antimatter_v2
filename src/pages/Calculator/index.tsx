@@ -10,7 +10,7 @@ import NumberInputPanel from 'components/NumberInputPanel'
 import { useCalculatorCallback } from 'hooks/useCalculatorCallback'
 import { tryFormatAmount } from 'state/swap/hooks'
 import useTheme from 'hooks/useTheme'
-import Card from 'components/Card'
+import Card, { OutlineCard } from 'components/Card'
 
 const InputWrapper = styled(RowBetween)`
   & > div {
@@ -18,12 +18,12 @@ const InputWrapper = styled(RowBetween)`
   }
 `
 
-export const Divider = styled.div`
-  width: calc(100% + 48px);
-  height: 0;
-  margin-left: -24px;
-  border-bottom: 1px solid ${({ theme }) => theme.bg4};
-`
+// export const Divider = styled.div`
+//   width: calc(100% + 48px);
+//   height: 0;
+//   margin-left: -24px;
+//   border-bottom: 1px solid ${({ theme }) => theme.bg4};
+// `
 
 enum ERROR {
   EMPTY_PRICE = 'Price cannot be 0',
@@ -82,112 +82,117 @@ export default function Calculator() {
   }, [calculateCallback, price, priceCap, priceFloor, totalCall, totalPut])
 
   return (
-    <AppBody maxWidth="560px" style={{ marginTop: 24 }}>
+    <AppBody maxWidth="560px" style={{ marginTop: 96 }}>
       <AutoColumn gap="20px">
         <AutoColumn gap="8px">
           <BodyHeader title="Option Calculator" />
-          <TYPE.body fontSize={14}>
+          <TYPE.body fontSize={16} opacity={0.4} marginTop={'8px'}>
             The calculator is configured with Antimatter option equation and allows you to estimate bull and bear token
             prices in various options. You can use it as the referral for the potential arbitrage opportunity.
           </TYPE.body>
         </AutoColumn>
-        <Divider />
         <AutoColumn gap="14px">
-          <TYPE.smallHeader>Input</TYPE.smallHeader>
-          <NumberInputPanel
-            label="Underlying Target Currency Market Price"
-            onUserInput={price => setPrice(limitDigits(price))}
-            value={price}
-            showMaxButton={false}
-            id="price"
-            unit="USDT"
-            hideBalance
-          />
-          <InputWrapper>
+          <TYPE.body>Input</TYPE.body>
+          <OutlineCard padding="24px 20px">
             <NumberInputPanel
-              label="Price Floor"
-              onUserInput={priceFloor => setPriceFloor(limitDigits(priceFloor))}
-              value={priceFloor}
+              label="Underlying Target Currency Market Price"
+              onUserInput={price => setPrice(limitDigits(price))}
+              value={price}
               showMaxButton={false}
-              id="pricefloor"
+              id="price"
               unit="USDT"
               hideBalance
             />
-            <NumberInputPanel
-              label="Price Ceiling"
-              onUserInput={priceCap => setPriceCap(limitDigits(priceCap))}
-              value={priceCap}
-              showMaxButton={false}
-              id="priceCeiling"
-              unit="USDT"
-              hideBalance
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <NumberInputPanel
-              label="Bull Issuance"
-              onUserInput={totalCall => setTotalCall(totalCall)}
-              value={totalCall}
-              showMaxButton={false}
-              id="callIssuance"
-              unit="Shares"
-              hideBalance
-            />
-            <NumberInputPanel
-              label="Bear Issuance"
-              onUserInput={totalPut => setTotalPut(totalPut)}
-              value={totalPut}
-              showMaxButton={false}
-              id="putIssuance"
-              unit="Shares"
-              hideBalance
-            />
-          </InputWrapper>
+            <InputWrapper style={{ marginTop: 24 }}>
+              <NumberInputPanel
+                label="Price Floor"
+                onUserInput={priceFloor => setPriceFloor(limitDigits(priceFloor))}
+                value={priceFloor}
+                showMaxButton={false}
+                id="pricefloor"
+                unit="USDT"
+                hideBalance
+              />
+              <NumberInputPanel
+                label="Price Ceiling"
+                onUserInput={priceCap => setPriceCap(limitDigits(priceCap))}
+                value={priceCap}
+                showMaxButton={false}
+                id="priceCeiling"
+                unit="USDT"
+                hideBalance
+              />
+            </InputWrapper>
+            <InputWrapper style={{ marginTop: 24 }}>
+              <NumberInputPanel
+                label="Bull Issuance"
+                onUserInput={totalCall => setTotalCall(totalCall)}
+                value={totalCall}
+                showMaxButton={false}
+                id="callIssuance"
+                unit="Shares"
+                hideBalance
+              />
+              <NumberInputPanel
+                label="Bear Issuance"
+                onUserInput={totalPut => setTotalPut(totalPut)}
+                value={totalPut}
+                showMaxButton={false}
+                id="putIssuance"
+                unit="Shares"
+                hideBalance
+              />
+            </InputWrapper>
+          </OutlineCard>
+
           <TYPE.body color={theme.red1} fontSize={14} style={{ height: 16 }}>
             {error}
           </TYPE.body>
         </AutoColumn>
-        <Divider />
         <AutoColumn gap="16px">
-          <TYPE.smallHeader>Output</TYPE.smallHeader>
-          <InputWrapper>
-            <AutoColumn gap="4px">
-              <TYPE.main color={theme.text3} fontSize={14}>
-                Price of Bull token
-              </TYPE.main>
-              <Card
-                style={{
-                  backgroundColor: theme.bg2,
-                  width: '100%',
-                  padding: '1rem',
-                  // height: '3rem',
-                  borderRadius: '14px'
-                }}
-              >
-                <RowBetween style={{ height: '100%' }}>
-                  {priceCall ? priceCall : <span style={{ color: theme.text3 }}>0.000000</span>} <span>USDT</span>
-                </RowBetween>
-              </Card>
-            </AutoColumn>
-            <AutoColumn gap="4px">
-              <TYPE.main color={theme.text3} fontSize={14}>
-                Price of Bear token
-              </TYPE.main>
-              <Card
-                style={{
-                  backgroundColor: theme.bg2,
-                  width: '100%',
-                  padding: '1rem',
-                  // height: '3rem',
-                  borderRadius: '14px'
-                }}
-              >
-                <RowBetween style={{ height: '100%', wordBreak: 'break-all' }}>
-                  {pricePut ? pricePut : <span style={{ color: theme.text3 }}>0.000000</span>} <span>USDT</span>
-                </RowBetween>
-              </Card>
-            </AutoColumn>
-          </InputWrapper>
+          <TYPE.body>Output</TYPE.body>
+          <OutlineCard padding="24px 20px">
+            <InputWrapper>
+              <AutoColumn gap="4px">
+                <TYPE.body color={theme.text5} fontSize={12}>
+                  Price of Bull token
+                </TYPE.body>
+                <Card
+                  style={{
+                    backgroundColor: theme.mainBG,
+                    width: '100%',
+                    padding: '1rem',
+                    height: '3rem',
+                    borderRadius: '14px'
+                  }}
+                >
+                  <RowBetween style={{ height: '100%' }}>
+                    {priceCall ? priceCall : <span style={{ color: theme.text3 }}>0.000000</span>}{' '}
+                    <span style={{ color: '#000000' }}>USDT</span>
+                  </RowBetween>
+                </Card>
+              </AutoColumn>
+              <AutoColumn gap="4px">
+                <TYPE.body color={theme.text5} fontSize={12}>
+                  Price of Bull token
+                </TYPE.body>
+                <Card
+                  style={{
+                    backgroundColor: theme.mainBG,
+                    width: '100%',
+                    padding: '1rem',
+                    height: '3rem',
+                    borderRadius: '14px'
+                  }}
+                >
+                  <RowBetween style={{ height: '100%' }}>
+                    {pricePut ? pricePut : <span style={{ color: theme.text3 }}>0.000000</span>}{' '}
+                    <span style={{ color: '#000000' }}>USDT</span>
+                  </RowBetween>
+                </Card>
+              </AutoColumn>
+            </InputWrapper>
+          </OutlineCard>
         </AutoColumn>
       </AutoColumn>
     </AppBody>

@@ -19,9 +19,10 @@ export const Base = styled(RebassButton)<{
 }>`
   padding: ${({ padding }) => (padding ? padding : '14px')};
   width: ${({ width }) => (width ? width : '100%')};
+  font-size: 16px;
   font-weight: 500;
   text-align: center;
-  border-radius: 49px;
+  border-radius: 16px;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;
@@ -50,20 +51,20 @@ export const ButtonPrimary = styled(Base)`
     box-shadow: 0 0 0 1pt ${({ theme }) => theme.bg4};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.primary4};
+    background-color: ${({ theme }) => theme.primary2};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary2};
   }
   &:disabled {
     cursor: auto;
     box-shadow: none;
-    background: ${({ theme }) => theme.primary5};
     border: 1px solid
       ${({ theme, altDisabledStyle, disabled }) =>
         altDisabledStyle ? (disabled ? theme.bg3 : theme.primary1) : theme.primary5};
     outline: none;
-    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.5' : '1')};
+    background-color: ${({ theme }) => theme.primary1};
+    opacity: 0.5;
   }
 `
 
@@ -392,5 +393,13 @@ export function ArrowLeftButton({ onClick }: { onClick: () => void }) {
     <ButtonEmpty onClick={onClick} padding="8px" width="fit-content">
       <ArrowLeft color={theme.text1} />
     </ButtonEmpty>
+  )
+}
+
+export function RoundButton({ children, onClick }: { onClick: () => void } & ButtonProps) {
+  return (
+    <ButtonPrimary style={{ borderRadius: '50px', width: 80, height: 36, fontSize: 14 }} onClick={onClick}>
+      {children}
+    </ButtonPrimary>
   )
 }

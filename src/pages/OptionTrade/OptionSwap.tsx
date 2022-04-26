@@ -1,40 +1,32 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { createChart, IChartApi, ISeriesApi, LineStyle } from 'lightweight-charts'
 import styled from 'styled-components'
 import Swap, { OptionField } from '../Swap'
 import { Option, OptionPrice } from '../../state/market/hooks'
-import SwitchTab from 'components/SwitchTab'
+// import SwitchTab from 'components/SwitchTab'
 import { Axios } from 'utils/option/axios'
 import { useActiveWeb3React } from 'hooks'
 import { useNetwork } from 'hooks/useNetwork'
 // import { ButtonOutlinedPrimary } from 'components/Button'
 import { formatDexTradeLineData, DexTradeLineData } from 'utils/option/utils'
 import { TYPE } from 'theme'
-
-const Wrapper = styled.div`
-  display: flex;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  flex-direction: column;
-  gap: 20px
-  `}
-`
+import { Grid } from '@mui/material'
+import { useTotalSupply } from '../../data/TotalSupply'
+import { tryFormatAmount } from '../../state/swap/hooks'
+import { Typography, Box } from '@mui/material'
+import { shortenAddress } from 'utils'
 
 const GraphWrapper = styled.div`
-  margin: 20px 40px;
   width: 100%;
   height: 100%;
   position: relative;
-  max-width: 559px;
-  /* ${({ theme }) => theme.mediaWidth.upToMedium`
-  max-width: 50%;
-  `} */
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  width: auto;
-  margin: 20px 24px 20px 14px;
-  max-width: unset;
   padding-bottom: ${({ theme }) => theme.mobileHeaderHeight}
   `}
+  background: #ffffff;
+  padding: 32px 24px;
+  border-radius: 20px;
 `
 
 const Chart = styled.div`
@@ -52,19 +44,19 @@ const Chart = styled.div`
 //   position: relative;
 // `
 
-const ButtonGroup = styled.div`
-  width: 100%;
-  display: flex;
-  margin: 24px 0 36px;
-  button:first-child {
-    margin-right: 10px;
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  button{
-    font-size: 14px
-  }
-  `}
-`
+// const ButtonGroup = styled.div`
+//   width: 100%;
+//   display: flex;
+//   margin-bottom: 24px;
+//   button:first-child {
+//     margin-right: 10px;
+//   }
+//   ${({ theme }) => theme.mediaWidth.upToMedium`
+//   button{
+//     font-size: 14px
+//   }
+//   `}
+// `
 // const Button = styled(ButtonOutlinedPrimary)<{ isActive: boolean }>`
 //   flex-grow: 0;
 //   padding: 6px 14px;
@@ -78,41 +70,24 @@ const ButtonGroup = styled.div`
 
 const CurrentPrice = styled.div`
   position: absolute;
-  right: 0;
-  top: 14px;
-  white-space: nowrap;
-  font-size: 18px;
-  font-weight: 400;
-  font-family: Futura PT;
-  color: ${({ theme }) => theme.text3};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    white-space: pre-wrap;
-    text-align: right;
-    font-size: 14px;
-    font-weight: 400;
-  `}
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-size: 12px;
-  `}
+  right: 23px;
+  top: 42px;
 `
 
-const Tabs = {
-  CALL: 'Bull Token',
-  PUT: 'Bear Token'
-}
-
 export default function OptionSwap({
+  optionId,
   option,
   // handleOptionType,
   optionPrice
 }: {
+  optionId: string
   option?: Option
   // handleOptionType: (option: string) => void
   optionPrice: OptionPrice | undefined
 }) {
   const transactions = useSelector((store: any) => store.transactions)
   const { chainId } = useActiveWeb3React()
-  const [currentTab, setCurrentTab] = useState<keyof typeof Tabs>('CALL')
+  const [currentTab, setCurrentTab] = useState<string>('CALL')
   const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
   // const [isMarketPriceChart, setIsMarketPriceChart] = useState(true)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
@@ -126,6 +101,8 @@ export default function OptionSwap({
 
   const priceCall = optionPrice?.priceCall
   const pricePut = optionPrice?.pricePut
+  const callTotalSupply = useTotalSupply(option?.call?.token)
+  const putTotalSupply = useTotalSupply(option?.put?.token)
 
   const {
     httpHandlingFunctions: { errorFunction, pendingFunction, pendingCompleteFunction },
@@ -196,19 +173,19 @@ export default function OptionSwap({
       width: chartElement ? chartElement.offsetWidth : 556,
       height: 328,
       layout: {
-        backgroundColor: '#000000',
-        textColor: '#FFFFFF',
+        backgroundColor: '#FFFFFF',
+        textColor: '#000000',
         fontSize: 12,
         fontFamily: 'Roboto'
       },
       grid: {
         vertLines: {
           style: LineStyle.Dotted,
-          color: 'rgba(255, 255, 255, 0.4)'
+          color: 'rgba(0, 0, 0, 0.4)'
         },
         horzLines: {
           style: LineStyle.Dotted,
-          color: 'rgba(255, 255, 255, 0.4)'
+          color: 'rgba(0, 0, 0, 0.4)'
         }
       }
     })
@@ -277,55 +254,92 @@ export default function OptionSwap({
   // const handleMarketPriceChart = useCallback(() => setIsMarketPriceChart(true), [])
   // const handleModalChart = useCallback(() => setIsMarketPriceChart(false), [])
 
-  const handleTabClick = useCallback(
-    (tab: string) => () => {
-      setCurrentTab(tab as keyof typeof Tabs)
-    },
-    []
-  )
+  const optionInformation = useMemo(() => {
+    if (!option || !priceCall || !pricePut) return
+
+    const range = {
+      cap: tryFormatAmount(option?.priceCap, option?.currency ?? undefined),
+      floor: tryFormatAmount(option?.priceFloor, option?.currency ?? undefined)
+    }
+
+    const address = currentTab === 'CALL' ? option?.callToken?.address : option?.putToken?.address
+
+    return {
+      'Pool ID': optionId || '-',
+      [`${currentTab} Token Contract Address`]: address && shortenAddress(address, 6),
+      'Option Price Range': `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` || '',
+      [`${currentTab} Token Issuance`]:
+        currentTab === 'CALL'
+          ? '$' + callTotalSupply?.toFixed(2).toString()
+          : '$' + putTotalSupply?.toFixed(2).toString(),
+      'Underlying Assets': `${option.underlying?.symbol}, ${option.currency?.symbol}` || '-',
+      [`${currentTab} Token Market Price`]:
+        currentTab === 'CALL' ? '$' + priceCall.toSignificant(6) : '$' + pricePut.toSignificant(6)
+    }
+  }, [optionId, currentTab, option, callTotalSupply, putTotalSupply, priceCall, pricePut])
 
   return (
     <>
       <NetworkErrorModal />
-      <Wrapper>
-        <Swap
-          optionPrice={optionPrice}
-          // handleOptionType={handleOptionType}
-          option={option}
-          setParentTXHash={handleHash}
-        />
-        <GraphWrapper>
-          {graphLoading && <NetworkPendingSpinner paddingTop="0" />}
-          <CurrentPrice>
-            Current price: {'\n'}${' '}
-            {currentTab === OptionField.CALL
-              ? priceCall
-                ? priceCall.toSignificant(6)
-                : '-'
-              : pricePut
-              ? pricePut.toSignificant(6)
-              : '-'}
-          </CurrentPrice>
-          <SwitchTab
-            onTabClick={handleTabClick}
-            currentTab={currentTab}
-            tabs={Tabs}
-            tabStyle={{ fontFamily: 'Futura PT', fontSize: 20, fontWeight: 500 }}
+      <Grid maxWidth={1120} container spacing={2} padding={0}>
+        <Grid item xs={12} md={4}>
+          <Swap
+            optionPrice={optionPrice}
+            // handleOptionType={handleOptionType}
+            option={option}
+            setParentTXHash={handleHash}
+            optionType={currentTab}
+            setOptionType={setCurrentTab}
           />
-
-          <ButtonGroup>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <GraphWrapper>
+            {graphLoading && <NetworkPendingSpinner paddingTop="0" />}
+            <CurrentPrice>
+              <TYPE.gray fontSize={16} fontWeight={400}>
+                Current price:{' '}
+                <span style={{ color: '#000000' }}>
+                  $
+                  {currentTab === OptionField.CALL
+                    ? priceCall
+                      ? priceCall.toSignificant(6)
+                      : '-'
+                    : pricePut
+                    ? pricePut.toSignificant(6)
+                    : '-'}
+                </span>
+              </TYPE.gray>
+            </CurrentPrice>
+            {/* <ButtonGroup> */}
             {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
-            <TYPE.body fontWeight="500" fontSize={18}>
-              Market Price
+            <TYPE.body fontWeight="700" fontSize={24} marginBottom={24}>
+              {currentTab} Token
             </TYPE.body>
             {/* <Button isActive={!isMarketPriceChart} onClick={handleModalChart}>
               Price Modeling Prediction
             </Button> */}
-          </ButtonGroup>
+            {/* </ButtonGroup> */}
 
-          <Chart id="chart" />
-        </GraphWrapper>
-      </Wrapper>
+            <Chart id="chart" />
+            <Box mt={'24px'}>
+              <Typography fontSize={12} fontWeight={600} mb="12px">
+                Option Information
+              </Typography>
+              <Grid container rowSpacing={'8px'}>
+                {optionInformation &&
+                  Object.keys(optionInformation).map((key, idx) => (
+                    <Grid key={idx} item xs={6}>
+                      <Typography fontSize={12}>
+                        <span style={{ opacity: 0.4 }}>{key}: </span>
+                        {optionInformation[key]}
+                      </Typography>
+                    </Grid>
+                  ))}
+              </Grid>
+            </Box>
+          </GraphWrapper>
+        </Grid>
+      </Grid>
     </>
   )
 }

@@ -11,11 +11,11 @@ import { ExternalLink } from 'theme'
 
 const ToggleMenuButton = styled(Base)`
   background: none;
-  width: auto;
-  :active,
-  :focus {
-    border: none;
-  }
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  padding: 0;
 `
 const TogggleMenuWrapper = styled.nav`
   z-index: 100;
@@ -23,7 +23,7 @@ const TogggleMenuWrapper = styled.nav`
   left: 0;
   width: 100vw;
   border-radius: 32px;
-  background: ${({ theme }) => theme.gradient2};
+  background: ${({ theme }) => theme.bg1};
   top: ${({ theme }) => theme.mobileHeaderHeight};
   height: calc(100vh - ${({ theme }) => theme.mobileHeaderHeight + ' - ' + theme.headerHeight});
   border: 1px solid ${({ theme }) => theme.bg3};
@@ -103,8 +103,8 @@ export default function ToggleMenu({ padding = '6px 14px 18px 14px' }: { padding
 
   return (
     <>
-      <ToggleMenuButton onClick={() => setIsOpen(!isOpen)} style={{ padding: padding }}>
-        {isOpen ? <X size={24} /> : <Menu style={{ height: 30, width: 24 }} />}
+      <ToggleMenuButton onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? <X size={24} style={{ color: '#000000' }} /> : <Menu />}
       </ToggleMenuButton>
       {isOpen && (
         <TogggleMenuWrapper>
