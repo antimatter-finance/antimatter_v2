@@ -1,10 +1,9 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Currency } from '@uniswap/sdk'
 import { Plus } from 'react-feather'
-import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 import AppBody, { BodyHeader } from 'pages/AppBody'
-import { RowBetween, RowFixed } from 'components/Row'
+import { RowFixed } from 'components/Row'
 import { TYPE } from 'theme'
 import { AutoColumn } from 'components/Column'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -24,12 +23,9 @@ import { useCreationCallback } from 'hooks/useCreationCallback'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import DataCard from 'components/Card/DataCard'
 import { useActiveWeb3React } from 'hooks'
+import { Box } from '@mui/material'
+import useMediaWidth from 'hooks/useMediaWidth'
 
-const InputWrapper = styled(RowBetween)`
-  & > div {
-    width: 46%;
-  }
-`
 const underlyingAssetList = [WUSDT]
 
 enum ERROR {
@@ -60,6 +56,7 @@ export default function Creation() {
   const [error, setError] = useState('')
   const { callback: creationCallback } = useCreationCallback()
   const addTransaction = useTransactionAdder()
+  const isDownSm = useMediaWidth('upToSmall')
 
   const theme = useTheme()
 
@@ -282,9 +279,19 @@ export default function Creation() {
           <BodyHeader title="Option Creation" />
           <AutoColumn gap="15px">
             <TYPE.body>1. Option underlying asset pair:</TYPE.body>
-            <RowBetween>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row'
+                },
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
               <ButtonSelect
-                width="46%"
+                width={isDownSm ? '100%' : '46%'}
                 onClick={handleOpenAssetSearch}
                 label="Underlying asset"
                 marginRight="0"
@@ -299,7 +306,7 @@ export default function Creation() {
               </ButtonSelect>
               <Plus size={18} color={theme.text3} style={{ margin: '20px 10px 0' }} />
               <ButtonSelect
-                width="46%"
+                width={isDownSm ? '100%' : '46%'}
                 label="Asset to create option"
                 placeholder="Select token"
                 marginRight="0"
@@ -307,11 +314,27 @@ export default function Creation() {
                 onSelection={handleSelectAsset1}
                 options={asset1Options}
               />
-            </RowBetween>
+            </Box>
           </AutoColumn>
           <AutoColumn gap="15px">
             <TYPE.body>2. Option underlying asset pair:</TYPE.body>
-            <InputWrapper>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row'
+                },
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                '& > div': {
+                  width: {
+                    xs: '100%',
+                    md: '46%'
+                  }
+                }
+              }}
+            >
               <NumberInputPanel
                 label="Price Floor"
                 id="floor"
@@ -330,7 +353,7 @@ export default function Creation() {
                 hideBalance={true}
                 placeholder="0.00"
               />
-            </InputWrapper>
+            </Box>
           </AutoColumn>
           {error && (
             <TYPE.body color={theme.primary1} fontSize={14} height={16}>
