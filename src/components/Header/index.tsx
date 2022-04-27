@@ -239,7 +239,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     height: 24px;
-    width:100px`}
+`}
 `
 
 const UNIAmount = styled.div`
