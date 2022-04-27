@@ -40,7 +40,7 @@ const CloseColor = styled(Close)`
 const Wrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   margin: 0;
-  padding: 0;
+  padding: 28px 20px;
   width: 100%;
   background: ${({ theme }) => theme.bg1};
 `
@@ -53,7 +53,6 @@ const HeaderRow = styled.div`
     padding: 1rem;
   `};
   display: flex;
-  justify-content: center;
 `
 
 const ContentWrapper = styled.div`
@@ -108,6 +107,7 @@ const OptionGrid = styled.div`
 `
 
 const HoverText = styled.div`
+  font-size: 24px;
   :hover {
     cursor: pointer;
   }

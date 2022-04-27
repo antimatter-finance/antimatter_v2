@@ -99,8 +99,6 @@ export const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
       width: 100vw;
       max-width:unset;
       border-radius: 20px;
-      border-bottom-left-radius: unset;
-      border-bottom-right-radius: unset;
       max-height: calc(100% - ${theme.mobileHeaderHeight});
       overflow-y: auto;
 
