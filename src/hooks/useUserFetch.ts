@@ -142,6 +142,7 @@ export function useMyTransaction(): {
     })()
   }, [chainId, account, currentPage])
   const res = useMemo(() => ({ page: { total, totalPages, currentPage, setCurrentPage }, loading, data: result }), [
+    total,
     currentPage,
     loading,
     result,
