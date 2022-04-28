@@ -171,6 +171,8 @@ export default function OptionTrade({
   const [chainIdQuery, setChainIdQuery] = useState<undefined | number>(undefined)
   const { page, ids: currentIds, firstLoading, data } = useOptionList(searchParams, chainIdQuery)
 
+  console.log(page)
+
   // const [searchTokenIndex, setSearchTokenIndex] = useState<number | undefined>(undefined)
   const [mode, setMode] = useState(Mode.TABLE)
 
@@ -179,10 +181,6 @@ export default function OptionTrade({
   useEffect(() => {
     setFilteredIndexes(currentIds)
   }, [currentIds])
-
-  const setPage = useCallback((event: object, page: number) => {
-    setFilteredIndexes(['', '', '', '', '', '', '', ''])
-  }, [])
 
   const {
     httpHandlingFunctions: { errorFunction },
@@ -285,8 +283,9 @@ export default function OptionTrade({
               <Pagination
                 page={page.currentPage}
                 count={page.totalPages}
-                setPage={page.setCurrentPage}
-                onChange={setPage}
+                perPage={8}
+                onChange={(event, value) => page.setCurrentPage(value)}
+                total={page.total}
               />
             )}
             <AlternativeDisplay

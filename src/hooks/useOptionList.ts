@@ -23,6 +23,7 @@ export function useOptionList(
   chainId: number | undefined
 ): {
   page: {
+    total: number
     totalPages: number
     currentPage: number
     setCurrentPage: (page: number) => void
@@ -31,6 +32,7 @@ export function useOptionList(
   data: OptionListData[] | undefined
   firstLoading: boolean
 } {
+  const [total, setTotal] = useState<number>(0)
   const [totalPages, setTotalPages] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [ids, setIds] = useState(undefined)
@@ -54,6 +56,7 @@ export function useOptionList(
         // throw new Error(e)
       })
       setFirstLoading(false)
+      setTotal(+r?.data?.data?.total)
       setTotalPages(r?.data?.data?.pages)
       setIds(r?.data?.data?.list?.map(({ optionIndex }: { optionIndex: string }) => optionIndex))
       setData(r?.data?.data?.list?.map((item: OptionListData) => parseOptionListData(item)))
@@ -65,6 +68,7 @@ export function useOptionList(
     data,
     firstLoading,
     page: {
+      total,
       totalPages,
       currentPage,
       setCurrentPage

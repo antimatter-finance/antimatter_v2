@@ -177,11 +177,15 @@ export default function User() {
               <>
                 <Table header={['Option', 'Type', 'Amount', 'Price', 'Action']} rows={myTransaction} />
                 {myTransactionPage.totalPages !== 0 && (
-                  <Pagination
-                    page={myTransactionPage.currentPage}
-                    count={myTransactionPage.totalPages}
-                    setPage={myTransactionPage.setCurrentPage}
-                  />
+                  <Box mt={12}>
+                    <Pagination
+                      page={myTransactionPage.currentPage}
+                      count={myTransactionPage.totalPages}
+                      perPage={8}
+                      onChange={(event, value) => myTransactionPage.setCurrentPage(value)}
+                      total={myTransactionPage.total}
+                    />
+                  </Box>
                 )}
                 {!myTransaction.length && !myTransactionLoading && (
                   <p style={{ margin: 50 }}>You have no transaction at the moment</p>
