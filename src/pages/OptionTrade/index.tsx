@@ -15,7 +15,6 @@ import OptionTradeAction from './OptionTradeAction'
 //import { useCurrency } from 'hooks/Tokens'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Loader from 'assets/svg/antimatter_background_logo.svg'
-//import { useUSDTPrice } from 'utils/useUSDCPrice'
 import { XCircle } from 'react-feather'
 import { useNetwork } from 'hooks/useNetwork'
 import { useOptionList } from 'hooks/useOptionList'
@@ -29,25 +28,20 @@ import { formatUnderlying } from 'utils/option/utils'
 import Pagination from 'components/Pagination'
 import { Skeleton } from '@material-ui/lab'
 import Card, { MainCard } from 'components/Card'
-import Tab from 'components/Tab'
 import { Text, Box } from 'rebass'
-import { usePrice } from 'hooks/usePrice'
+// import { usePrice } from 'hooks/usePrice'
 import { ButtonOutlined } from 'components/Button'
 import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
 import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
 import Table, { Row } from 'components/Table'
 import useMediaWidth from 'hooks/useMediaWidth'
-import { WrappedSymbolMap } from 'constants/index'
+import { ZERO_ADDRESS } from 'constants/index'
+import { CHAIN_ID_LIST, SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_KEYS } from 'constants/chains'
+import Tabs from 'components/Tab/Tabs'
+import { OptionListData } from 'state/market/hooks'
+import { useTokenOtherChain } from 'hooks/useTokenOtherChain'
 
-const TableHeaders = [
-  'Option ID',
-  'Underlying Asset',
-  // 'Pool size (ETH)',
-  // 'Pool size(USDT)',
-  'Option Price Range',
-  'Your Put Position',
-  'Your Call Position'
-]
+const TableHeaders = ['Option ID', 'Underlying Asset', 'Option Range', 'Current Bear Issuance', 'Current Bull Issuance']
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -100,7 +94,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 96px 20px;
+  padding: 120px 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   padding: 48px 20px;
 `};
@@ -146,12 +140,6 @@ const TitleWrapper = styled(RowFixed)`
   flex-wrap: nowrap;
   width: 100%;
 `
-// const OptionId = styled(TYPE.smallGray)`
-//   border-radius: 20px;
-//   background-color: ${({ theme }) => theme.bg4};
-//   padding: 3px 6px;
-//   margin-right: 10px !important;
-// `
 
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
@@ -173,8 +161,9 @@ export default function OptionTrade({
   const [filteredIndexes, setFilteredIndexes] = useState<string[] | undefined>(undefined)
   const history = useHistory()
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
-  const { page, data: currentIds, firstLoading } = useOptionList(searchParams)
-  const [searchTokenIndex, setSearchTokenIndex] = useState<number | undefined>(undefined)
+  const [chainIdQuery, setChainIdQuery] = useState<undefined | number>(undefined)
+  const { page, ids: currentIds, firstLoading, data } = useOptionList(searchParams, chainIdQuery)
+
   const [mode, setMode] = useState(Mode.TABLE)
 
   const match = useMediaWidth('upToSmall')
@@ -182,10 +171,6 @@ export default function OptionTrade({
   useEffect(() => {
     setFilteredIndexes(currentIds)
   }, [currentIds])
-
-  const setPage = useCallback((event: object, page: number) => {
-    setFilteredIndexes(['', '', '', '', '', '', '', ''])
-  }, [])
 
   const {
     httpHandlingFunctions: { errorFunction },
@@ -217,19 +202,11 @@ export default function OptionTrade({
       })
   }, [chainId, errorFunction])
 
-  const tabOptions = useMemo(() => {
-    if (!tokenList) return []
-
-    return tokenList.map((token, idx) => {
-      return <TokenTab token={token} key={idx} />
-    })
-  }, [tokenList])
-
   const rowsComponent = useMemo(() => {
-    if (!filteredIndexes) return
+    if (!data) return
 
-    return filteredIndexes.map(optionId => <OptionRow key={optionId} optionId={optionId} />)
-  }, [filteredIndexes])
+    return data.map(option => <OptionRow option={option} key={option.id + option.chainId} />)
+  }, [data])
 
   return (
     <>
@@ -238,7 +215,12 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <Tab current={searchTokenIndex || 0} options={tabOptions} setTab={setSearchTokenIndex} />
+          <ChainTabs
+            chainIdQuery={chainIdQuery}
+            setChainIdQuery={val => {
+              setChainIdQuery(val)
+            }}
+          />
           <Card margin="24px 0 auto" padding="40px 25px">
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Search
@@ -247,29 +229,30 @@ export default function OptionTrade({
                 onClear={handleClearSearch}
                 onSearch={handleSearch}
                 tokenList={tokenList}
-                searchToken={tokenList && searchTokenIndex ? tokenList[searchTokenIndex] : undefined}
+                chainId={chainIdQuery}
               />
               {!match && <ModeSwitch current={mode} setMode={setMode} />}
             </Box>
 
             {filteredIndexes && (
               <>
-                <Grid container mt={'20px'} spacing={'20px'}>
+                <Grid container mt={'20px'} spacing={20}>
                   {(mode === Mode.CARD || match) &&
-                    filteredIndexes.map((optionId, idx) => (
+                    data &&
+                    data.map((option, idx) => (
                       <Grid key={idx} item xs={12} md={4}>
-                        {optionId ? (
-                          <OptionCard
-                            optionId={optionId}
-                            key={optionId}
+                        {option ? (
+                          <ListOptionCard
+                            option={option}
+                            key={option.id + option.chainId}
                             buttons={
-                              <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
+                              <ButtonPrimary onClick={() => history.push(`/option_trading/${option.id}`)}>
                                 Trade
                               </ButtonPrimary>
                             }
                           />
                         ) : (
-                          <OptionCardSkeleton key={optionId + idx} />
+                          <OptionCardSkeleton key={idx} />
                         )}
                       </Grid>
                     ))}
@@ -281,8 +264,9 @@ export default function OptionTrade({
               <Pagination
                 page={page.currentPage}
                 count={page.totalPages}
-                setPage={page.setCurrentPage}
-                onChange={setPage}
+                perPage={8}
+                onChange={(event, value) => page.setCurrentPage(value)}
+                total={page.total}
               />
             )}
             <AlternativeDisplay
@@ -292,6 +276,94 @@ export default function OptionTrade({
             />
           </Card>
         </Wrapper>
+      )}
+    </>
+  )
+}
+
+export function ListOptionCard({ buttons, option }: { buttons: JSX.Element; option: OptionListData }) {
+  const call = useTokenOtherChain(option?.callAddress, option.chainId)
+  const put = useTokenOtherChain(option?.putAddress, option.chainId)
+
+  const data = useMemo(() => {
+    if (!option) return undefined
+    const currency = new Token(1, option.currency, option.currencyDecimals, option.currencySymbol ?? 'TOKEN')
+    const underlying = new Token(1, option.underlying, option.underlyingDecimals, option.underlyingSymbol ?? 'TOKEN')
+
+    return {
+      underlying,
+      range: {
+        cap: tryFormatAmount(option?.priceCap, currency),
+        floor: tryFormatAmount(option?.priceFloor, currency)
+      },
+      totalCall: call
+        ? tryFormatAmount(option.totalCall, call)
+            ?.toFixed(2)
+            .toString()
+        : '-',
+      totalput: put
+        ? tryFormatAmount(option.totalPut, put)
+            ?.toFixed(2)
+            .toString()
+        : '-'
+    }
+  }, [call, option, put])
+
+  const details = {
+    'Option Range': option
+      ? `$${data?.range.floor?.toExact().toString() ?? '-'}~$${data?.range.cap?.toExact().toString() ?? '-'}`
+      : '',
+    'Underlying Assets': option ? `${option.underlyingSymbol}, ${option.currencySymbol}` : '-',
+    'Current Bear Issuance': data?.totalput,
+    'Current Bull Issuance': data?.totalCall
+  }
+
+  return (
+    <>
+      {option ? (
+        <MainCard padding="20px 24px 23px">
+          <AutoColumn gap="20px">
+            <TitleWrapper>
+              <Circle>
+                <CurrencyLogo currency={data?.underlying ?? undefined} size="100%" />
+              </Circle>
+              <AutoColumn gap="5px" style={{ width: '100%', position: 'relative', minHeight: 51 }}>
+                <TYPE.mediumHeader
+                  fontSize={20}
+                  style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
+                >
+                  {`${option?.underlyingSymbol ?? '-'}`}
+                </TYPE.mediumHeader>
+
+                <RowFixed>ID:&nbsp;{option?.optionIndex ?? '-'}</RowFixed>
+              </AutoColumn>
+            </TitleWrapper>
+            <Divider />
+            <AutoColumn gap="12px">
+              {Object.keys(details).map(key => (
+                <RowBetween key={key}>
+                  <TYPE.body style={{ fontSize: 13, opacity: 0.6 }}>{key}</TYPE.body>
+                  <TYPE.main
+                    style={{
+                      textAlign: 'right',
+                      overflow: 'hidden',
+                      whiteSpace: 'pre-wrap',
+                      textOverflow: 'ellipsis',
+                      minHeight: 19,
+                      fontWeight: 400,
+                      fontSize: 14
+                    }}
+                  >
+                    {details[key as keyof typeof details]}
+                  </TYPE.main>
+                </RowBetween>
+              ))}
+            </AutoColumn>
+            <RowBetween>{buttons}</RowBetween>
+          </AutoColumn>
+        </MainCard>
+      ) : (
+        <OptionCardSkeleton />
       )}
     </>
   )
@@ -442,53 +514,136 @@ export function ModeSwitch({ current, setMode }: { current: number; setMode: (mo
   )
 }
 
-export function OptionRow({ optionId }: { optionId: string }) {
-  const option = useOption(optionId)
-  const callTotalSupply = useTotalSupply(option?.call?.token)
-  const putTotalSupply = useTotalSupply(option?.put?.token)
+export function OptionRow({ option }: { option: OptionListData }) {
   const history = useHistory()
+  const call = useTokenOtherChain(option?.callAddress, option.chainId)
+  const put = useTokenOtherChain(option?.putAddress, option.chainId)
 
-  const range = {
-    cap: tryFormatAmount(option?.priceCap, option?.currency ?? undefined),
-    floor: tryFormatAmount(option?.priceFloor, option?.currency ?? undefined)
-  }
-  const data = {
-    'Option Range': option ? `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` : '',
-    'Underlying Assets': option ? `${option.underlying?.symbol}, ${option.currency?.symbol}` : '-',
-    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-',
-    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-'
-  }
+  const data = useMemo(() => {
+    if (!option) return undefined
+    const currency = new Token(1, option.currency, option.currencyDecimals, option.currencySymbol ?? 'TOKEN')
+    const underlying = new Token(1, option.underlying, option.underlyingDecimals, option.underlyingSymbol ?? 'TOKEN')
 
+    return {
+      underlying,
+      range: {
+        cap: tryFormatAmount(option?.priceCap, currency),
+        floor: tryFormatAmount(option?.priceFloor, currency)
+      },
+      totalCall: call
+        ? tryFormatAmount(option.totalCall, call)
+            ?.toFixed(2)
+            .toString()
+        : '-',
+      totalput: put
+        ? tryFormatAmount(option.totalPut, put)
+            ?.toFixed(2)
+            .toString()
+        : '-'
+    }
+  }, [call, option, put])
+
+  const details = {
+    'Option Range': option
+      ? `$${data?.range.floor?.toExact().toString() ?? '-'}~$${data?.range.cap?.toExact().toString() ?? '-'}`
+      : '',
+    'Underlying Assets': option ? `${option.underlyingSymbol}, ${option.currencySymbol}` : '-',
+    'Current Bear Issuance': data?.totalput,
+    'Current Bull Issuance': data?.totalCall
+  }
   return (
     <Row
       row={[
-        <>{optionId}</>,
-        <>{data['Underlying Assets']}</>,
-        <>{data['Option Range']}</>,
-        <>{data['Current Bear Issuance']}</>,
-        <>{data['Current Bull Issuance']}</>,
-        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+        <>{option.optionIndex}</>,
+        <>{details['Underlying Assets']}</>,
+        <>{details['Option Range']}</>,
+        <>{details['Current Bear Issuance']}</>,
+        <>{details['Current Bull Issuance']}</>,
+        <RoundButton key={option.id} onClick={() => history.push(`/option_trading/${option.id}`)}>
+          Trade
+        </RoundButton>
       ]}
     />
   )
 }
 
-export function TokenTab({ token }: { token: Token }) {
+// export function TokenTab({ token }: { token: Token }) {
+//   const match = useMediaWidth('upToSmall')
+//   const tokenSymbol = token.symbol || ''
+
+//   const wrappedSymbolMapIndex = Object.values(WrappedSymbolMap).indexOf(tokenSymbol) || -1
+//   const targetSymbol = Object.keys(WrappedSymbolMap)[wrappedSymbolMapIndex]
+
+//   const price = usePrice(targetSymbol)
+//   const priceNum = price && +price
+
+//   return (
+//     <Box display="flex" alignItems="center">
+//       <CurrencyLogo currency={token} size="28px" style={{ marginRight: 8 }} />
+//       <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
+//         {token.symbol} {priceNum ? '$' + priceNum.toFixed(2) : ''}
+//       </Text>
+//     </Box>
+//   )
+// }
+
+export function ChainTabs({
+  chainIdQuery,
+  setChainIdQuery
+}: {
+  chainIdQuery: number | undefined
+  setChainIdQuery: (val: number | undefined) => void
+}) {
   const match = useMediaWidth('upToSmall')
-  const tokenSymbol = token.symbol || ''
+  const data = useMemo(() => {
+    const filler = [<></>]
+    const list = CHAIN_ID_LIST.map(chainId => {
+      filler.push(<></>)
+      const network = SUPPORTED_NETWORKS[chainId as SUPPORTED_NETWORKS_KEYS]
 
-  const wrappedSymbolMapIndex = Object.values(WrappedSymbolMap).indexOf(tokenSymbol) || -1
-  const targetSymbol = Object.keys(WrappedSymbolMap)[wrappedSymbolMapIndex]
-
-  const price = usePrice(targetSymbol)
-  const priceNum = price && +price
+      return (
+        <Box display="flex" alignItems="center" key={chainId} padding={'0 10px 30px'}>
+          <CurrencyLogo
+            currency={
+              network
+                ? new Token(chainId, ZERO_ADDRESS, network.nativeCurrency.decimals, network.nativeCurrency.symbol)
+                : undefined
+            }
+            size="28px"
+            style={{ marginRight: 8 }}
+          />
+          <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
+            {network?.chainName ?? '-'}
+          </Text>
+        </Box>
+      )
+    })
+    return {
+      titles: [
+        <Box display="flex" alignItems="center" key="all" padding={'0 10px 30px'}>
+          <CurrencyLogo currency={undefined} size="28px" style={{ marginRight: 8 }} />
+          <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
+            All
+          </Text>
+        </Box>,
+        ...list
+      ],
+      filler: filler
+    }
+  }, [match])
 
   return (
-    <Box display="flex" alignItems="center">
-      <CurrencyLogo currency={token} size="28px" style={{ marginRight: 8 }} />
-      <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
-        {token.symbol} {priceNum ? '$' + priceNum.toFixed(2) : ''}
-      </Text>
-    </Box>
+    <Tabs
+      customCurrentTab={CHAIN_ID_LIST.findIndex((id: number) => id === chainIdQuery) + 1}
+      customOnChange={val => {
+        if (val === 0) {
+          setChainIdQuery(undefined)
+          return
+        }
+        setChainIdQuery(CHAIN_ID_LIST[val - 1])
+      }}
+      titles={data.titles}
+      contents={data.filler}
+    />
   )
 }

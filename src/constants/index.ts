@@ -9,7 +9,7 @@ export const ARBITRUM: { [key: string]: Token } = {
 }
 
 export const BSC: { [key: string]: Token } = {
-  WBNB: new Token(ChainId.BSC, '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', 18, 'WBNB', 'Wrapped BNB')
+  WBNB: new Token(ChainId.BSC, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB')
 }
 
 export const AVAX: { [key: string]: Token } = {
@@ -52,10 +52,10 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 
 export const WUSDT = {
   [ChainId.MAINNET]: USDT,
-  [ChainId.ROPSTEN]: new Token(ChainId.MAINNET, '0x6ee856ae55b6e1a249f04cd3b947141bc146273c', 6, 'USDT', 'Tether USD'),
+  [ChainId.ROPSTEN]: new Token(ChainId.MAINNET, '0x6EE856Ae55B6E1A249f04cd3b947141bc146273c', 6, 'USDT', 'Tether USD'),
   [ChainId.BSC]: new Token(
     ChainId.BSC,
-    '0x55d398326f99059ff775485246999027b3197955',
+    '0x55d398326f99059fF775485246999027B3197955',
     18,
     'BUSDT',
     'Binance-Peg BSC-USD'
@@ -80,7 +80,7 @@ export const WDAI = {
   [ChainId.MAINNET]: DAI,
   [ChainId.ROPSTEN]: new Token(
     ChainId.MAINNET,
-    '0xad6d458402f60fd3bd25163575031acdce07538d',
+    '0xaD6D458402F60fD3Bd25163575031ACDce07538D',
     18,
     'DAI',
     'Dai Stablecoin'

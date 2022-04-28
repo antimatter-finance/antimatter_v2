@@ -84,7 +84,7 @@ export default function ButtonSelect({
   width = '100%',
   disabled,
   placeholder = 'Select Option Type',
-  marginRight = '20px'
+  marginRight
 }: ButtonProps & {
   disabled?: boolean
   label?: string
@@ -116,6 +116,7 @@ export default function ButtonSelect({
     setIsOpen(!isOpen)
     onClick && onClick()
   }, [isOpen, onClick])
+
   return (
     <div style={{ position: 'relative', marginRight: marginRight, width: width, flex: 1 }}>
       {label && (

@@ -59,6 +59,25 @@ export interface Option {
   putToken: Token | undefined | null
 }
 
+export interface OptionListData {
+  id: string
+  optionIndex: string
+  chainId: number
+  callAddress: string
+  putAddress: string
+  callDecimals: number
+  putDecimals: number
+  totalCall: string
+  totalPut: string
+  underlying: string
+  currency: string
+  priceFloor: string
+  priceCap: string
+  underlyingSymbol: string
+  currencySymbol: string
+  underlyingDecimals: number
+  currencyDecimals: number
+}
 export interface OptionPrice {
   priceCall: TokenAmount | undefined | null
   pricePut: TokenAmount | undefined | null

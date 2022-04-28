@@ -1,52 +1,76 @@
 import React from 'react'
-import MuiPagination from '@material-ui/lab/Pagination'
-import styled from 'styled-components'
-import { ThemeProvider as MaterialThemeProvider } from '@material-ui/core/styles'
-import { createTheme } from '@material-ui/core/styles'
+import { styled, Pagination, Typography, Box } from '@mui/material'
 
-const materialTheme = createTheme({
-  palette: {
-    type: 'dark'
+export const StyledPagination = styled(Pagination)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  '& .MuiPaginationItem-root': { opacity: 0.5 },
+  '& .MuiPaginationItem-page.Mui-selected': {
+    backgroundColor: 'transparent',
+    opacity: 1,
+    color: theme.palette.text.primary,
+    borderColor: theme.palette.text.primary
   }
-})
-
-const materialThemeLight = createTheme({
-  palette: {
-    type: 'light'
-  }
-})
-
-const StyledPagination = styled.div`
-  display: flex;
-  justify-content: center;
-  & > * {
-    margin-bottom: 20px;
-  }
-`
+}))
 
 interface PaginationProps {
   count: number
   page: number
-  setPage?: (page: number) => void
+  siblingCount?: number
+  boundaryCount?: number
+  // setPage: (page: number) => void
+  // eslint-disable-next-line @typescript-eslint/ban-types
   onChange?: (event: object, page: number) => void
-  isLightBg?: boolean
+  perPage?: number
+  total?: number
 }
-export default function Pagination({ count, page, onChange, setPage, isLightBg }: PaginationProps) {
+export default function PaginationView({
+  count,
+  page,
+  onChange,
+  // setPage,
+  siblingCount,
+  boundaryCount,
+  perPage,
+  total
+}: PaginationProps) {
   return (
-    <MaterialThemeProvider theme={isLightBg ? materialThemeLight : materialTheme}>
-      {count && (
-        <StyledPagination>
-          <MuiPagination
+    <>
+      {count > 0 && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            gap: { xs: 20, sm: 26 },
+            flexDirection: { xs: 'column', sm: 'row' }
+          }}
+        >
+          {perPage && (
+            <Box
+              sx={{
+                width: { xs: '100%', sm: 'fit-content' }
+              }}
+            >
+              <Typography
+                sx={{
+                  opacity: 0.4
+                }}
+              >
+                {(page - 1) * perPage + 1} - {total && page * perPage > total ? total : page * perPage} items of {total}
+              </Typography>
+            </Box>
+          )}
+          <StyledPagination
             count={count}
             page={page}
-            onChange={(event, page) => {
-              onChange && onChange(event, page)
-              setPage && setPage(page)
-            }}
-            size="large"
+            siblingCount={siblingCount || 1}
+            boundaryCount={boundaryCount || 1}
+            variant="outlined"
+            shape="rounded"
+            onChange={onChange}
           />
-        </StyledPagination>
+        </Box>
       )}
-    </MaterialThemeProvider>
+    </>
   )
 }

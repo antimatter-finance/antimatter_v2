@@ -27,7 +27,7 @@ export const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{
 
     background-color: ${({ theme, color }) => color ?? theme.advancedBG};
     ${({ theme }) => theme.mediaWidth.upToSmall`
-    height: calc(100% - ${theme.headerHeight});
+    height: 100%;
     justify-content: flex-end;
     padding-top: ${theme.headerHeight};
     `}
@@ -61,7 +61,7 @@ export const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
   overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
 
   &[data-reach-dialog-content] {
-    background: ${({ theme }) => theme.bg1};
+    background: ${({ theme }) => '#ffffff'};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
     padding: 0px;
     width: 42vw;
@@ -99,6 +99,12 @@ export const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
       width: 100vw;
       max-width:unset;
       border-radius: 20px;
+<<<<<<< HEAD
+=======
+      border-bottom-left-radius: unset;
+      border-bottom-right-radius: unset;
+      padding-bottom: 40px;
+>>>>>>> new_ui_master
       max-height: calc(100% - ${theme.mobileHeaderHeight});
       overflow-y: auto;
 
