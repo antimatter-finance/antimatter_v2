@@ -37,7 +37,11 @@ import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
 import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
 import Table, { Row } from 'components/Table'
 import useMediaWidth from 'hooks/useMediaWidth'
-import { WrappedSymbolMap } from 'constants/index'
+import { WrappedSymbolMap, ZERO_ADDRESS } from 'constants/index'
+import { CHAIN_ID_LIST, SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_KEYS } from 'constants/chains'
+import Tabs from 'components/Tab/Tabs'
+import { OptionListData } from 'state/market/hooks'
+import { useTokenOtherChain } from 'hooks/useTokenOtherChain'
 
 const TableHeaders = [
   'Option ID',
@@ -173,7 +177,8 @@ export default function OptionTrade({
   const [filteredIndexes, setFilteredIndexes] = useState<string[] | undefined>(undefined)
   const history = useHistory()
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
-  const { page, data: currentIds, firstLoading } = useOptionList(searchParams)
+  const [chainIdQuery, setChainIdQuery] = useState<undefined | number>(undefined)
+  const { page, ids: currentIds, firstLoading, data } = useOptionList(searchParams, chainIdQuery)
   const [searchTokenIndex, setSearchTokenIndex] = useState<number | undefined>(undefined)
   const [mode, setMode] = useState(Mode.TABLE)
 
@@ -239,6 +244,12 @@ export default function OptionTrade({
       ) : (
         <Wrapper id="optionTrade">
           <Tab current={searchTokenIndex || 0} options={tabOptions} setTab={setSearchTokenIndex} />
+          <ChainTabs
+            chainIdQuery={chainIdQuery}
+            setChainIdQuery={val => {
+              setChainIdQuery(val)
+            }}
+          />
           <Card margin="24px 0 auto" padding="40px 25px">
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Search
@@ -256,20 +267,21 @@ export default function OptionTrade({
               <>
                 <Grid container mt={'20px'} spacing={'20px'}>
                   {(mode === Mode.CARD || match) &&
-                    filteredIndexes.map((optionId, idx) => (
+                    data &&
+                    data.map((option, idx) => (
                       <Grid key={idx} item xs={12} md={4}>
-                        {optionId ? (
-                          <OptionCard
-                            optionId={optionId}
-                            key={optionId}
+                        {option ? (
+                          <ListOptionCard
+                            option={option}
+                            key={option.id + option.chainId}
                             buttons={
-                              <ButtonPrimary onClick={() => history.push(`/option_trading/${optionId}`)}>
+                              <ButtonPrimary onClick={() => history.push(`/option_trading/${option.id}`)}>
                                 Trade
                               </ButtonPrimary>
                             }
                           />
                         ) : (
-                          <OptionCardSkeleton key={optionId + idx} />
+                          <OptionCardSkeleton key={idx} />
                         )}
                       </Grid>
                     ))}
@@ -292,6 +304,94 @@ export default function OptionTrade({
             />
           </Card>
         </Wrapper>
+      )}
+    </>
+  )
+}
+
+export function ListOptionCard({ buttons, option }: { buttons: JSX.Element; option: OptionListData }) {
+  const call = useTokenOtherChain(option?.callAddress, option.chainId)
+  const put = useTokenOtherChain(option?.putAddress, option.chainId)
+
+  const data = useMemo(() => {
+    if (!option) return undefined
+    const currency = new Token(1, option.currency, option.currencyDecimals, option.currencySymbol ?? 'TOKEN')
+    const underlying = new Token(1, option.underlying, option.underlyingDecimals, option.underlyingSymbol ?? 'TOKEN')
+
+    return {
+      underlying,
+      range: {
+        cap: tryFormatAmount(option?.priceCap, currency),
+        floor: tryFormatAmount(option?.priceFloor, currency)
+      },
+      totalCall: call
+        ? tryFormatAmount(option.totalCall, call)
+            ?.toFixed(2)
+            .toString()
+        : '-',
+      totalput: put
+        ? tryFormatAmount(option.totalPut, put)
+            ?.toFixed(2)
+            .toString()
+        : '-'
+    }
+  }, [call, option, put])
+
+  const details = {
+    'Option Range': option
+      ? `$${data?.range.floor?.toExact().toString() ?? '-'}~$${data?.range.cap?.toExact().toString() ?? '-'}`
+      : '',
+    'Underlying Assets': option ? `${option.underlyingSymbol}, ${option.currencySymbol}` : '-',
+    'Current Bear Issuance': data?.totalput,
+    'Current Bull Issuance': data?.totalCall
+  }
+
+  return (
+    <>
+      {option ? (
+        <MainCard padding="20px 24px 23px">
+          <AutoColumn gap="20px">
+            <TitleWrapper>
+              <Circle>
+                <CurrencyLogo currency={data?.underlying ?? undefined} size="100%" />
+              </Circle>
+              <AutoColumn gap="5px" style={{ width: '100%', position: 'relative', minHeight: 51 }}>
+                <TYPE.mediumHeader
+                  fontSize={20}
+                  style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
+                >
+                  {`${option?.underlyingSymbol ?? '-'}`}
+                </TYPE.mediumHeader>
+
+                <RowFixed>ID:&nbsp;{option?.id ?? '-'}</RowFixed>
+              </AutoColumn>
+            </TitleWrapper>
+            <Divider />
+            <AutoColumn gap="12px">
+              {Object.keys(details).map(key => (
+                <RowBetween key={key}>
+                  <TYPE.body style={{ fontSize: 13, opacity: 0.6 }}>{key}</TYPE.body>
+                  <TYPE.main
+                    style={{
+                      textAlign: 'right',
+                      overflow: 'hidden',
+                      whiteSpace: 'pre-wrap',
+                      textOverflow: 'ellipsis',
+                      minHeight: 19,
+                      fontWeight: 400,
+                      fontSize: 14
+                    }}
+                  >
+                    {details[key as keyof typeof details]}
+                  </TYPE.main>
+                </RowBetween>
+              ))}
+            </AutoColumn>
+            <RowBetween>{buttons}</RowBetween>
+          </AutoColumn>
+        </MainCard>
+      ) : (
+        <OptionCardSkeleton />
       )}
     </>
   )
@@ -467,7 +567,9 @@ export function OptionRow({ optionId }: { optionId: string }) {
         <>{data['Option Range']}</>,
         <>{data['Current Bear Issuance']}</>,
         <>{data['Current Bull Issuance']}</>,
-        <RoundButton onClick={() => history.push(`/option_trading/${optionId}`)}>Trade</RoundButton>
+        <RoundButton key={optionId} onClick={() => history.push(`/option_trading/${optionId}`)}>
+          Trade
+        </RoundButton>
       ]}
     />
   )
@@ -490,5 +592,66 @@ export function TokenTab({ token }: { token: Token }) {
         {token.symbol} {priceNum ? '$' + priceNum.toFixed(2) : ''}
       </Text>
     </Box>
+  )
+}
+
+export function ChainTabs({
+  chainIdQuery,
+  setChainIdQuery
+}: {
+  chainIdQuery: number | undefined
+  setChainIdQuery: (val: number | undefined) => void
+}) {
+  const match = useMediaWidth('upToSmall')
+  const data = useMemo(() => {
+    const filler = [<></>]
+    const list = CHAIN_ID_LIST.map(chainId => {
+      filler.push(<></>)
+      const network = SUPPORTED_NETWORKS[chainId as SUPPORTED_NETWORKS_KEYS]
+
+      return (
+        <Box display="flex" alignItems="center" key={chainId} padding={'0 10px 30px'}>
+          <CurrencyLogo
+            currency={
+              network
+                ? new Token(chainId, ZERO_ADDRESS, network.nativeCurrency.decimals, network.nativeCurrency.symbol)
+                : undefined
+            }
+            size="28px"
+            style={{ marginRight: 8 }}
+          />
+          <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
+            {network?.chainName ?? '-'}
+          </Text>
+        </Box>
+      )
+    })
+    return {
+      titles: [
+        <Box display="flex" alignItems="center" key="all" padding={'0 10px 30px'}>
+          <CurrencyLogo currency={undefined} size="28px" style={{ marginRight: 8 }} />
+          <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
+            All
+          </Text>
+        </Box>,
+        ...list
+      ],
+      filler: filler
+    }
+  }, [match])
+
+  return (
+    <Tabs
+      customCurrentTab={CHAIN_ID_LIST.findIndex((id: number) => id === chainIdQuery) + 1}
+      customOnChange={val => {
+        if (val === 0) {
+          setChainIdQuery(undefined)
+          return
+        }
+        setChainIdQuery(CHAIN_ID_LIST[val - 1])
+      }}
+      titles={data.titles}
+      contents={data.filler}
+    />
   )
 }

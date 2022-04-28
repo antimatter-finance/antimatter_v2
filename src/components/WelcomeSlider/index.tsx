@@ -4,7 +4,7 @@ import { GradientCard } from 'components/Card'
 import { StyledDialogOverlay, StyledDialogContent } from 'components/Modal'
 import { CloseIcon, TYPE } from 'theme'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { ButtonWhite } from 'components/Button'
+import { ButtonOutlinedPrimary, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import useTheme from 'hooks/useTheme'
 import useMediaWidth from 'hooks/useMediaWidth'
@@ -13,9 +13,11 @@ import useMediaWidth from 'hooks/useMediaWidth'
 
 const WelcomeCard = styled(GradientCard)`
   width: 580px;
+  background: #ffffff;
+  padding: 20px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: auto;
-  `}
+  `};
 `
 
 function List({ list }: { list: string[] }) {
@@ -30,14 +32,15 @@ function List({ list }: { list: string[] }) {
                 style={{
                   width: '24px',
                   height: '24px',
-                  border: '1px solid #FFFFFF',
+                  border: '1px solid #31B047',
+                  color: '#31B047',
                   borderRadius: '50%',
                   marginRight: '24px',
                   textAlign: 'center',
                   flexShrink: 0
                 }}
               >
-                {idx}
+                {idx + 1}
               </AutoRow>
               <div>{item}</div>
             </RowFixed>
@@ -140,16 +143,14 @@ export default function WelcomeSlider() {
             <TYPE.body style={{ whiteSpace: 'pre-wrap' }}>{pageContent[page].content}</TYPE.body>
             <RowFixed style={{ marginTop: '20px', width: '100%' }}>
               {!isEndPage && (
-                <ButtonWhite style={{ padding: '9px', marginRight: '20px' }} onClick={handleClose}>
-                  <TYPE.main fontSize={14}>Skip </TYPE.main>
-                </ButtonWhite>
+                <ButtonOutlinedPrimary style={{ padding: '9px', marginRight: '20px' }} onClick={handleClose}>
+                  <span>Skip </span>
+                </ButtonOutlinedPrimary>
               )}
-              <ButtonWhite style={{ padding: '9px', backgroundColor: '#FFFFFF' }} onClick={handleNextClick}>
-                <TYPE.main fontSize={14} color="#000000">
-                  {!isEndPage && (page === 0 ? 'Show Tutorial' : 'Next')}
-                  {isEndPage && 'Begin to trade'}
-                </TYPE.main>
-              </ButtonWhite>
+              <ButtonPrimary style={{ padding: '9px' }} onClick={handleNextClick}>
+                {!isEndPage && (page === 0 ? 'Show Tutorial' : 'Next')}
+                {isEndPage && 'Begin to trade'}
+              </ButtonPrimary>
             </RowFixed>
           </AutoColumn>
         </WelcomeCard>
