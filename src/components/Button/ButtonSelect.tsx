@@ -84,7 +84,7 @@ export default function ButtonSelect({
   width = '100%',
   disabled,
   placeholder = 'Select Option Type',
-  marginRight = '20px'
+  marginRight
 }: ButtonProps & {
   disabled?: boolean
   label?: string

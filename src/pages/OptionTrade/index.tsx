@@ -29,7 +29,6 @@ import { formatUnderlying } from 'utils/option/utils'
 import Pagination from 'components/Pagination'
 import { Skeleton } from '@material-ui/lab'
 import Card, { MainCard } from 'components/Card'
-import Tab from 'components/Tab'
 import { Text, Box } from 'rebass'
 import { usePrice } from 'hooks/usePrice'
 import { ButtonOutlined } from 'components/Button'
@@ -43,15 +42,7 @@ import Tabs from 'components/Tab/Tabs'
 import { OptionListData } from 'state/market/hooks'
 import { useTokenOtherChain } from 'hooks/useTokenOtherChain'
 
-const TableHeaders = [
-  'Option ID',
-  'Underlying Asset',
-  // 'Pool size (ETH)',
-  // 'Pool size(USDT)',
-  'Option Price Range',
-  'Your Put Position',
-  'Your Call Position'
-]
+const TableHeaders = ['Option ID', 'Underlying Asset', 'Option Range', 'Current Bear Issuance', 'Current Bull Issuance']
 
 export interface OptionInterface {
   optionId: string | undefined
@@ -104,7 +95,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 96px 20px;
+  padding: 120px 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
   padding: 48px 20px;
 `};
@@ -179,7 +170,8 @@ export default function OptionTrade({
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
   const [chainIdQuery, setChainIdQuery] = useState<undefined | number>(undefined)
   const { page, ids: currentIds, firstLoading, data } = useOptionList(searchParams, chainIdQuery)
-  const [searchTokenIndex, setSearchTokenIndex] = useState<number | undefined>(undefined)
+
+  // const [searchTokenIndex, setSearchTokenIndex] = useState<number | undefined>(undefined)
   const [mode, setMode] = useState(Mode.TABLE)
 
   const match = useMediaWidth('upToSmall')
@@ -222,19 +214,19 @@ export default function OptionTrade({
       })
   }, [chainId, errorFunction])
 
-  const tabOptions = useMemo(() => {
-    if (!tokenList) return []
+  // const tabOptions = useMemo(() => {
+  //   if (!tokenList) return []
 
-    return tokenList.map((token, idx) => {
-      return <TokenTab token={token} key={idx} />
-    })
-  }, [tokenList])
+  //   return tokenList.map((token, idx) => {
+  //     return <TokenTab token={token} key={idx} />
+  //   })
+  // }, [tokenList])
 
   const rowsComponent = useMemo(() => {
-    if (!filteredIndexes) return
+    if (!data) return
 
-    return filteredIndexes.map(optionId => <OptionRow key={optionId} optionId={optionId} />)
-  }, [filteredIndexes])
+    return data.map(option => <OptionRow option={option} key={option.id + option.chainId} />)
+  }, [data])
 
   return (
     <>
@@ -243,7 +235,7 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <Tab current={searchTokenIndex || 0} options={tabOptions} setTab={setSearchTokenIndex} />
+          {/* <Tab current={searchTokenIndex || 0} options={tabOptions} setTab={setSearchTokenIndex} /> */}
           <ChainTabs
             chainIdQuery={chainIdQuery}
             setChainIdQuery={val => {
@@ -258,14 +250,14 @@ export default function OptionTrade({
                 onClear={handleClearSearch}
                 onSearch={handleSearch}
                 tokenList={tokenList}
-                searchToken={tokenList && searchTokenIndex ? tokenList[searchTokenIndex] : undefined}
+                chainId={chainIdQuery}
               />
               {!match && <ModeSwitch current={mode} setMode={setMode} />}
             </Box>
 
             {filteredIndexes && (
               <>
-                <Grid container mt={'20px'} spacing={'20px'}>
+                <Grid container mt={'20px'} spacing={20}>
                   {(mode === Mode.CARD || match) &&
                     data &&
                     data.map((option, idx) => (
@@ -542,32 +534,52 @@ export function ModeSwitch({ current, setMode }: { current: number; setMode: (mo
   )
 }
 
-export function OptionRow({ optionId }: { optionId: string }) {
-  const option = useOption(optionId)
-  const callTotalSupply = useTotalSupply(option?.call?.token)
-  const putTotalSupply = useTotalSupply(option?.put?.token)
+export function OptionRow({ option }: { option: OptionListData }) {
   const history = useHistory()
+  const call = useTokenOtherChain(option?.callAddress, option.chainId)
+  const put = useTokenOtherChain(option?.putAddress, option.chainId)
 
-  const range = {
-    cap: tryFormatAmount(option?.priceCap, option?.currency ?? undefined),
-    floor: tryFormatAmount(option?.priceFloor, option?.currency ?? undefined)
-  }
-  const data = {
-    'Option Range': option ? `$${range.floor?.toExact().toString()}~$${range.cap?.toExact().toString()}` : '',
-    'Underlying Assets': option ? `${option.underlying?.symbol}, ${option.currency?.symbol}` : '-',
-    'Current Bull Issuance': option ? callTotalSupply?.toFixed(2).toString() : '-',
-    'Current Bear Issuance': option ? putTotalSupply?.toFixed(2).toString() : '-'
-  }
+  const data = useMemo(() => {
+    if (!option) return undefined
+    const currency = new Token(1, option.currency, option.currencyDecimals, option.currencySymbol ?? 'TOKEN')
+    const underlying = new Token(1, option.underlying, option.underlyingDecimals, option.underlyingSymbol ?? 'TOKEN')
 
+    return {
+      underlying,
+      range: {
+        cap: tryFormatAmount(option?.priceCap, currency),
+        floor: tryFormatAmount(option?.priceFloor, currency)
+      },
+      totalCall: call
+        ? tryFormatAmount(option.totalCall, call)
+            ?.toFixed(2)
+            .toString()
+        : '-',
+      totalput: put
+        ? tryFormatAmount(option.totalPut, put)
+            ?.toFixed(2)
+            .toString()
+        : '-'
+    }
+  }, [call, option, put])
+
+  const details = {
+    'Option Range': option
+      ? `$${data?.range.floor?.toExact().toString() ?? '-'}~$${data?.range.cap?.toExact().toString() ?? '-'}`
+      : '',
+    'Underlying Assets': option ? `${option.underlyingSymbol}, ${option.currencySymbol}` : '-',
+    'Current Bear Issuance': data?.totalput,
+    'Current Bull Issuance': data?.totalCall
+  }
   return (
     <Row
       row={[
-        <>{optionId}</>,
-        <>{data['Underlying Assets']}</>,
-        <>{data['Option Range']}</>,
-        <>{data['Current Bear Issuance']}</>,
-        <>{data['Current Bull Issuance']}</>,
-        <RoundButton key={optionId} onClick={() => history.push(`/option_trading/${optionId}`)}>
+        <>{option.id}</>,
+        <>{details['Underlying Assets']}</>,
+        <>{details['Option Range']}</>,
+        <>{details['Current Bear Issuance']}</>,
+        <>{details['Current Bull Issuance']}</>,
+        <RoundButton key={option.id} onClick={() => history.push(`/option_trading/${option.id}`)}>
           Trade
         </RoundButton>
       ]}
