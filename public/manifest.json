@@ -1,5 +1,5 @@
 {
-  "background_color": "#000",
+  "background_color": "#fff",
   "display": "standalone",
   "homepage_url": "https://antimatter.finance/",
   "icons": [
@@ -17,8 +17,8 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Antimatter",
-  "short_name": "Antimatter",
+  "name": "Antimatter Bull Bear",
+  "short_name": "Antimatter Bull Bear",
   "start_url": ".",
-  "theme_color": "#B2F355"
+  "theme_color": "#31B047"
 }

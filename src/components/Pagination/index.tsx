@@ -38,6 +38,7 @@ export default function PaginationView({
       {count > 0 && (
         <Box
           sx={{
+            mt: '20px',
             display: 'flex',
             justifyContent: 'flex-end',
             alignItems: 'center',

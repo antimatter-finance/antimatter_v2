@@ -41,15 +41,15 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: '#000000',
-    text2: '#191919',
-    text3: '#252525',
+    text1: '#252525',
+    text2: '#25252580',
+    text3: '#25252550',
     text4: '#303030',
     text5: '#A1A1A1',
 
     // backgrounds / greys
     bg1: '#FFFFFF',
-    bg2: '#CCCCCC',
+    bg2: '#F2F5FA',
     bg3: '#999999',
     bg4: '#727272',
     bg5: '#333333',
@@ -199,12 +199,12 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'SF Pro', sans-serif;
   font-display: fallback;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'SF Pro', sans-serif;
   }
 }
 html,

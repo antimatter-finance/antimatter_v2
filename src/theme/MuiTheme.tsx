@@ -154,12 +154,12 @@ export const override: any = {
         // overflow: 'auto!important',
         // paddingRight: '0px!important'
       },
-      'html, input, textarea, button, body': {
+      '*': {
         fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif',
         fontDisplay: 'fallback'
       },
       '@supports (font-variation-settings: normal)': {
-        'html, input, textarea, button, body': {
+        '*': {
           fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif',
           fontDisplay: 'fallback'
         }
@@ -307,6 +307,11 @@ export const mainTheme = createTheme({
   ...theme,
   components: {
     ...override
+  },
+  typography: {
+    allVariants: {
+      fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
+    }
   }
 })
 

@@ -1,11 +1,14 @@
 import { SearchQuery } from 'components/Search'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Axios } from '../utils/option/axios'
 import { useBlockNumber } from 'state/application/hooks'
 import { useNetwork } from './useNetwork'
 import { OptionListData } from 'state/market/hooks'
 import { toChecksumAddress } from 'web3-utils'
 import { isAddress } from 'utils'
+import { useTokenOtherChain } from './useTokenOtherChain'
+import { tryFormatAmount } from 'state/swap/hooks'
+import { Token } from '@uniswap/sdk'
 
 const parseOptionListData = (item: any) => {
   const id = +item.chainId
@@ -74,4 +77,48 @@ export function useOptionList(
       setCurrentPage
     }
   }
+}
+
+export function useFormattedOptionListData(option: OptionListData | undefined) {
+  const call = useTokenOtherChain(option?.callAddress, option?.chainId)
+  const put = useTokenOtherChain(option?.putAddress, option?.chainId)
+
+  return useMemo(() => {
+    if (!option) return undefined
+    const currency = new Token(1, option.currency, option.currencyDecimals, option.currencySymbol ?? 'TOKEN')
+    const underlying = new Token(1, option.underlying, option.underlyingDecimals, option.underlyingSymbol ?? 'TOKEN')
+    const range = {
+      cap: tryFormatAmount(option?.priceCap, currency),
+      floor: tryFormatAmount(option?.priceFloor, currency)
+    }
+    const totalCall =
+      option.totalCall === '0'
+        ? '0'
+        : call
+        ? tryFormatAmount(option.totalCall, call)
+            ?.toFixed(2)
+            .toString()
+        : '-'
+    const totalput =
+      option.totalPut === '0'
+        ? '0'
+        : put
+        ? tryFormatAmount(option.totalPut, put)
+            ?.toFixed(2)
+            .toString()
+        : '-'
+    return {
+      call,
+      put,
+      underlying,
+      details: {
+        'Option Range': option
+          ? `$${range.floor?.toExact().toString() ?? '-'}~$${range.cap?.toExact().toString() ?? '-'}`
+          : '',
+        'Underlying Assets': option ? `${option.underlyingSymbol}, ${option.currencySymbol}` : '-',
+        'Current Bear Issuance': totalput,
+        'Current Bull Issuance': totalCall
+      }
+    }
+  }, [call, option, put])
 }

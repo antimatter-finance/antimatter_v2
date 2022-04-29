@@ -28,6 +28,10 @@ const MaticNetwork = new NetworkConnector({
   urls: { 137: 'https://polygon-rpc.com/' }
 })
 
+const ArbitrumNetwork = new NetworkConnector({
+  urls: { 42161: 'https://arb1.arbitrum.io/rpc' }
+})
+
 export function getOtherNetworkLibrary(chainId: number) {
   switch (chainId) {
     case 1:
@@ -44,6 +48,8 @@ export function getOtherNetworkLibrary(chainId: number) {
       return new Web3Provider(KovanNetwork.provider as any)
     case 137:
       return new Web3Provider(MaticNetwork.provider as any)
+    case 42161:
+      return new Web3Provider(ArbitrumNetwork.provider as any)
     default:
       return undefined
   }

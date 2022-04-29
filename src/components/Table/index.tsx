@@ -65,6 +65,7 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
 
     '& .MuiTableCell-root': {
+      fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important',
       fontSize: '12px',
       whiteSpace: 'pre',
       lineHeight: '12px',
@@ -96,6 +97,7 @@ export const useStyles = makeStyles(theme => ({
       backgroundColor: '#E2E7F0'
     },
     '& .MuiTableCell-root': {
+      fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important',
       color: '#000000'
     },
     '&:last-child': {

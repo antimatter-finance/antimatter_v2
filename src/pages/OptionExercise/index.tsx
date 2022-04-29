@@ -3,12 +3,13 @@ import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { Token } from '@uniswap/sdk'
 import { ButtonPrimary } from 'components/Button'
-import { OptionCard, OptionInterface /*AlternativeDisplay,*/ } from '../OptionTrade'
+import { OptionInterface /*AlternativeDisplay,*/ } from '../OptionTrade'
 import { useActiveWeb3React } from 'hooks'
 import { getUnderlyingList, getOptionTypeList } from 'utils/option/httpRequests'
 import { ZERO_ADDRESS } from 'constants/index'
 import { useNetwork } from 'hooks/useNetwork'
 import Search from 'components/Search'
+import { OptionTradeCard } from 'components/OptionTradeCard'
 
 export enum Type {
   CALL = 'call',
@@ -66,26 +67,32 @@ export default function OptionExercise() {
         {filteredList && (
           <>
             <NetworkPendingSpinner />
-            {filteredList.map(option => (
-              <OptionCard
-                optionId={'1'}
-                key={option.title}
-                buttons={
-                  <>
-                    <ButtonPrimary
-                      style={{ padding: 8 }}
-                      onClick={() => history.push(`/generate/${option.optionType}`)}
-                    >
-                      Generate
-                    </ButtonPrimary>
-                    <div style={{ width: 10 }} />
-                    <ButtonPrimary style={{ padding: 8 }} onClick={() => history.push(`/redeem/${option.optionType}`)}>
-                      Redeem
-                    </ButtonPrimary>
-                  </>
-                }
-              />
-            ))}
+            {filteredList.map(option => {
+              if (!option.optionId) return null
+              return (
+                <OptionTradeCard
+                  optionId={option.optionId}
+                  key={option.title}
+                  buttons={
+                    <>
+                      <ButtonPrimary
+                        style={{ padding: 8 }}
+                        onClick={() => history.push(`/generate/${option.optionType}`)}
+                      >
+                        Generate
+                      </ButtonPrimary>
+                      <div style={{ width: 10 }} />
+                      <ButtonPrimary
+                        style={{ padding: 8 }}
+                        onClick={() => history.push(`/redeem/${option.optionType}`)}
+                      >
+                        Redeem
+                      </ButtonPrimary>
+                    </>
+                  }
+                />
+              )
+            })}
           </>
         )}
         {/* <AlternativeDisplay optionList={optionList} filteredList={filteredList} /> */}

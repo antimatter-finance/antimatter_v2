@@ -64,7 +64,6 @@ export default function ProgressCircles({ steps, disabled = false, ...rest }: Pr
     <Wrapper justify={'center'} {...rest}>
       <Grouping>
         {steps.map((step, i) => {
-          console.log('step-->', step, disabled)
           return (
             <CircleRow key={i}>
               <Circle confirmed={step} disabled={disabled || (!steps[i - 1] && i !== 0)}>

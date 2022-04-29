@@ -62,7 +62,6 @@ export default function Stats() {
     Axios.get('getStatistics', {})
       .then(res => {
         if (res.data.code === 200) {
-          console.log(9999, res.data.data)
           const _data = res.data.data
           setStatsData({
             availableChains: _data.Available_Chains,
