@@ -50,15 +50,18 @@ export function ListOptionCard({ buttons, option }: { buttons: JSX.Element; opti
                   size="70%"
                 />
               </Circle>
-              <AutoColumn gap="5px" style={{ width: '100%', position: 'relative', minHeight: 51 }}>
+              <AutoColumn style={{ width: '100%', position: 'relative', minHeight: 51 }}>
                 <TYPE.mediumHeader
                   fontSize={20}
+                  fontWeight={700}
                   style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}
                 >
                   {`${option?.underlyingSymbol ?? '-'}`}
                 </TYPE.mediumHeader>
 
-                <RowFixed>ID:&nbsp;{option?.optionIndex ?? '-'}</RowFixed>
+                <RowFixed>
+                  <TYPE.small fontWeight={500}> ID:&nbsp;{option?.optionIndex ?? '-'}</TYPE.small>
+                </RowFixed>
               </AutoColumn>
             </TitleWrapper>
             <Divider />

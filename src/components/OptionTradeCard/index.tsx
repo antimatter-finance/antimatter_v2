@@ -145,7 +145,9 @@ export function OptionTradeCard({ optionId, buttons }: { optionId: string; butto
                   {`${option?.underlying?.symbol ?? '-'}`}
                 </TYPE.mediumHeader>
 
-                <RowFixed>ID:&nbsp;{option?.underlying ? optionId : '-'}</RowFixed>
+                <RowFixed>
+                  <TYPE.small>ID:&nbsp;{option?.underlying ? optionId : '-'}</TYPE.small>{' '}
+                </RowFixed>
               </AutoColumn>
             </TitleWrapper>
             <Divider />
