@@ -5,15 +5,13 @@ import { TYPE } from '../theme'
 export const BodyWrapper = styled.div<{ maxWidth?: string; gradient1?: boolean; isCard?: boolean }>`
   max-width: ${({ maxWidth }) => maxWidth ?? '480px'};
   width: 100%;
-  border-radius: 32px;
+  border-radius: 16px;
   background: #ffffff;
   padding: 32px 24px 36px;
   ${({ theme, isCard }) => theme.mediaWidth.upToSmall`
     min-height:100%;
     padding: 16px 24px;
     flex-grow: 1;
-    ${isCard ? '' : 'border-bottom-left-radius: unset;border-bottom-right-radius: unset;'}
-
   `};
 `
 

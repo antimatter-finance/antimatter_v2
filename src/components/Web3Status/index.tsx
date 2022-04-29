@@ -241,7 +241,7 @@ function Web3StatusInner() {
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <TYPE.black fontSize={16}>{t('Connect Wallet')}</TYPE.black>
+        <TYPE.black fontSize={isDownSm ? 12 : 16}>{t('Connect Wallet')}</TYPE.black>
       </Web3StatusConnect>
     )
   }

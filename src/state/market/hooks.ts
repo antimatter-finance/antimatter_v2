@@ -61,6 +61,7 @@ export interface Option {
 
 export interface OptionListData {
   id: string
+  optionIndex: string
   chainId: number
   callAddress: string
   putAddress: string

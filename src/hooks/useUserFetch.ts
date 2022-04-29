@@ -56,6 +56,7 @@ export interface MyTransactionProp {
 export function useMyTransaction(): {
   loading: boolean
   page: {
+    total: number
     totalPages: number
     currentPage: number
     setCurrentPage: (page: number) => void
@@ -68,6 +69,7 @@ export function useMyTransaction(): {
   const [currencyAddresses, setCurrencyAddresses] = useState<string[]>([])
   const [data, setData] = useState<MyTransactionProp[]>([])
   const [loading, setLoading] = useState(true)
+  const [total, setTotal] = useState<number>(0)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(0)
   const history = useHistory()
@@ -130,6 +132,7 @@ export function useMyTransaction(): {
         setUnderlyingAddresses(underlyingAddressList)
         setCurrencyAddresses(currencyAddressList)
         setTotalPages(Number(res.data.data.pages))
+        setTotal(+res.data.data.total)
       } catch (error) {
         setLoading(false)
         console.error('request error getMyposition', error)
@@ -138,7 +141,8 @@ export function useMyTransaction(): {
       }
     })()
   }, [chainId, account, currentPage])
-  const res = useMemo(() => ({ page: { totalPages, currentPage, setCurrentPage }, loading, data: result }), [
+  const res = useMemo(() => ({ page: { total, totalPages, currentPage, setCurrentPage }, loading, data: result }), [
+    total,
     currentPage,
     loading,
     result,

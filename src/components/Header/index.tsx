@@ -181,7 +181,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     height: 24px;
-    width:100px`}
+`}
 `
 
 const UNIAmount = styled.div`
@@ -288,6 +288,7 @@ const StyledNavLink = styled(NavLink).attrs({
 const StyledExternalHeaderLink = styled(ExternalHeaderLink)`
   margin: 0 22px;
   padding: 32px 0;
+  color: ${({ theme }) => theme.text5};
 `
 
 const StyledDropdown = styled.div`

@@ -43,6 +43,9 @@ const StyledPositionCard = styled(Card)`
   overflow: hidden;
   padding: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0;
+  `}
 `
 
 interface PositionCardProps {
@@ -205,10 +208,26 @@ export default function FullPositionCard({ index }: { index: string }) {
         <Box
           height={60}
           bgcolor={theme.mainBG}
-          display="flex"
           justifyContent="space-between"
-          padding="0 20px"
           borderRadius="16px"
+          sx={{
+            display: {
+              xs: 'block',
+              md: 'flex'
+            },
+            height: {
+              xs: 97,
+              md: 60
+            },
+            flexDirection: {
+              xs: 'column',
+              md: 'row'
+            },
+            padding: {
+              xs: '20px 20px 16px',
+              md: '0 20px'
+            }
+          }}
         >
           <AutoRow gap="8px">
             <CurrencyLogo currency={option?.underlying ?? undefined} size={'20px'} />
@@ -223,7 +242,7 @@ export default function FullPositionCard({ index }: { index: string }) {
               )}
             </Text>
           </AutoRow>
-          <RowFixed gap="8px">
+          <RowFixed gap="8px" style={{ marginLeft: 'auto' }}>
             <ButtonEmpty
               padding="6px 8px"
               borderRadius="12px"
@@ -265,12 +284,23 @@ export default function FullPositionCard({ index }: { index: string }) {
                 </Text>
               </FixedHeightRow>
 
-              <RowBetween marginTop="10px">
+              <Box
+                marginTop="10px"
+                sx={{
+                  display: 'flex',
+                  flexDirection: {
+                    xs: 'column',
+                    md: 'row'
+                  },
+                  justifyContent: 'space-between',
+                  gap: '12px'
+                }}
+              >
                 <ButtonPrimary
                   as={Link}
                   to={`/liquidity/add/${index}`}
                   padding="4px"
-                  width="48%"
+                  width="100%"
                   style={{ color: theme.bg1, borderColor: theme.primary1, height: 48, fontSize: 16, fontWeight: 400 }}
                 >
                   + Add New
@@ -280,11 +310,11 @@ export default function FullPositionCard({ index }: { index: string }) {
                   to={`/liquidity/remove/${index}`}
                   style={{ color: theme.bg1, borderColor: theme.primary1, height: 48, fontSize: 16, fontWeight: 400 }}
                   padding="4px"
-                  width="48%"
+                  width="100%"
                 >
                   - Remove
                 </ButtonPrimary>
-              </RowBetween>
+              </Box>
             </AutoColumn>
           </Box>
         )}
