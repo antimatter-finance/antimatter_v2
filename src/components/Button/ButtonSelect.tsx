@@ -28,13 +28,14 @@ export const ButtonSelectStyle = styled(ButtonOutlined)<{ selected?: boolean; wi
   border: unset;
   padding: 0 10px 0 15px;
   border: 1px solid transparent;
+  box-shadow: none !important;
 
   :focus,
   :active {
-    border: none;
+    border-color: ${({ theme }) => theme.primary1};
   }
   :hover {
-    border: none;
+    border-color: ${({ theme }) => theme.primary1};
   }
   &:disabled {
     :hover {
@@ -54,7 +55,8 @@ const OptionWrapper = styled.div<{ isOpen: boolean; width?: string }>`
   overflow: hidden;
   z-index: 2;
   margin-top: 4px;
-  background-color: ${({ theme }) => theme.mainBG};
+  border: 1px solid #00000010;
+  background-color: #ffffff;
   & button:last-child {
     border: none;
   }
@@ -69,7 +71,7 @@ const SelectOption = styled(Base)<{ selected: boolean }>`
   :hover,
   :focus,
   :active {
-    background-color: ${({ theme }) => theme.bg4};
+    background-color: ${({ theme }) => theme.primary1 + 30};
   }
   justify-content: flex-start;
 `

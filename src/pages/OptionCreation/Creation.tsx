@@ -25,6 +25,8 @@ import DataCard from 'components/Card/DataCard'
 import { useActiveWeb3React } from 'hooks'
 import { Box } from '@mui/material'
 import useMediaWidth from 'hooks/useMediaWidth'
+import { BlackButton } from 'components/Button/Button'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 const underlyingAssetList = [WUSDT]
 
@@ -43,7 +45,7 @@ const limitDigits = (string: string, currencyDecimal = 18) => {
 }
 
 export default function Creation() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const [asset0, setAsset0] = useState<Currency | undefined>(undefined)
   const [asset1, setAsset1] = useState<Currency | undefined>(undefined)
   const [currencySearchOpen, setCurrencySearchOpen] = useState(false)
@@ -57,6 +59,8 @@ export default function Creation() {
   const { callback: creationCallback } = useCreationCallback()
   const addTransaction = useTransactionAdder()
   const isDownSm = useMediaWidth('upToSmall')
+
+  const toggleWalletModal = useWalletModalToggle()
 
   const theme = useTheme()
 
@@ -93,6 +97,7 @@ export default function Creation() {
 
   const handleNext = () => {
     let errorString = ''
+    if (+floor === +cap) errorString = ERROR.FLOOR_TOO_LARGE
     if (floor && cap && +cap > +floor * 4) errorString = ERROR.CAP_TOO_LARGE
     if (floor && cap && +floor > +cap) errorString = ERROR.FLOOR_TOO_LARGE
     if (!floor) errorString = ERROR.FLOOR_REQUIRED
@@ -107,6 +112,7 @@ export default function Creation() {
   useEffect(() => {
     debounce(() => {
       let errorString = ''
+      if (floor && cap && +floor === +cap) errorString = ERROR.FLOOR_TOO_LARGE
       if (floor && cap && +cap > +floor * 4) errorString = ERROR.CAP_TOO_LARGE
       if (floor && cap && +floor > +cap) errorString = ERROR.FLOOR_TOO_LARGE
       if ((floor || cap) && !asset1) errorString = ERROR.CURRENCY_REQUIRED
@@ -360,9 +366,13 @@ export default function Creation() {
               {error}
             </TYPE.body>
           )}
-          <ButtonPrimary disabled onClick={handleNext}>
-            Coming Soon
-          </ButtonPrimary>
+          {account ? (
+            <ButtonPrimary onClick={handleNext} disabled={!!error || !floor || !cap || !asset0 || !asset1}>
+              Create
+            </ButtonPrimary>
+          ) : (
+            <BlackButton onClick={toggleWalletModal}>Connect Wallet</BlackButton>
+          )}
         </AutoColumn>
       </AppBody>
     </>
