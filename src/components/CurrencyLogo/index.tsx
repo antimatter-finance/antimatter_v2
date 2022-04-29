@@ -1,4 +1,4 @@
-import { ChainId, Currency, ETHER, Token } from '@uniswap/sdk'
+import { ChainId, Currency, Token } from '@uniswap/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import CircleEth from '../../assets/svg/circle_ETH.svg'
@@ -8,6 +8,7 @@ import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 import { useActiveWeb3React } from '../../hooks'
 import { Symbol } from '../../constants'
+import tokenLogoUriList from '../../assets/tokenLogoUriList.json'
 import unknownUrl from 'assets/svg/circle_unknown.svg'
 
 export const getTokenLogoURL = (address: string) =>
@@ -58,23 +59,34 @@ const LOGO: { readonly [chainId in ChainId]?: string } = {
 export default function CurrencyLogo({
   currency,
   size = '24px',
-  style
+  style,
+  currencySymbol
 }: {
   currency?: Currency
   size?: string
   style?: React.CSSProperties
+  currencySymbol?: string
 }) {
   const { chainId } = useActiveWeb3React()
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
-    if (!currency) {
+    if (!currency && !currencySymbol) {
       return [unknownUrl]
     }
-
-    if (currency === ETHER) {
-      return [LOGO[chainId ?? 1] ?? '']
+    if (currencySymbol) {
+      const uri = (tokenLogoUriList as any)[currencySymbol]
+      if (uri) return [uri]
     }
+
+    if (currency?.symbol) {
+      const uri = (tokenLogoUriList as any)[currency.symbol]
+      if (uri) return [uri]
+    }
+
+    // if (currency === ETHER) {
+    //   return [LOGO[chainId ?? 1] ?? '']
+    // }
 
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
@@ -82,16 +94,20 @@ export default function CurrencyLogo({
       }
       return [getTokenLogoURL(currency.address)]
     }
+
     return []
-  }, [chainId, currency, uriLocations])
+  }, [currency, currencySymbol, uriLocations])
 
-  if (currency?.symbol === Symbol[chainId ?? 1] || currency?.symbol === 'W' + Symbol[chainId ?? 1]) {
+  if (
+    srcs.length === 0 &&
+    (currency?.symbol === Symbol[chainId ?? 1] || currency?.symbol === 'W' + Symbol[chainId ?? 1])
+  ) {
     return <StyledEthereumLogo src={LOGO[chainId ?? 1]} size={size} style={style} />
   }
 
-  if (currency === ETHER || currency?.symbol === 'WETH') {
-    return <StyledEthereumLogo src={LOGO[chainId ?? 1]} size={size} style={style} />
-  }
+  // if (currency === ETHER || currency?.symbol === 'WETH') {
+  //   return <StyledEthereumLogo src={LOGO[chainId ?? 1]} size={size} style={style} />
+  // }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
 }

@@ -10,7 +10,6 @@ import { AnimatedImg, AnimatedWrapper, ExternalLink, TYPE } from 'theme'
 import { RowBetween, RowFixed } from 'components/Row'
 //import { OptionIcon } from 'components/Icons'
 import { AutoColumn } from 'components/Column'
-//import { USDT, ZERO_ADDRESS } from '../../constants'
 import OptionTradeAction from './OptionTradeAction'
 //import { useCurrency } from 'hooks/Tokens'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -35,7 +34,7 @@ import { ReactComponent as TableIcon } from 'assets/svg/table_icon.svg'
 import { ReactComponent as CardIcon } from 'assets/svg/card_icon.svg'
 import Table, { Row } from 'components/Table'
 import useMediaWidth from 'hooks/useMediaWidth'
-import { ZERO_ADDRESS } from 'constants/index'
+// import { ZERO_ADDRESS } from 'constants/index'
 import { CHAIN_ID_LIST, SUPPORTED_NETWORKS, SUPPORTED_NETWORKS_KEYS } from 'constants/chains'
 import Tabs from 'components/Tab/Tabs'
 import { OptionListData } from 'state/market/hooks'
@@ -325,7 +324,11 @@ export function ListOptionCard({ buttons, option }: { buttons: JSX.Element; opti
           <AutoColumn gap="20px">
             <TitleWrapper>
               <Circle>
-                <CurrencyLogo currency={data?.underlying ?? undefined} size="100%" />
+                <CurrencyLogo
+                  currencySymbol={option?.underlyingSymbol}
+                  currency={data?.underlying ?? undefined}
+                  size="100%"
+                />
               </Circle>
               <AutoColumn gap="5px" style={{ width: '100%', position: 'relative', minHeight: 51 }}>
                 <TYPE.mediumHeader
@@ -392,7 +395,11 @@ export function OptionCard({ optionId, buttons }: { optionId: string; buttons: J
           <AutoColumn gap="20px">
             <TitleWrapper>
               <Circle>
-                <CurrencyLogo currency={option?.underlying ?? undefined} size="100%" />
+                <CurrencyLogo
+                  currencySymbol={option.underlying?.symbol}
+                  currency={option?.underlying ?? undefined}
+                  size="100%"
+                />
               </Circle>
               <AutoColumn gap="5px" style={{ width: '100%', position: 'relative', minHeight: 51 }}>
                 <TYPE.mediumHeader
@@ -567,26 +574,6 @@ export function OptionRow({ option }: { option: OptionListData }) {
   )
 }
 
-// export function TokenTab({ token }: { token: Token }) {
-//   const match = useMediaWidth('upToSmall')
-//   const tokenSymbol = token.symbol || ''
-
-//   const wrappedSymbolMapIndex = Object.values(WrappedSymbolMap).indexOf(tokenSymbol) || -1
-//   const targetSymbol = Object.keys(WrappedSymbolMap)[wrappedSymbolMapIndex]
-
-//   const price = usePrice(targetSymbol)
-//   const priceNum = price && +price
-
-//   return (
-//     <Box display="flex" alignItems="center">
-//       <CurrencyLogo currency={token} size="28px" style={{ marginRight: 8 }} />
-//       <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
-//         {token.symbol} {priceNum ? '$' + priceNum.toFixed(2) : ''}
-//       </Text>
-//     </Box>
-//   )
-// }
-
 export function ChainTabs({
   chainIdQuery,
   setChainIdQuery
@@ -602,16 +589,8 @@ export function ChainTabs({
       const network = SUPPORTED_NETWORKS[chainId as SUPPORTED_NETWORKS_KEYS]
 
       return (
-        <Box display="flex" alignItems="center" key={chainId} padding={'0 10px 30px'}>
-          <CurrencyLogo
-            currency={
-              network
-                ? new Token(chainId, ZERO_ADDRESS, network.nativeCurrency.decimals, network.nativeCurrency.symbol)
-                : undefined
-            }
-            size="28px"
-            style={{ marginRight: 8 }}
-          />
+        <Box display="flex" alignItems="center" key={chainId}>
+          <CurrencyLogo currencySymbol={network?.nativeCurrency.symbol} size="28px" style={{ marginRight: 8 }} />
           <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
             {network?.chainName ?? '-'}
           </Text>
@@ -620,8 +599,7 @@ export function ChainTabs({
     })
     return {
       titles: [
-        <Box display="flex" alignItems="center" key="all" padding={'0 10px 30px'}>
-          <CurrencyLogo currency={undefined} size="28px" style={{ marginRight: 8 }} />
+        <Box display="flex" alignItems="center" key="all">
           <Text fontSize={match ? 14 : 20} color={'#000000'} fontWeight={400}>
             All
           </Text>
@@ -644,6 +622,7 @@ export function ChainTabs({
       }}
       titles={data.titles}
       contents={data.filler}
+      tabMarginRight={10}
     />
   )
 }

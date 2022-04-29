@@ -9,6 +9,7 @@ interface Props {
   tabPadding?: string
   CustomTab?: React.FC<TabProps & { selected?: boolean }>
   fontWeight?: number
+  tabMarginRight?: number
 }
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
@@ -16,7 +17,7 @@ function TabPanel({ children, value, index }: { children: React.ReactNode; value
 }
 
 export default function Tabs(props: Props) {
-  const { titles, contents, customCurrentTab, customOnChange, tabPadding, CustomTab } = props
+  const { titles, contents, customCurrentTab, customOnChange, tabPadding, CustomTab, tabMarginRight } = props
   const [value, setValue] = React.useState(0)
 
   const onChange = useCallback(
@@ -49,7 +50,7 @@ export default function Tabs(props: Props) {
                     fontSize: { xs: 16 },
                     fontWeight: 700,
                     padding: tabPadding,
-                    mr: { xs: 23, md: 28 },
+                    mr: tabMarginRight ?? { xs: 23, md: 28 },
                     textTransform: 'none',
                     color: theme => theme.palette.text.primary,
                     opacity: 0.4,
