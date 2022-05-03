@@ -110,7 +110,7 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 120px 20px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 48px 20px;
+  padding: 27.5px 20px;
 `};
 `
 
