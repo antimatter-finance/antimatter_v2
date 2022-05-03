@@ -338,6 +338,9 @@ export default function Creation() {
                     xs: '100%',
                     md: '46%'
                   }
+                },
+                gap: {
+                  xs: 24
                 }
               }}
             >
