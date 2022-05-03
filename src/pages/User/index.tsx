@@ -7,7 +7,7 @@ import Loader from '../../assets/svg/antimatter_background_logo.svg'
 import Table from '../../components/Table'
 import { useMyTransaction, useMyCreation, useMyPosition } from '../../hooks/useUserFetch'
 import Pagination from '../../components/Pagination'
-// import useMediaWidth from 'hooks/useMediaWidth'
+import useMediaWidth from 'hooks/useMediaWidth'
 import { useActiveWeb3React } from 'hooks'
 import Image from 'components/Image'
 import PositionIcon from 'assets/images/position-icon.png'
@@ -18,9 +18,11 @@ import Card from 'components/Card'
 import { Box, Typography } from '@mui/material'
 import { ReactComponent as AntimatterIcon } from 'assets/svg/antimatter_icon.svg'
 import Copy from 'components/AccountDetails/Copy'
+import useENSName from '../../hooks/useENSName'
+import { shortenAddress } from 'utils'
 
 const Wrapper = styled.div`
-  padding: 96px 0;
+  padding: calc(48px + ${({ theme }) => theme.headerHeight}); 0;
   width: 100%;
   max-width: 1110px;
   display: flex;
@@ -94,6 +96,8 @@ export default function User() {
   const [currentTab, setCurrentTab] = useState(UserInfoTabs.POSITION)
   // const isUptoSmall = useMediaWidth('upToSmall')
   const { account } = useActiveWeb3React()
+  const { ENSName } = useENSName(account ?? undefined)
+  const isDownSm = useMediaWidth('upToSmall')
 
   useEffect(() => {
     if (!account) {
@@ -123,12 +127,12 @@ export default function User() {
   return (
     <Wrapper>
       <AppBody>
-        <Box display="flex" gap={'20px'} alignItems="center" mb={'60px'}>
-          <AntimatterIcon width="72px" height="72px" />
-          <Box>
-            <Typography sx={{ fontSize: 32, fontWeight: 700 }}>Unnamed</Typography>
+        <Box display="flex" gap={'20px'} alignItems="center" mb={'48px'}>
+          <AntimatterIcon width={isDownSm ? '60px' : '72px'} height={isDownSm ? '60px' : '72px'} />
+          <Box display="grid" gap={4}>
+            <Typography sx={{ fontSize: 32, fontWeight: 700 }}>{ENSName || 'Unamed'}</Typography>
             <AutoRow>
-              <Typography sx={{ opacity: 0.5 }}>{account}</Typography>
+              <Typography sx={{ opacity: 0.5 }}>{account && isDownSm ? shortenAddress(account) : account}</Typography>
               {account && <Copy toCopy={account} fixedSize />}
             </AutoRow>
           </Box>
@@ -208,6 +212,8 @@ function SwitchTab({
   onTabClick: (tab: UserInfoTabs) => () => void
   style?: CSSProperties
 }) {
+  const isDownSm = useMediaWidth('upToSmall')
+
   const accountIcons = {
     [UserInfoTabs.POSITION]: PositionIcon,
     [UserInfoTabs.CREATION]: CreationIcon,
@@ -224,9 +230,10 @@ function SwitchTab({
               <Image
                 src={accountIcons[tab as keyof typeof UserInfoTabRoute]}
                 alt="my-position-icon"
-                style={{ marginRight: '12px' }}
+                style={{ marginRight: isDownSm ? 8 : 12 }}
+                width={isDownSm ? 20 : 28}
               />
-              {tabName}
+              <Typography fontSize={isDownSm ? 14 : 20}>{tabName}</Typography>
             </AutoRow>
           </Tab>
         )

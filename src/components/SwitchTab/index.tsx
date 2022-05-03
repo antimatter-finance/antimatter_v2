@@ -2,11 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 export const SwitchTabWrapper = styled.div`
+  display: flex;
+  gap: 52px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     overflow-x: auto;
     overflow-y: hidden;
+    gap: 20px;
     `};
 `
 
@@ -14,7 +17,6 @@ export const Tab = styled.button<{ selected: boolean }>`
   border: none;
   background: none;
   padding: 14px 0;
-  margin-right: 40px;
   font-size: 20px;
   font-weight: 400;
   color: ${({ theme }) => theme.text1};
