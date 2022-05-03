@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 48px 20px;
+  padding: 0px 20px;
   width: calc(100% + 2px);
   margin: 0 -1px
   `}
