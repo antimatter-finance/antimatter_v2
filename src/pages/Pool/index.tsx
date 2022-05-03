@@ -5,7 +5,6 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
 import { TYPE } from '../../theme'
 import Card from '../../components/Card'
-import { RowBetween } from '../../components/Row'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -13,6 +12,7 @@ import { Dots } from '../../components/swap/styleds'
 // import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import AppBody from 'pages/AppBody'
 import { useOptionTypeCount } from '../../state/market/hooks'
+import { Typography } from '@mui/material'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -22,13 +22,6 @@ const PageWrapper = styled(AutoColumn)`
 //   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
 //   overflow: hidden;
 // `
-
-const TitleRow = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    gap: 12px;
-    width: 100%;
-  `};
-`
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
@@ -56,22 +49,21 @@ export default function Pool() {
         <PageWrapper>
           <SwapPoolTabs active={'liquidity'} />
 
-          <AutoColumn gap="8px" style={{ width: '100%' }}>
-            <TitleRow padding={'0'}>
-              <TYPE.mediumHeader>Your Positions</TYPE.mediumHeader>
-            </TitleRow>
-            {/*<ResponsiveButtonPrimary*/}
-            {/*  style={{ width: '100%' }}*/}
-            {/*  id="join-pool-button"*/}
-            {/*  as={Link}*/}
-            {/*  padding="14px 10px"*/}
-            {/*  to="/add/ETH"*/}
-            {/*>*/}
-            {/*  <Text fontWeight={500} fontSize={16}>*/}
-            {/*    Add Liquidity*/}
-            {/*  </Text>*/}
-            {/*</ResponsiveButtonPrimary>*/}
-
+          <Typography fontSize={24} fontWeight={700} mb={28}>
+            Your Positions
+          </Typography>
+          {/*<ResponsiveButtonPrimary*/}
+          {/*  style={{ width: '100%' }}*/}
+          {/*  id="join-pool-button"*/}
+          {/*  as={Link}*/}
+          {/*  padding="14px 10px"*/}
+          {/*  to="/add/ETH"*/}
+          {/*>*/}
+          {/*  <Text fontWeight={500} fontSize={16}>*/}
+          {/*    Add Liquidity*/}
+          {/*  </Text>*/}
+          {/*</ResponsiveButtonPrimary>*/}
+          <AutoColumn gap="12px" style={{ width: '100%' }}>
             {!account ? (
               <Card padding="12px" border={`1px solid ${theme.text3}`} borderRadius="14px">
                 <TYPE.body color={theme.text3} textAlign="center">

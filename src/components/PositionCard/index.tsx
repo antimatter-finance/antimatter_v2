@@ -211,10 +211,7 @@ export default function FullPositionCard({ index }: { index: string }) {
           justifyContent="space-between"
           borderRadius="16px"
           sx={{
-            display: {
-              xs: 'block',
-              md: 'flex'
-            },
+            display: 'flex',
             height: {
               xs: 97,
               md: 60
@@ -224,8 +221,8 @@ export default function FullPositionCard({ index }: { index: string }) {
               md: 'row'
             },
             padding: {
-              xs: '20px 20px 16px',
-              md: '0 20px'
+              xs: '20px 20px 8px',
+              md: '0 22px'
             }
           }}
         >
