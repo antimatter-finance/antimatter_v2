@@ -99,6 +99,8 @@ export default function OptionSwap({
 
   const handleHash = useCallback(hash => setTxHash(hash), [])
 
+  console.log(optionPrice)
+
   const priceCall = optionPrice?.priceCall
   const pricePut = optionPrice?.pricePut
   const callTotalSupply = useTotalSupply(option?.call?.token)
@@ -281,7 +283,7 @@ export default function OptionSwap({
   return (
     <>
       <NetworkErrorModal />
-      <Grid maxWidth={1120} container spacing={2} padding={0}>
+      <Grid maxWidth={1120} container spacing={20} padding={0}>
         <Grid item xs={12} md={4}>
           <Swap
             optionPrice={optionPrice}
@@ -325,7 +327,7 @@ export default function OptionSwap({
               <Typography fontSize={12} fontWeight={600} mb="12px">
                 Option Information
               </Typography>
-              <Grid container rowSpacing={'8px'}>
+              <Grid container rowSpacing={8}>
                 {optionInformation &&
                   Object.keys(optionInformation).map((key, idx) => (
                     <Grid key={idx} item xs={6}>
