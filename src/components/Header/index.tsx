@@ -181,7 +181,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   background-color: ${({ theme }) => theme.mainBG};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     height: 24px;
-`}
+  `}
 `
 
 const UNIAmount = styled.div`
@@ -214,20 +214,20 @@ const NetworkCard = styled.div<{ color?: string }>`
   justify-content: center;
   border-radius: 4px;
   align-items: center;
-  background-color: ${({ color }) => color ?? 'rgba(255, 255, 255, 0.12)'}
+  background-color: #ffffff;
   font-size: 13px;
   font-weight: 500;
   position: relative;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   & > svg:first-child {
     height: 20px;
     width: 20px;
   }
   .dropdown_wrapper {
-    &>div{
+    & > div {
       a {
-        padding: 12px 12px 12px 44px ;
+        padding: 12px 12px 12px 44px;
       }
     }
   }
@@ -240,13 +240,13 @@ const NetworkCard = styled.div<{ color?: string }>`
       height: 10px;
       position: absolute;
       width: 172px;
-      &>div{
+      & > div {
         height: auto;
         margin-top: 10px;
         border: 1px solid ${({ theme }) => theme.text5};
-        a{
-        position: relative;
-          & >svg{
+        a {
+          position: relative;
+          & > svg {
             height: 20px;
             width: 20px;
             margin-right: 15px;
@@ -255,6 +255,11 @@ const NetworkCard = styled.div<{ color?: string }>`
       }
     }
   }
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    padding: 5px 6px;
+    width: 42px;
+    height: 28px;
+`}
 `
 
 const activeClassName = 'ACTIVE'

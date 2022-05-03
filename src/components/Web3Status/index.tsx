@@ -105,7 +105,6 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   }
   & p {
     margin: 0;
-    margin-left: 8px;
   }
 `
 
@@ -118,6 +117,7 @@ const Text = styled.p`
   font-size: 13px;
   width: fit-content;
   font-weight: 400;
+  color: #000000;
 `
 
 const NetworkIcon = styled(Activity)`
