@@ -99,8 +99,6 @@ export default function OptionSwap({
 
   const handleHash = useCallback(hash => setTxHash(hash), [])
 
-  console.log(optionPrice)
-
   const priceCall = optionPrice?.priceCall
   const pricePut = optionPrice?.pricePut
   const callTotalSupply = useTotalSupply(option?.call?.token)
