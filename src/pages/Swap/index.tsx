@@ -623,7 +623,7 @@ export default function Swap({
           </BottomGrouping>
         </Wrapper>
         <Box width="100%" display="flex" justifyContent="center">
-          <NavLink to={'/option_creation'} style={{ textDecoration: 'none' }}>
+          <NavLink to={'/option_creation/creation'} style={{ textDecoration: 'none' }}>
             <Typography component="span" color="#31B047" fontSize={{ xs: 12, md: 14 }}>
               Option Creation
             </Typography>
