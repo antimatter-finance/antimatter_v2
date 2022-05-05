@@ -327,7 +327,7 @@ const StyledDropdown = styled.div`
       }
     }
     & > div {
-      top: 40px;
+      top: 60px;
       height: auto;
       border: 1px solid ${({ theme }) => theme.text5};
     }
@@ -347,7 +347,7 @@ const Dropdown = styled.div<{ width?: string }>`
   width: ${({ width }) => width ?? '172px'};
   a {
     color: #000000;
-    background-color: ${({ theme }) => theme.mainBG};
+    background-color: #ffffff;
     text-decoration: none;
     padding: 14px 17px;
     border-bottom: 1px solid ${({ theme }) => theme.text5}
