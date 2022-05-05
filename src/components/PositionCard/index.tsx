@@ -1,6 +1,6 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
 import { darken } from 'polished'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -191,7 +191,13 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
   )
 }
 
-export default function FullPositionCard({ index }: { index: string }) {
+export default function FullPositionCard({
+  index,
+  setStatus
+}: {
+  index: string
+  setStatus: (index: string, status: string) => void
+}) {
   const { account } = useActiveWeb3React()
   const option = useOption(index)
   const userCallBalance = useTokenBalance(account ?? undefined, option?.call?.token ?? undefined)
@@ -200,136 +206,156 @@ export default function FullPositionCard({ index }: { index: string }) {
   const [showMore, setShowMore] = useState(false)
 
   const theme = useTheme()
+  useEffect(() => {
+    if (!option || !option.currency || !option.priceCap || !option.priceFloor || !userCallBalance || !userPutBalance) {
+      setStatus(index, 'loading')
+      return
+    }
+    if (userCallBalance?.equalTo(JSBI.BigInt(0)) && userPutBalance?.equalTo(JSBI.BigInt(0))) {
+      setStatus(index, 'none')
+      return
+    }
+    setStatus(index, 'done')
+    return
+  }, [index, option, setStatus, userCallBalance, userPutBalance])
 
   return (
     <>
-      <StyledPositionCard>
-        <CardNoise />
-        <AutoColumn>
-          <Box
-            height={60}
-            bgcolor={theme.mainBG}
-            justifyContent="space-between"
-            borderRadius="16px"
-            sx={{
-              display: 'flex',
-              height: {
-                xs: 97,
-                md: 60
-              },
-              flexDirection: {
-                xs: 'column',
-                md: 'row'
-              },
-              padding: {
-                xs: '20px 20px 8px',
-                md: '0 22px'
-              }
-            }}
-          >
-            <AutoRow gap="8px">
-              <CurrencyLogo currency={option?.underlying ?? undefined} size={'20px'} />
-              <Text fontWeight={400} fontSize={16}>
-                {!option || !option.currency || !option.priceCap || !option.priceFloor ? (
-                  <Dots>Loading</Dots>
-                ) : (
-                  `${option.underlying?.symbol} ($${new TokenAmount(
-                    option.currency,
-                    option.priceFloor
-                  ).toSignificant()}~$${new TokenAmount(option.currency, option.priceCap).toSignificant()})`
-                )}
-              </Text>
-            </AutoRow>
-            <RowFixed gap="8px" style={{ marginLeft: 'auto' }}>
-              <ButtonEmpty
-                padding="6px 8px"
-                borderRadius="12px"
-                width="fit-content"
-                onClick={() => setShowMore(!showMore)}
-              >
-                {showMore ? (
-                  <>
-                    Manage
-                    <ChevronUp size="30" style={{ marginLeft: '10px' }} />
-                  </>
-                ) : (
-                  <>
-                    Manage
-                    <ChevronDown size="30" style={{ marginLeft: '10px' }} />
-                  </>
-                )}
-              </ButtonEmpty>
-            </RowFixed>
-          </Box>
-
-          {showMore && (
-            <Box padding="24px 20px 32px">
-              <AutoColumn gap="8px">
-                <FixedHeightRow>
-                  <Text fontSize={16} fontWeight={400} color={theme.text5}>
-                    Bull token:
-                  </Text>
-                  <Text fontSize={16} fontWeight={400}>
-                    {userCallBalance ? userCallBalance.toSignificant(4) : '-'}
-                  </Text>
-                </FixedHeightRow>
-                <FixedHeightRow>
-                  <Text fontSize={16} fontWeight={400} color={theme.text5}>
-                    Bear token:
-                  </Text>
-                  <Text fontSize={16} fontWeight={400}>
-                    {userPutBalance ? userPutBalance.toSignificant(4) : '-'}
-                  </Text>
-                </FixedHeightRow>
-
-                <Box
-                  marginTop="10px"
-                  sx={{
-                    display: 'flex',
-                    flexDirection: {
-                      xs: 'column',
-                      md: 'row'
-                    },
-                    justifyContent: 'space-between',
-                    gap: '12px'
-                  }}
+      {!option ||
+      !option.currency ||
+      !option.priceCap ||
+      !option.priceFloor ||
+      !userCallBalance ||
+      !userPutBalance ||
+      (userCallBalance?.equalTo(JSBI.BigInt(0)) && userPutBalance?.equalTo(JSBI.BigInt(0))) ? null : (
+        <StyledPositionCard>
+          <CardNoise />
+          <AutoColumn>
+            <Box
+              height={60}
+              bgcolor={theme.mainBG}
+              justifyContent="space-between"
+              borderRadius="16px"
+              sx={{
+                display: 'flex',
+                height: {
+                  xs: 97,
+                  md: 60
+                },
+                flexDirection: {
+                  xs: 'column',
+                  md: 'row'
+                },
+                padding: {
+                  xs: '20px 20px 8px',
+                  md: '0 22px'
+                }
+              }}
+            >
+              <AutoRow gap="8px">
+                <CurrencyLogo currency={option?.underlying ?? undefined} size={'20px'} />
+                <Text fontWeight={400} fontSize={16}>
+                  {!option || !option.currency || !option.priceCap || !option.priceFloor ? (
+                    <Dots>Loading</Dots>
+                  ) : (
+                    `${option.underlying?.symbol} ($${new TokenAmount(
+                      option.currency,
+                      option.priceFloor
+                    ).toSignificant()}~$${new TokenAmount(option.currency, option.priceCap).toSignificant()})`
+                  )}
+                </Text>
+              </AutoRow>
+              <RowFixed gap="8px" style={{ marginLeft: 'auto' }}>
+                <ButtonEmpty
+                  padding="6px 8px"
+                  borderRadius="12px"
+                  width="fit-content"
+                  onClick={() => setShowMore(!showMore)}
                 >
-                  <ButtonPrimary
-                    as={Link}
-                    to={`/liquidity/add/${index}`}
-                    padding="4px"
-                    width="100%"
-                    style={{
-                      color: theme.bg1,
-                      borderColor: theme.primary1,
-                      height: 48,
-                      fontSize: 16,
-                      fontWeight: 400
-                    }}
-                  >
-                    + Add New
-                  </ButtonPrimary>
-                  <ButtonPrimary
-                    as={Link}
-                    to={`/liquidity/remove/${index}`}
-                    style={{
-                      color: theme.bg1,
-                      borderColor: theme.primary1,
-                      height: 48,
-                      fontSize: 16,
-                      fontWeight: 400
-                    }}
-                    padding="4px"
-                    width="100%"
-                  >
-                    - Remove
-                  </ButtonPrimary>
-                </Box>
-              </AutoColumn>
+                  {showMore ? (
+                    <>
+                      Manage
+                      <ChevronUp size="30" style={{ marginLeft: '10px' }} />
+                    </>
+                  ) : (
+                    <>
+                      Manage
+                      <ChevronDown size="30" style={{ marginLeft: '10px' }} />
+                    </>
+                  )}
+                </ButtonEmpty>
+              </RowFixed>
             </Box>
-          )}
-        </AutoColumn>
-      </StyledPositionCard>
+
+            {showMore && (
+              <Box padding="24px 20px 32px">
+                <AutoColumn gap="8px">
+                  <FixedHeightRow>
+                    <Text fontSize={16} fontWeight={400} color={theme.text5}>
+                      Bull token:
+                    </Text>
+                    <Text fontSize={16} fontWeight={400}>
+                      {userCallBalance ? userCallBalance.toSignificant(4) : '-'}
+                    </Text>
+                  </FixedHeightRow>
+                  <FixedHeightRow>
+                    <Text fontSize={16} fontWeight={400} color={theme.text5}>
+                      Bear token:
+                    </Text>
+                    <Text fontSize={16} fontWeight={400}>
+                      {userPutBalance ? userPutBalance.toSignificant(4) : '-'}
+                    </Text>
+                  </FixedHeightRow>
+
+                  <Box
+                    marginTop="10px"
+                    sx={{
+                      display: 'flex',
+                      flexDirection: {
+                        xs: 'column',
+                        md: 'row'
+                      },
+                      justifyContent: 'space-between',
+                      gap: '12px'
+                    }}
+                  >
+                    <ButtonPrimary
+                      as={Link}
+                      to={`/liquidity/add/${index}`}
+                      padding="4px"
+                      width="100%"
+                      style={{
+                        color: theme.bg1,
+                        borderColor: theme.primary1,
+                        height: 48,
+                        fontSize: 16,
+                        fontWeight: 400
+                      }}
+                    >
+                      + Add New
+                    </ButtonPrimary>
+                    <ButtonPrimary
+                      as={Link}
+                      to={`/liquidity/remove/${index}`}
+                      style={{
+                        color: theme.bg1,
+                        borderColor: theme.primary1,
+                        height: 48,
+                        fontSize: 16,
+                        fontWeight: 400
+                      }}
+                      padding="4px"
+                      width="100%"
+                    >
+                      - Remove
+                    </ButtonPrimary>
+                  </Box>
+                </AutoColumn>
+              </Box>
+            )}
+          </AutoColumn>
+        </StyledPositionCard>
+      )}
     </>
   )
 }

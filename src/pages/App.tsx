@@ -33,6 +33,7 @@ import ComingSoon from './ComingSoon'
 import User from './User'
 import Calculator from './Calculator'
 import WarningModal from 'components/Modal/WarningModal'
+import Pool from './Pool'
 // import Spinner from 'components/Spinner'
 // import NoService from './NoService'
 // import { fetchLocation } from '../utils/option/location'
@@ -151,7 +152,8 @@ export default function App() {
               <>
                 {/* <LocatoinVerification resource={resource}> */}
                 <Switch>
-                  <Route exact strict path="/option_creation/:tab" component={OptionCreation} />
+                  <Route exact strict path="/option_creation/creation" component={OptionCreation} />
+                  <Route exact strict path="/option_creation/liquidity" component={Pool} />
                   <Route exact strict path="/option_trading" component={OptionTrade} />
                   <Route exact strict path="/calculator" component={Calculator} />
                   <Route exact strict path="/option_trading/:chainId/:optionId" component={OptionTrade} />
