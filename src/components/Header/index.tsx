@@ -193,8 +193,9 @@ const UNIAmount = styled.div`
   background-color: transparent;
   &:after {
     content: '';
-    border-right: 1px solid ${({ theme }) => theme.text5};
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
     margin-left: 16px;
+    margin-right: 16px;
     height: 20px;
   }
 `
