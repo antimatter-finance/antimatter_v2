@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react'
-import { Currency, Token } from '@uniswap/sdk'
+import React, { useState, useCallback, useEffect } from 'react'
+import { Currency } from '@uniswap/sdk'
 import { ButtonOutlinedPrimary, ButtonPrimary } from 'components/Button'
 import { ReactComponent as SearchIcon } from '../../assets/svg/search.svg'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -28,14 +28,16 @@ export default function Search({
   // optionTypeQuery,
   onClear,
   onSearch,
-  tokenList,
-  chainId
+  // tokenList,
+  chainId,
+  chainIdQuery
 }: {
   // onOptionType?: (type: string) => void
   // optionTypeQuery?: string
   onClear?: () => void
   onSearch: (query: any) => void
-  tokenList?: Token[]
+  chainIdQuery?: number
+  // tokenList?: Token[]
   chainId?: number | undefined
 }) {
   const match = useMediaWidth('upToSmall')
@@ -67,11 +69,16 @@ export default function Search({
 
     onSearch(body)
   }, [assetTypeQuery, onSearch, optionIdQuery])
+
   const handleClear = useCallback(() => {
     onClear && onClear()
     setAssetTypeQuery(undefined)
     setOptionIdQuery('')
   }, [onClear])
+
+  useEffect(() => {
+    handleClear()
+  }, [chainIdQuery, handleClear])
 
   return (
     <>
@@ -79,7 +86,8 @@ export default function Search({
         isOpen={currencySearchOpen}
         onDismiss={handleDismissSearch}
         onCurrencySelect={setAssetTypeQuery}
-        tokenList={tokenList ?? []}
+        showEther={false}
+        // tokenList={tokenList ?? []}
       />
 
       <Box width={match ? '100%' : 'fit-content'} display="flex" flexDirection={match ? 'column' : 'row'} gap={12}>

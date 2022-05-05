@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
-import { Token } from '@uniswap/sdk'
 import { ButtonPrimary } from 'components/Button'
 import { OptionInterface /*AlternativeDisplay,*/ } from '../OptionTrade'
 import { useActiveWeb3React } from 'hooks'
-import { getUnderlyingList, getOptionTypeList } from 'utils/option/httpRequests'
+import { getOptionTypeList } from 'utils/option/httpRequests'
 import { ZERO_ADDRESS } from 'constants/index'
 import { useNetwork } from 'hooks/useNetwork'
 import Search from 'components/Search'
@@ -23,7 +22,7 @@ const Wrapper = styled.div`
 
 export default function OptionExercise() {
   const { chainId } = useActiveWeb3React()
-  const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
+  // const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
   const [optionList, setOptionList] = useState<OptionInterface[] | undefined>(undefined)
   const [filteredList, setFilteredList] = useState<OptionInterface[] | undefined>(undefined)
   const history = useHistory()
@@ -49,7 +48,7 @@ export default function OptionExercise() {
   }, [optionList])
 
   useEffect(() => {
-    getUnderlyingList((list: Token[] | undefined) => setTokenList(list), chainId, httpHandlingFunctions.errorFunction)
+    // getUnderlyingList((list: Token[] | undefined) => setTokenList(list), chainId, httpHandlingFunctions.errorFunction)
     getOptionTypeList(httpHandlingFunctions, list => setOptionList(list), chainId)
   }, [chainId, httpHandlingFunctions])
 
@@ -63,7 +62,7 @@ export default function OptionExercise() {
     <>
       <NetworkErrorModal />
       <Wrapper id="optionExercise">
-        <Search onSearch={handleSearch} tokenList={tokenList} onClear={handleClearSearch} />
+        <Search onSearch={handleSearch} onClear={handleClearSearch} />
         {filteredList && (
           <>
             <NetworkPendingSpinner />

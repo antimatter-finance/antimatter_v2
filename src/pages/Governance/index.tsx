@@ -102,7 +102,7 @@ display: flex
 
 export default function Governance() {
   const governanceList = useGovernanceList()
-  console.log('governanceList', governanceList)
+
   const [isCardOpen, setIsCardOpen] = useState(false)
   const [isCreationOpen, setIsCreationOpen] = useState(false)
   const [cardDetail, setCardDetail] = useState<undefined | GovernanceData>(undefined)

@@ -52,17 +52,6 @@ export default function Pool() {
           <Typography fontSize={24} fontWeight={700} mb={28}>
             Your Positions
           </Typography>
-          {/*<ResponsiveButtonPrimary*/}
-          {/*  style={{ width: '100%' }}*/}
-          {/*  id="join-pool-button"*/}
-          {/*  as={Link}*/}
-          {/*  padding="14px 10px"*/}
-          {/*  to="/add/ETH"*/}
-          {/*>*/}
-          {/*  <Text fontWeight={500} fontSize={16}>*/}
-          {/*    Add Liquidity*/}
-          {/*  </Text>*/}
-          {/*</ResponsiveButtonPrimary>*/}
           <AutoColumn gap="12px" style={{ width: '100%' }}>
             {!account ? (
               <Card padding="12px" border={`1px solid ${theme.text3}`} borderRadius="14px">
@@ -83,18 +72,6 @@ export default function Pool() {
                 })}
               </>
             )}
-            {/*<AutoColumn justify={'center'} gap="md">*/}
-            {/*  <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>*/}
-            {/*    {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}*/}
-            {/*    <StyledInternalLink*/}
-            {/*      id="import-pool-link"*/}
-            {/*      to={hasV1Liquidity ? '/migrate/v1' : '/find'}*/}
-            {/*      style={{ color: theme.text1 }}*/}
-            {/*    >*/}
-            {/*      {hasV1Liquidity ? 'Migrate now' : 'Import it'}*/}
-            {/*    </StyledInternalLink>*/}
-            {/*  </Text>*/}
-            {/*</AutoColumn>*/}
           </AutoColumn>
         </PageWrapper>
       </AppBody>

@@ -15,7 +15,7 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 //   RedirectOldAddLiquidityPathStructure,
 //   RedirectToAddLiquidity
 // } from './AddLiquidity/redirects'
-import MatterToken from './MatterToken'
+// import MatterToken from './MatterToken'
 // import Swap from './Swap'
 import { /*OpenClaimAddressModalAndRedirectToSwap,*/ RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Generate from './Generate'
@@ -167,7 +167,7 @@ export default function App() {
                   {/* <Route exact strict path="/exercise" component={Exercise} /> */}
                   <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                   {/* <Route exact strict path="/send" component={RedirectPathToSwapOnly} /> */}
-                  <Route exact strict path="/farm" component={MatterToken} />
+                  {/* <Route exact strict path="/farm" component={MatterToken} /> */}
                   <Route exact strict path="/faq" component={FAQ} />
                   <Route component={RedirectPathToSwapOnly} />
                 </Switch>

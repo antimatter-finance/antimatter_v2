@@ -3,7 +3,6 @@ import { Grid, Box as MuiBox } from '@mui/material'
 import { useHistory } from 'react-router-dom'
 import { RouteComponentProps } from 'react-router'
 import styled from 'styled-components'
-import { Token } from '@uniswap/sdk'
 import { ButtonPrimary, RoundButton } from 'components/Button'
 import { AnimatedImg, AnimatedWrapper, ExternalLink, TYPE } from 'theme'
 //import { OptionIcon } from 'components/Icons'
@@ -15,10 +14,10 @@ import { XCircle } from 'react-feather'
 import { useNetwork } from 'hooks/useNetwork'
 import { useFormattedOptionListData, useOptionList } from 'hooks/useOptionList'
 import { useOptionTypeCount } from '../../state/market/hooks'
-import { useActiveWeb3React } from 'hooks'
+// import { useActiveWeb3React } from 'hooks'
 import Search, { SearchQuery } from 'components/Search'
-import { Axios } from 'utils/option/axios'
-import { formatUnderlying } from 'utils/option/utils'
+// import { Axios } from 'utils/option/axios'
+// import { formatUnderlying } from 'utils/option/utils'
 import Pagination from 'components/Pagination'
 import Card from 'components/Card'
 // import { usePrice } from 'hooks/usePrice'
@@ -128,9 +127,9 @@ export default function OptionTrade({
     params: { optionId, chainId: chainIdParam }
   }
 }: RouteComponentProps<{ optionId?: string; chainId?: string }>) {
-  const { chainId } = useActiveWeb3React()
+  // const { chainId } = useActiveWeb3React()
   const optionCount = useOptionTypeCount()
-  const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
+  // const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
   const [filteredIndexes, setFilteredIndexes] = useState<string[] | undefined>(undefined)
   const history = useHistory()
   const [searchParams, setSearchParams] = useState<SearchQuery>({})
@@ -146,7 +145,7 @@ export default function OptionTrade({
   }, [currentIds])
 
   const {
-    httpHandlingFunctions: { errorFunction },
+    // httpHandlingFunctions: { errorFunction },
     NetworkErrorModal
   } = useNetwork()
 
@@ -163,17 +162,17 @@ export default function OptionTrade({
     setSearchParams(body)
   }, [])
 
-  useEffect(() => {
-    if (!chainId) return
-    Axios.get('getUnderlyingList', { chainId })
-      .then(r => {
-        setTokenList(formatUnderlying(r.data.data, chainId))
-      })
-      .catch(e => {
-        console.error(e)
-        errorFunction()
-      })
-  }, [chainId, errorFunction])
+  // useEffect(() => {
+  //   if (!chainId) return
+  //   Axios.get('getUnderlyingList', { chainId })
+  //     .then(r => {
+  //       setTokenList(formatUnderlying(r.data.data, chainId))
+  //     })
+  //     .catch(e => {
+  //       console.error(e)
+  //       errorFunction()
+  //     })
+  // }, [chainId, errorFunction])
 
   const rowsComponent = useMemo(() => {
     if (!data) return
@@ -194,6 +193,10 @@ export default function OptionTrade({
     ))
   }, [data, history])
 
+  const handleChainId = useCallback(val => {
+    setChainIdQuery(val)
+  }, [])
+
   return (
     <>
       <NetworkErrorModal />
@@ -201,12 +204,7 @@ export default function OptionTrade({
         <OptionTradeAction optionId={optionId} />
       ) : (
         <Wrapper id="optionTrade">
-          <ChainTabs
-            chainIdQuery={chainIdQuery}
-            setChainIdQuery={val => {
-              setChainIdQuery(val)
-            }}
-          />
+          <ChainTabs chainIdQuery={chainIdQuery} setChainIdQuery={handleChainId} />
           <Card margin="24px 0 auto" padding="40px 25px">
             <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Search
@@ -214,7 +212,8 @@ export default function OptionTrade({
                 // onOptionType={handleSelectOptionType}
                 onClear={handleClearSearch}
                 onSearch={handleSearch}
-                tokenList={tokenList}
+                chainIdQuery={chainIdQuery}
+                // tokenList={tokenList}
                 chainId={chainIdQuery}
               />
               {!match && <ModeSwitch current={mode} setMode={setMode} />}
@@ -294,7 +293,7 @@ export function AlternativeDisplay({
           <AutoColumn justify="center" gap="20px">
             <XCircle size={40} strokeWidth={1} />
             <TYPE.body>No results found</TYPE.body>
-            <TYPE.body>Please change your search query and try again</TYPE.body>
+            <TYPE.body marginBottom={60}>Please change your search query and try again</TYPE.body>
           </AutoColumn>
         )
       )}

@@ -127,7 +127,11 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
+      <CurrencyLogo
+        currency={currency}
+        size={'24px'}
+        currencySymbol={currency === ETHER ? Symbol[chainId ?? 1] : undefined}
+      />
       {currency === ETHER ? (
         <Column>
           <Text title={Name[chainId ?? 1]} fontWeight={500}>

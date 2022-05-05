@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   max-width: 480px;
   border-radius: 42px;
   background: ${({ theme }) => theme.gradient1};
+  margin: 0 auto;
 `
 const Section = styled(AutoColumn)`
   padding: 24px;
@@ -144,6 +145,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
     <Wrapper>
       <Section>
         <RowBetween>
+          <div />
           <Close onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ padding: '2rem 0' }} gap="24px" justify="center">

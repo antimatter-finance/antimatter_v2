@@ -8,10 +8,10 @@ import { useAntimatterContract } from './useContract'
 const parseNumber = (val: string, currency: Currency) => {
   return tryParseAmount(val, currency)?.raw.toString() ?? '0'
 }
-const getAddress = (currency: Currency, chainId: ChainId) => {
+export const getAddress = (currency: Currency, chainId: ChainId | undefined) => {
   const id = currencyId(currency)
   if (id === 'ETH') {
-    return currencyId(WETH[chainId as ChainId])
+    return currencyId(WETH[(chainId ?? 1) as ChainId])
   }
   return id
 }

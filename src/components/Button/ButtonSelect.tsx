@@ -67,7 +67,7 @@ const SelectOption = styled(Base)<{ selected: boolean }>`
   border-bottom: 1px solid ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text1};
   padding: 14px;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg3 : 'transparent')};
+  background-color: ${({ selected, theme }) => (selected ? theme.primary1 + 30 : 'transparent')};
   :hover,
   :focus,
   :active {

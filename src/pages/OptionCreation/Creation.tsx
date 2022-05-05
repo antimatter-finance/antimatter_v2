@@ -13,13 +13,13 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { currencyNameHelper } from 'utils/marketStrategyUtils'
 import NumberInputPanel from 'components/NumberInputPanel'
 import { ButtonPrimary } from 'components/Button'
-import { WUSDT } from '../../constants'
+import { Symbol, WUSDT } from '../../constants'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
 } from 'components/TransactionConfirmationModal'
 import { SubmittedView } from 'components/ModalViews'
-import { useCreationCallback } from 'hooks/useCreationCallback'
+import { useCreationCallback, getAddress } from 'hooks/useCreationCallback'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import DataCard from 'components/Card/DataCard'
 import { useActiveWeb3React } from 'hooks'
@@ -36,7 +36,8 @@ enum ERROR {
   FLOOR_REQUIRED = 'Price floor is required',
   CAP_REQUIRED = 'Price cap is required',
   CURRENCY_REQUIRED = 'Currency  is required',
-  UNDERLYING_REQUIRED = 'Underlying is required'
+  UNDERLYING_REQUIRED = 'Underlying is required',
+  DUPLICATE_CURRENCY = 'Same currency cannot be selected twice'
 }
 
 const limitDigits = (string: string, currencyDecimal = 18) => {
@@ -72,7 +73,13 @@ export default function Creation() {
         currency,
         option: (
           <RowFixed>
-            <CurrencyLogo currency={currency} size="24px" style={{ marginRight: 20 }} /> {currency.symbol}
+            <CurrencyLogo
+              currency={currency}
+              size="24px"
+              style={{ marginRight: 20 }}
+              currencySymbol={currency.symbol}
+            />{' '}
+            {currency.symbol}
           </RowFixed>
         )
       }
@@ -112,6 +119,8 @@ export default function Creation() {
   useEffect(() => {
     debounce(() => {
       let errorString = ''
+      if (asset1 && asset0 && getAddress(asset1, chainId) === getAddress(asset0, chainId))
+        errorString = ERROR.DUPLICATE_CURRENCY
       if (floor && cap && +floor === +cap) errorString = ERROR.FLOOR_TOO_LARGE
       if (floor && cap && +cap > +floor * 4) errorString = ERROR.CAP_TOO_LARGE
       if (floor && cap && +floor > +cap) errorString = ERROR.FLOOR_TOO_LARGE
@@ -119,7 +128,7 @@ export default function Creation() {
       if ((floor || cap) && !asset0) errorString = ERROR.UNDERLYING_REQUIRED
       setError(errorString)
     }, 1000)()
-  }, [asset0, asset1, cap, floor])
+  }, [asset0, asset1, cap, chainId, floor])
 
   const createdOption = `${asset0?.symbol} (${floor}$${cap})`
 
@@ -305,8 +314,15 @@ export default function Creation() {
               >
                 <TYPE.body color={asset0 ? theme.text1 : theme.text5}>
                   <RowFixed>
-                    {asset0 && <CurrencyLogo currency={asset0} size={'24px'} style={{ marginRight: 20 }} />}
-                    {currencyNameHelper(asset0, 'Select token')}
+                    {asset0 && (
+                      <CurrencyLogo
+                        currency={asset0}
+                        size={'24px'}
+                        style={{ marginRight: 20 }}
+                        currencySymbol={asset0.symbol === 'ETH' ? Symbol[chainId ?? 1] : undefined}
+                      />
+                    )}
+                    {currencyNameHelper(asset0, 'Select token', chainId)}
                   </RowFixed>
                 </TYPE.body>
               </ButtonSelect>
