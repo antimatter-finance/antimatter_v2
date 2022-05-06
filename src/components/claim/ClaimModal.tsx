@@ -89,7 +89,7 @@ export default function ClaimModal() {
   )
 
   return (
-    <Modal isOpen={isOpen ? true : true} onDismiss={toggleClaimModal} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={toggleClaimModal} maxHeight={90}>
       <Confetti start={Boolean(isOpen && claimConfirmed)} />
       {!attempting && !claimConfirmed && (
         <ContentWrapper gap="lg">

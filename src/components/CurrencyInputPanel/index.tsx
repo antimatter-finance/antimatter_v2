@@ -110,19 +110,19 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button`
   height: 28px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.primary1};
   border: 1px solid transparent;
   border-radius: 49px;
   font-size: 0.875rem;
   padding: 0 1rem;
   font-weight: 500;
   cursor: pointer;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.bg1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    opacity: 0.9;
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    opacity: 0.9;
     outline: none;
   }
 

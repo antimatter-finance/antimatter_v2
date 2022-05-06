@@ -13,7 +13,6 @@ import Web3Status from '../Web3Status'
 import { ReactComponent as Logo } from '../../assets/svg/antimatter_logo.svg'
 import { ReactComponent as ETH } from '../../assets/svg/eth_logo.svg'
 import { ReactComponent as BSCInvert } from '../../assets/svg/binance.svg'
-import { ReactComponent as BSCSelected } from '../../assets/svg/bsc_logo_selected.svg'
 import { ReactComponent as Arbitrum } from '../../assets/svg/arbitrum_logo.svg'
 import { ReactComponent as AVAX } from '../../assets/svg/avax_logo.svg'
 // import { ReactComponent as Plus } from '../../assets/svg/plus.svg'
@@ -91,7 +90,6 @@ const NetworkInfo: {
   [ChainId.BSC]: {
     color: '#F0B90B',
     icon: <BSCInvert />,
-    selectedIcon: <BSCSelected />,
     title: 'BSC'
   },
   [ChainId.Arbitrum]: {

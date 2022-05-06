@@ -132,7 +132,7 @@ export default function OptionTrade() {
 
   const [mode, setMode] = useState(Mode.TABLE)
 
-  const match = useMediaWidth('upToSmall')
+  const match = useMediaWidth('upToMedium')
 
   useEffect(() => {
     setFilteredIndexes(currentIds)
@@ -198,7 +198,15 @@ export default function OptionTrade() {
       <Wrapper id="optionTrade">
         <ChainTabs chainIdQuery={chainIdQuery} setChainIdQuery={handleChainId} />
         <Card margin="24px 0 auto" padding="40px 25px">
-          <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <MuiBox
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column-reverse', lg: 'row' },
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 10
+            }}
+          >
             <Search
               // optionTypeQuery={optionTypeQuery}
               // onOptionType={handleSelectOptionType}
@@ -209,7 +217,7 @@ export default function OptionTrade() {
               chainId={chainIdQuery}
             />
             {!match && <ModeSwitch current={mode} setMode={setMode} />}
-          </Box>
+          </MuiBox>
 
           {filteredIndexes && (
             <>
@@ -294,7 +302,7 @@ export function AlternativeDisplay({
 
 export function ModeSwitch({ current, setMode }: { current: number; setMode: (mode: number) => void }) {
   return (
-    <Box display="flex" style={{ gap: '12px' }}>
+    <Box display="flex" style={{ gap: '12px', marginLeft: 'auto' }}>
       {[<CardIcon key="card" />, <TableIcon key="table" />].map((icon, idx) => {
         return (
           <ButtonOutlined

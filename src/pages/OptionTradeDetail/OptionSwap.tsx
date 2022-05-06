@@ -30,7 +30,7 @@ const GraphWrapper = styled.div`
 `
 
 const Chart = styled.div`
-  background-color: #000;
+  background-color: #ffffff;
   width: 100%;
   display: flex;
   align-items: center;
@@ -88,7 +88,7 @@ export default function OptionSwap({
   const transactions = useSelector((store: any) => store.transactions)
   const { chainId } = useActiveWeb3React()
   const [currentTab, setCurrentTab] = useState<string>('CALL')
-  const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
+  const [lineSeries, setLineSeries] = useState<ISeriesApi<'Area'> | undefined>(undefined)
   // const [isMarketPriceChart, setIsMarketPriceChart] = useState(true)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
   const [callChartData, setCallChartData] = useState<DexTradeLineData[] | undefined>(undefined)
@@ -174,25 +174,26 @@ export default function OptionSwap({
       height: 328,
       layout: {
         backgroundColor: '#FFFFFF',
-        textColor: '#000000',
+        textColor: 'rgba(13,13, 13, 0.4)',
         fontSize: 12,
-        fontFamily: 'Roboto'
+        fontFamily: 'SF Pro, sans-serif'
       },
       grid: {
         vertLines: {
           style: LineStyle.Dotted,
-          color: 'rgba(0, 0, 0, 0.4)'
+          color: 'rgba(0, 0, 0, 0.2)'
         },
         horzLines: {
           style: LineStyle.Dotted,
-          color: 'rgba(0, 0, 0, 0.4)'
+          color: 'rgba(0, 0, 0, 0.2)'
         }
       }
     })
     chart.applyOptions({
-      leftPriceScale: { autoScale: true, visible: true },
+      leftPriceScale: { autoScale: true, visible: true, borderColor: 'rgba(0, 0, 0, 0.2)' },
       rightPriceScale: { visible: false },
       timeScale: {
+        borderColor: 'rgba(0, 0, 0, 0.2)',
         timeVisible: true,
         secondsVisible: true,
         shiftVisibleRangeOnNewBar: true,
@@ -206,7 +207,8 @@ export default function OptionSwap({
       },
       crosshair: {
         vertLine: {
-          labelVisible: false
+          labelVisible: false,
+          color: 'rgba(0, 0, 0, 0.4)'
         }
       },
       handleScroll: {
@@ -224,11 +226,11 @@ export default function OptionSwap({
     }
     window.addEventListener('resize', resizeFunction)
     setChart(chart)
-    const lineSeries = chart.addLineSeries({
-      color: '#33E74F',
-      lineWidth: 2,
-      // downColor: '#FF0000',
-      // wickVisible: false,
+    const lineSeries = chart.addAreaSeries({
+      lineColor: '#FF4141',
+      topColor: 'rgba(254, 240, 238, 1)',
+      bottomColor: 'rgba(254, 240, 238, 0)',
+      lineWidth: 1,
       priceFormat: {
         type: 'price',
         precision: 2
@@ -281,7 +283,7 @@ export default function OptionSwap({
   return (
     <>
       <NetworkErrorModal />
-      <Grid maxWidth={1120} container spacing={20} padding={0}>
+      <Grid maxWidth={1200} container spacing={20} padding={0}>
         <Grid item xs={12} md={4}>
           <Swap
             optionPrice={optionPrice}
@@ -298,7 +300,7 @@ export default function OptionSwap({
             <CurrentPrice>
               <TYPE.gray fontSize={16} fontWeight={400}>
                 Current price:{' '}
-                <span style={{ color: '#000000' }}>
+                <span style={{ color: '#252525', marginLeft: '10px' }}>
                   $
                   {currentTab === OptionField.CALL
                     ? priceCall
@@ -322,15 +324,15 @@ export default function OptionSwap({
 
             <Chart id="chart" />
             <Box mt={'24px'}>
-              <Typography fontSize={12} fontWeight={600} mb="12px">
+              <Typography fontSize={16} fontWeight={600} mb="20px">
                 Option Information
               </Typography>
-              <Grid container rowSpacing={8}>
+              <Grid container rowSpacing={9}>
                 {optionInformation &&
                   Object.keys(optionInformation).map((key, idx) => (
                     <Grid key={idx} item xs={6}>
-                      <Typography fontSize={12}>
-                        <span style={{ opacity: 0.4 }}>{key}: </span>
+                      <Typography fontSize={16} lineHeight="auto">
+                        <span style={{ opacity: 0.4, marginRight: 4 }}>{key}: </span>
                         {optionInformation[key]}
                       </Typography>
                     </Grid>

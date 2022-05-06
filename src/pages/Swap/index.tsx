@@ -495,10 +495,10 @@ export default function Swap({
                 <AutoColumn gap="8px">
                   <RowBetween align="center">
                     <Text
-                      style={{ display: 'flex', alignItems: 'center' }}
+                      style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}
                       fontWeight={500}
                       fontSize={14}
-                      color={'rgba(178, 243, 85, 1)'}
+                      color={theme.primary1}
                     >
                       {payFormattedAmount?.[0] === '-' ? 'You will receive' : 'You will pay'}
                       <QuestionHelper
@@ -546,7 +546,6 @@ export default function Swap({
             ) : showApproveFlow ? (
               <RowBetween>
                 <ButtonConfirmed
-                  borderRadius="49px"
                   onClick={approveCallback}
                   disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
                   width="48%"
@@ -564,7 +563,6 @@ export default function Swap({
                   )}
                 </ButtonConfirmed>
                 <ButtonError
-                  borderRadius="49px"
                   disabled={approval !== ApprovalState.APPROVED}
                   onClick={() => {
                     setSwapState({
@@ -588,7 +586,6 @@ export default function Swap({
               </RowBetween>
             ) : (
               <ButtonError
-                borderRadius="49px"
                 onClick={() => {
                   setSwapState({
                     tradeToConfirm: routerDelta?.undTrade ?? undefined,

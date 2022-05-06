@@ -22,7 +22,6 @@ const TokenPanel = styled.div`
   height: 2.5rem;
   flex-direction: row;
   align-items: center;
-  background: rgba(255, 255, 255, 0.08);
   border-radius: 14px;
   padding: 0 16px;
   display: flex;
@@ -69,7 +68,7 @@ export default function SwapModalHeader({
           ? '$' + pricePut.toSignificant(6)
           : '-'}
       </TYPE.main>
-      <OutlineCard style={{ backgroundColor: 'rgba(0,0,0,.2)', padding: '16px 20px' }}>
+      <OutlineCard style={{ padding: '16px 20px' }}>
         <AutoColumn style={{ flex: 1 }} gap={'8px'}>
           <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text3}>
             {auction === Auction.BUY ? 'You will receive' : 'You will Pay'}
@@ -86,12 +85,12 @@ export default function SwapModalHeader({
         </AutoColumn>
       </OutlineCard>
       <RowFixed />
-      <OutlineCard style={{ backgroundColor: 'rgba(0,0,0,.2)', padding: '16px 20px' }}>
+      <OutlineCard style={{ padding: '16px 20px' }}>
         <AutoColumn style={{ flex: 1 }} gap={'8px'}>
           <TYPE.subHeader fontWeight={500} fontSize={14} color={theme.text3}>
             {payTitle}
           </TYPE.subHeader>
-          <TYPE.small color={'#B2F355'}>{paySubTitle}</TYPE.small>
+          <TYPE.small color={theme.primary1}>{paySubTitle}</TYPE.small>
           <TokenPanel>
             {payCurrencyAmount && <CurrencyLogo currency={payCurrencyAmount?.currency} size={'20px'} />}
             <TYPE.black fontWeight={500} fontSize={14} marginLeft={'8px'} flex={1}>
@@ -119,25 +118,6 @@ export default function SwapModalHeader({
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}
-      {/*<AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>*/}
-      {/*  {trade.tradeType === TradeType.EXACT_INPUT ? (*/}
-      {/*    <TYPE.small textAlign="left" style={{ width: '100%' }} padding={'8px 0 0 0 '} color={theme.text3}>*/}
-      {/*      {`Output is estimated. You will receive at least `}*/}
-      {/*      <b>*/}
-      {/*        {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {trade.outputAmount.currency.symbol}*/}
-      {/*      </b>*/}
-      {/*      {' or the transaction will revert.'}*/}
-      {/*    </TYPE.small>*/}
-      {/*  ) : (*/}
-      {/*    <TYPE.small textAlign="left" style={{ width: '100%' }} padding={'8px 0 0 0 '} color={theme.text3}>*/}
-      {/*      {`Input is estimated. You will sell at most `}*/}
-      {/*      <b>*/}
-      {/*        {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {trade.inputAmount.currency.symbol}*/}
-      {/*      </b>*/}
-      {/*      {' or the transaction will revert.'}*/}
-      {/*    </TYPE.small>*/}
-      {/*  )}*/}
-      {/*</AutoColumn>*/}
     </AutoColumn>
   )
 }

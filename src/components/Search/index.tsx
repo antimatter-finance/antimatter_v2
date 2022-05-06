@@ -40,7 +40,7 @@ export default function Search({
   // tokenList?: Token[]
   chainId?: number | undefined
 }) {
-  const match = useMediaWidth('upToSmall')
+  const match = useMediaWidth('upToMedium')
   const [assetTypeQuery, setAssetTypeQuery] = useState<Currency | undefined>(undefined)
   const [optionIdQuery, setOptionIdQuery] = useState('')
   // const { chainId } = useActiveWeb3React()
@@ -90,7 +90,7 @@ export default function Search({
         // tokenList={tokenList ?? []}
       />
 
-      <Box width={match ? '100%' : 'fit-content'} display="flex" flexDirection={match ? 'column' : 'row'} gap={12}>
+      <Box width={{ xs: '100%', md: '100%' }} display="flex" flexDirection={match ? 'column' : 'row'} gap={12}>
         <ButtonSelect
           onClick={handleOpenAssetSearch}
           width={match ? '100%' : '256px'}

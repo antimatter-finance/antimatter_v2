@@ -74,6 +74,9 @@ export const useStyles = makeStyles(theme => ({
       color: 'rgba(0, 0, 0, 1)',
       opacity: 0.5,
       borderBottom: 'none',
+      [theme.breakpoints.down('lg')]: {
+        padding: '14px 6px'
+      },
       '& .MuiTableSortLabel-root': {
         fontWeight: 400,
         opacity: 0.5
@@ -145,7 +148,7 @@ export default function Table({
   rowsComponent?: JSX.Element[]
   isHeaderGray?: boolean
 }) {
-  const match = useMediaWidth('upToSmall')
+  const match = useMediaWidth('upToMedium')
   const classes = useStyles({ isHeaderGray })
   return (
     <>
