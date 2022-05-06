@@ -243,7 +243,7 @@ const NetworkCard = styled.div<{ color?: string }>`
       & > div {
         height: auto;
         margin-top: 10px;
-        border: 1px solid ${({ theme }) => theme.text5};
+        border: 1px solid #ededed;
         a {
           position: relative;
           & > svg {
@@ -329,7 +329,7 @@ const StyledDropdown = styled.div`
     & > div {
       top: 60px;
       height: auto;
-      border: 1px solid ${({ theme }) => theme.text5};
+      border: 1px solid rgba(0, 0, 0, 0.1);
     }
   }
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -350,11 +350,11 @@ const Dropdown = styled.div<{ width?: string }>`
     background-color: #ffffff;
     text-decoration: none;
     padding: 14px 17px;
-    border-bottom: 1px solid ${({ theme }) => theme.text5}
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     transition: 0.5s;
     display: flex;
     align-items: center;
-    :last-child{
+    :last-child {
       border: none;
     }
     :hover {

@@ -17,9 +17,7 @@ import { Typography } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/svg/arrow_left.svg'
 
 const Wrapper = styled.div`
-  min-height: calc(100vh - ${({ theme }) => theme.headerHeight + ' - 100px'});
   width: 100%;
-  padding: 96px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,7 +93,7 @@ export default function OptionTradeAction({ optionId }: { optionId?: string }) {
       {optionId ? (
         <Wrapper>
           <RowBetween style={{ padding: '27px 0', maxWidth: '1110px' }}>
-            <NavLink to={'/option_trading'} style={{ textDecoration: 'none' }}>
+            <NavLink to={'/option_trading'} style={{ textDecoration: 'none', padding: '0 20px' }}>
               <ArrowLeft />
               <Typography component="span" color="#000000" fontSize={{ xs: 12, md: 14 }} ml={'16px'}>
                 Go Back

@@ -7,6 +7,15 @@ import { AutoColumn } from 'components/Column'
 import useTheme from 'hooks/useTheme'
 import styled from 'styled-components'
 
+const Wrapper = styled(AutoColumn)`
+  margin-top: 100px;
+  width: 100%;
+  max-width: ${({ theme }) => theme.maxContentWidth};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin-top: 30px;
+  `}
+`
+
 const Badge = styled.div`
   border: 1px solid ${({ theme }) => theme.bg5};
   padding:8px 16px
@@ -119,13 +128,15 @@ function Accordion({
 
 export default function FAQ() {
   return (
-    <AppBody style={{ maxWidth: 540, padding: '23px 32px 22px 32px' }}>
-      <TYPE.mediumHeader marginBottom={24}>FAQ</TYPE.mediumHeader>
-      <AutoColumn>
-        {faqList.map((faq, idx) => (
-          <Accordion key={faq.question} faq={faq} isLast={idx === faqList.length - 1} />
-        ))}
-      </AutoColumn>
-    </AppBody>
+    <Wrapper>
+      <AppBody style={{ maxWidth: 1200, padding: '23px 32px 22px 32px' }}>
+        <TYPE.mediumHeader marginBottom={24}>FAQ</TYPE.mediumHeader>
+        <AutoColumn>
+          {faqList.map((faq, idx) => (
+            <Accordion key={faq.question} faq={faq} isLast={idx === faqList.length - 1} />
+          ))}
+        </AutoColumn>
+      </AppBody>
+    </Wrapper>
   )
 }

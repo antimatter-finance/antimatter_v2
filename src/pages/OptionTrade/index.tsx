@@ -100,14 +100,14 @@ export enum Mode {
 
 const Wrapper = styled.div`
   width: 100%;
-  max-width: 1110px;
-  margin: auto;
+  max-width: ${({ theme }) => theme.maxContentWidth};
+  margin: 0 auto auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 120px 20px;
+  padding-top: 60px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  padding: 27.5px 20px;
+  padding-top:30px;
 `};
 `
 

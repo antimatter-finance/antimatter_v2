@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { Tabs as MuiTabs, Tab, Box, TabProps } from '@mui/material'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 interface Props {
   titles: JSX.Element[]
@@ -20,6 +21,8 @@ export default function Tabs(props: Props) {
   const { titles, contents, customCurrentTab, customOnChange, tabPadding, CustomTab, tabMarginRight } = props
   const [value, setValue] = React.useState(0)
 
+  const isDownMd = useBreakpoint('md')
+
   const onChange = useCallback(
     (e: React.ChangeEvent<any>, value: any) => {
       customOnChange ? customOnChange(value) : setValue(value)
@@ -32,10 +35,16 @@ export default function Tabs(props: Props) {
       <Box sx={CustomTab ? undefined : { borderBottom: 1, borderColor: 'divider' }}>
         <MuiTabs
           allowScrollButtonsMobile
-          scrollButtons="auto"
+          scrollButtons={true}
+          variant={isDownMd ? 'scrollable' : 'standard'}
           value={customCurrentTab !== undefined ? customCurrentTab : value}
           onChange={onChange}
-          sx={{ mb: -1 }}
+          sx={{
+            mb: -1,
+            '.MuiTabs-scrollButtons.Mui-disabled': {
+              opacity: 0.3
+            }
+          }}
           TabIndicatorProps={{ style: CustomTab ? { display: 'none' } : { backgroundColor: '#31B047' } }}
         >
           {CustomTab

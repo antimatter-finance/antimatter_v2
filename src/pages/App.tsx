@@ -55,7 +55,6 @@ const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   ${({ theme }) => theme.mediaWidth.upToSmall`
   height: 0;
-  // overflow: hidden
   min-width: 0;
   `}
 `
@@ -64,23 +63,20 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: calc(100vh - ${({ theme }) => theme.headerHeight});
-  justify-content: center;
+  min-height: 100vh;
+  justify-content: flex-start;
   align-items: center;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  padding-bottom: 100px;
-  /* ${({ theme }) => theme.mediaWidth.upToLarge`
-  margin-bottom: ${theme.headerHeight};
-  min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight});
-  `} */
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  padding-bottom: 0;
+  margin-top: ${({ theme }) => theme.headerHeight};
+  padding: 0 20px 100px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+  margin-top:0;
   min-width: auto;
   margin-top: ${({ theme }) => theme.mobileHeaderHeight}
-  min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight});
+  min-height: calc(100vh - ${theme.mobileHeaderHeight});
   `};
 `
 

@@ -14,9 +14,9 @@ export * from './components'
 
 export const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
-  upToSmall: 720,
-  upToMedium: 960,
-  upToLarge: 1280
+  upToSmall: 600,
+  upToMedium: 900,
+  upToLarge: 1200
 }
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
@@ -61,7 +61,7 @@ export function colors(darkMode: boolean): Colors {
     //primary colors
     primary1: '#31B047',
     primary2: '#129026',
-    primary3: '#B2F355',
+    primary3: '#ADDFB5',
     primary4: '#739A3B',
     primary5: '#2B3A14',
 

@@ -8,7 +8,7 @@ const Wrapper = styled(AutoColumn)`
   width: 100%;
   max-width: 600px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0 20px;
+  margin-top: 30px;
   `}
 `
 

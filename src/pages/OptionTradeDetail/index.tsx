@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import OptionTradeAction from 'pages/OptionTrade/OptionTradeAction'
+import OptionTradeAction from 'pages/OptionTradeDetail/OptionTradeAction'
 import { RouteComponentProps, useHistory } from 'react-router-dom'
 
 import SwitchChainModal from 'components/Modal/SwitchChainModal'
