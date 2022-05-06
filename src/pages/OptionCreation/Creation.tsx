@@ -271,7 +271,7 @@ export default function Creation() {
         isOpen={currencySearchOpen}
         onDismiss={handleDismissSearch}
         onCurrencySelect={handleSelectAsset0}
-        hasManage={true}
+        hasManage={false}
       />
       <TransactionConfirmationModal
         isOpen={showConfirm}

@@ -10,8 +10,9 @@ export default function OptionTradeDetail({
   }
 }: RouteComponentProps<{ optionId?: string; chainId?: string }>) {
   const history = useHistory()
+
   const handleDismiss = useCallback(() => {
-    history.push('/option_trading')
+    history.push(`/option_trading`)
   }, [history])
 
   return (

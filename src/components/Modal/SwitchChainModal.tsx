@@ -57,7 +57,7 @@ export default function SwitchChainModal({
                     }
                   />
 
-                  <Typography variant="inherit" align="center">
+                  <Typography variant="inherit" align="center" color={'#252525'}>
                     {SUPPORTED_NETWORKS[(chainId as keyof typeof SUPPORTED_NETWORKS) ?? 1]?.chainName}
                   </Typography>
                 </Box>
@@ -94,7 +94,7 @@ export default function SwitchChainModal({
                       SUPPORTED_NETWORKS[(toChainId as keyof typeof SUPPORTED_NETWORKS) ?? 1]?.nativeCurrency.symbol
                     }
                   />
-                  <Typography variant="inherit" align="center">
+                  <Typography variant="inherit" align="center" color={'#252525'}>
                     {SUPPORTED_NETWORKS[(toChainId as keyof typeof SUPPORTED_NETWORKS) ?? 1]?.chainName}
                   </Typography>
                 </Box>

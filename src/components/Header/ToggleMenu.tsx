@@ -25,8 +25,8 @@ const TogggleMenuWrapper = styled.nav`
   border-radius: 32px;
   background: ${({ theme }) => theme.bg1};
   top: ${({ theme }) => theme.mobileHeaderHeight};
-  height: calc(100vh - ${({ theme }) => theme.mobileHeaderHeight + ' - ' + theme.headerHeight});
-  border: 1px solid ${({ theme }) => theme.bg3};
+  height: calc(100vh - ${({ theme }) => theme.mobileHeaderHeight});
+
   border-bottom: none;
   overflow-y: auto;
 `

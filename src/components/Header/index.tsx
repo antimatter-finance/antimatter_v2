@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk'
-import React, { useCallback, useState, useEffect, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Check, ChevronDown } from 'react-feather'
 import { Link, NavLink, useHistory, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
@@ -10,7 +10,6 @@ import { useETHBalances } from '../../state/wallet/hooks'
 import { ButtonText, ExternalHeaderLink, ExternalLink, HideMedium, StyledLink, TYPE } from '../../theme'
 import Row, { RowFixed, RowFlat } from '../Row'
 import Web3Status from '../Web3Status'
-import ClaimModal from '../claim/ClaimModal'
 import { ReactComponent as Logo } from '../../assets/svg/antimatter_logo.svg'
 import { ReactComponent as ETH } from '../../assets/svg/eth_logo.svg'
 import { ReactComponent as BSCInvert } from '../../assets/svg/binance.svg'
@@ -520,7 +519,7 @@ const MobileHeader = styled.header`
 export default function Header() {
   const theme = useTheme()
   const { account, chainId, library } = useActiveWeb3React()
-  const [, setChain] = useState<any>(undefined)
+  // const [, setChain] = useState<any>(undefined)
   const aggregateBalance = useETHBalances([account ?? undefined])[account ?? '']
 
   const countUpValue = aggregateBalance?.toFixed(2) ?? '0'
@@ -534,14 +533,14 @@ export default function Header() {
     return
   }, [history])
 
-  useEffect(() => {
-    setChain((prev: any) => {
-      if (prev !== undefined && prev !== chainId) {
-        window.location.replace('/')
-      }
-      return chainId
-    })
-  }, [chainId])
+  // useEffect(() => {
+  //   setChain((prev: any) => {
+  //     if (prev !== undefined && prev !== chainId) {
+  //       window.location.replace('/')
+  //     }
+  //     return chainId
+  //   })
+  // }, [chainId])
 
   const NetworkSelect = useMemo(() => {
     return (
@@ -603,7 +602,6 @@ export default function Header() {
 
   return (
     <>
-      <ClaimModal />
       <HeaderRow>
         <HideMedium>
           <RowFixed>

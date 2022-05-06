@@ -1,14 +1,11 @@
 import React, { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import styled from 'styled-components'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 // import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
-// import { ApplicationModal } from '../state/application/actions'
-// import { useModalOpen, useToggleModal } from '../state/application/hooks'
-import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Generate from './Generate'
 import Redeem from './Redeem'
 // import ComingSoon from './ComingSoon'
@@ -138,12 +135,11 @@ export default function App() {
                   <Route strict path="/profile/:tab" component={User} />
                   <Route strict path="/profile" component={User} />
                   <Route exact strict path="/statistics" component={Stats} />
-                  {/* <Route exact strict path="/exercise" component={Exercise} /> */}
-                  <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                  {/* <Route exact strict path="/send" component={RedirectPathToSwapOnly} /> */}
                   {/* <Route exact strict path="/farm" component={MatterToken} /> */}
                   <Route exact strict path="/faq" component={FAQ} />
-                  <Route component={RedirectPathToSwapOnly} />
+                  <Route path="/">
+                    <Redirect to={'/option_trading'} />
+                  </Route>
                 </Switch>
                 {/* </LocatoinVerification> */}
               </>
