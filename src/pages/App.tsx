@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 // import URLWarning from '../components/Header/URLWarning'
@@ -9,20 +8,11 @@ import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 // import { ApplicationModal } from '../state/application/actions'
 // import { useModalOpen, useToggleModal } from '../state/application/hooks'
-import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-// import {
-//   RedirectDuplicateTokenIds,
-//   RedirectOldAddLiquidityPathStructure,
-//   RedirectToAddLiquidity
-// } from './AddLiquidity/redirects'
-// import MatterToken from './MatterToken'
-// import Swap from './Swap'
-import { /*OpenClaimAddressModalAndRedirectToSwap,*/ RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Generate from './Generate'
 import Redeem from './Redeem'
 // import ComingSoon from './ComingSoon'
 import Info from './Info'
-// import MatterRedemption from './MatterToken/MatterRedemption'
 import WelcomeSlider from 'components/WelcomeSlider'
 import FAQ from './FAQ'
 import OptionTrade from './OptionTrade'
@@ -34,6 +24,7 @@ import User from './User'
 import Calculator from './Calculator'
 import WarningModal from 'components/Modal/WarningModal'
 import Pool from './Pool'
+import OptionTradeDetail from './OptionTradeDetail'
 // import Spinner from 'components/Spinner'
 // import NoService from './NoService'
 // import { fetchLocation } from '../utils/option/location'
@@ -43,6 +34,7 @@ const AppWrapper = styled.div`
   align-items: flex-start;
   overflow-x: hidden;
   background-color: ${({ theme }) => theme.mainBG};
+  min-width: ${({ theme }) => theme.minContentWidth};
   ${({ theme }) => theme.mediaWidth.upToSmall`
   flex-direction: column;
   height: 100vh;
@@ -94,24 +86,6 @@ const BodyWrapper = styled.div`
   min-height: calc(100vh - ${theme.headerHeight + ' - ' + theme.mobileHeaderHeight});
   `};
 `
-// const Feedback = styled(ExternalLink)`
-//   z-index: 9;
-//   position: fixed;
-//   right: 50px;
-//   bottom: 50px;
-//   img {
-//     width: 24px;
-//     height: 24px;
-//   }
-//   ${({ theme }) => theme.mediaWidth.upToLarge`
-//     right:14px
-//     bottom: 38px;
-//     img {
-//       width: 26px;
-//       height: 26px;
-//     }
-//   `};
-// `
 
 export const Marginer = styled.div`
   ${({ theme }) => theme.desktop}
@@ -134,8 +108,6 @@ export default function App() {
       >
         <img alt="" src={Helper} />
       </Feedback> */}
-      <Route component={GoogleAnalyticsReporter} />
-      <Route component={DarkModeQueryParamReader} />
       <AppWrapper id="app">
         {/* <URLWarning /> */}
         <ContentWrapper>
@@ -156,7 +128,7 @@ export default function App() {
                   <Route exact strict path="/option_creation/liquidity" component={Pool} />
                   <Route exact strict path="/option_trading" component={OptionTrade} />
                   <Route exact strict path="/calculator" component={Calculator} />
-                  <Route exact strict path="/option_trading/:chainId/:optionId" component={OptionTrade} />
+                  <Route exact strict path="/option_trading/:chainId/:optionId" component={OptionTradeDetail} />
                   <Route exact strict path="/option_exercise" component={OptionExercise} />
                   <Route exact strict path="/liquidity/add/:optionTypeIndex" component={Generate} />
                   {/* <Route exact strict path="/redeem" component={Redeem} /> */}

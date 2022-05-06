@@ -104,7 +104,7 @@ export const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
       padding-bottom: 40px;
       max-height: calc(100% - ${theme.mobileHeaderHeight});
       overflow-y: auto;
-
+      min-width: ${theme.minContentWidth};
     `}
   }
 `

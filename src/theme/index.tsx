@@ -82,9 +82,6 @@ export function colors(darkMode: boolean): Colors {
     yellow2: '#F3841E',
     blue1: '#2172E5',
 
-    // dont wanna forget these blue yet
-    // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
     translucent: 'rgba(255, 255, 255, 0.08)',
     gradient1: '#ffffff',
     gradient2: '#ffffff'
@@ -117,6 +114,9 @@ export function theme(darkMode: boolean): DefaultTheme {
     `,
     mobileHeaderHeight: '51px',
     headerHeight: '80px',
+
+    maxContentWidth: '1200px',
+    minContentWidth: '300px',
 
     // css snippets
     flexColumnNoWrap: css`

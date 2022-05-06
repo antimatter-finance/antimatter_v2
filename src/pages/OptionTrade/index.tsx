@@ -1,13 +1,11 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import { Grid, Box as MuiBox } from '@mui/material'
 import { useHistory } from 'react-router-dom'
-import { RouteComponentProps } from 'react-router'
 import styled from 'styled-components'
 import { ButtonPrimary, RoundButton } from 'components/Button'
 import { AnimatedImg, AnimatedWrapper, ExternalLink, TYPE } from 'theme'
 //import { OptionIcon } from 'components/Icons'
 import { AutoColumn } from 'components/Column'
-import OptionTradeAction from './OptionTradeAction'
 import { Text, Box } from 'rebass'
 import Loader from 'assets/svg/antimatter_background_logo.svg'
 import { XCircle } from 'react-feather'
@@ -122,11 +120,7 @@ export const StyledExternalLink = styled(ExternalLink)`
   }
 `
 
-export default function OptionTrade({
-  match: {
-    params: { optionId, chainId: chainIdParam }
-  }
-}: RouteComponentProps<{ optionId?: string; chainId?: string }>) {
+export default function OptionTrade() {
   // const { chainId } = useActiveWeb3React()
   const optionCount = useOptionTypeCount()
   // const [tokenList, setTokenList] = useState<Token[] | undefined>(undefined)
@@ -200,70 +194,67 @@ export default function OptionTrade({
   return (
     <>
       <NetworkErrorModal />
-      {optionId && chainIdParam ? (
-        <OptionTradeAction optionId={optionId} />
-      ) : (
-        <Wrapper id="optionTrade">
-          <ChainTabs chainIdQuery={chainIdQuery} setChainIdQuery={handleChainId} />
-          <Card margin="24px 0 auto" padding="40px 25px">
-            <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Search
-                // optionTypeQuery={optionTypeQuery}
-                // onOptionType={handleSelectOptionType}
-                onClear={handleClearSearch}
-                onSearch={handleSearch}
-                chainIdQuery={chainIdQuery}
-                // tokenList={tokenList}
-                chainId={chainIdQuery}
-              />
-              {!match && <ModeSwitch current={mode} setMode={setMode} />}
-            </Box>
 
-            {filteredIndexes && (
-              <>
-                <Grid container mt={'20px'} spacing={20}>
-                  {(mode === Mode.CARD || match) &&
-                    data &&
-                    data.map((option, idx) => (
-                      <Grid key={idx} item xs={12} md={4}>
-                        {option ? (
-                          <ListOptionCard
-                            option={option}
-                            key={option.id + option.chainId}
-                            buttons={
-                              <ButtonPrimary
-                                onClick={() => history.push(`/option_trading/${option.chainId}/${option.id}`)}
-                              >
-                                Trade
-                              </ButtonPrimary>
-                            }
-                          />
-                        ) : (
-                          <OptionCardSkeleton key={idx} />
-                        )}
-                      </Grid>
-                    ))}
-                </Grid>
-                {mode === Mode.TABLE && <Table header={TableHeaders} rowsComponent={rowsComponent} />}
-              </>
-            )}
-            {page.totalPages !== 0 && (
-              <Pagination
-                page={page.currentPage}
-                count={page.totalPages}
-                perPage={8}
-                onChange={(event, value) => page.setCurrentPage(value)}
-                total={page.total}
-              />
-            )}
-            <AlternativeDisplay
-              loading={firstLoading}
-              optionIndexes={optionTypeIndexes}
-              filteredIndexes={filteredIndexes}
+      <Wrapper id="optionTrade">
+        <ChainTabs chainIdQuery={chainIdQuery} setChainIdQuery={handleChainId} />
+        <Card margin="24px 0 auto" padding="40px 25px">
+          <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Search
+              // optionTypeQuery={optionTypeQuery}
+              // onOptionType={handleSelectOptionType}
+              onClear={handleClearSearch}
+              onSearch={handleSearch}
+              chainIdQuery={chainIdQuery}
+              // tokenList={tokenList}
+              chainId={chainIdQuery}
             />
-          </Card>
-        </Wrapper>
-      )}
+            {!match && <ModeSwitch current={mode} setMode={setMode} />}
+          </Box>
+
+          {filteredIndexes && (
+            <>
+              <Grid container mt={'20px'} spacing={20}>
+                {(mode === Mode.CARD || match) &&
+                  data &&
+                  data.map((option, idx) => (
+                    <Grid key={idx} item xs={12} md={4}>
+                      {option ? (
+                        <ListOptionCard
+                          option={option}
+                          key={option.id + option.chainId}
+                          buttons={
+                            <ButtonPrimary
+                              onClick={() => history.push(`/option_trading/${option.chainId}/${option.id}`)}
+                            >
+                              Trade
+                            </ButtonPrimary>
+                          }
+                        />
+                      ) : (
+                        <OptionCardSkeleton key={idx} />
+                      )}
+                    </Grid>
+                  ))}
+              </Grid>
+              {mode === Mode.TABLE && <Table header={TableHeaders} rowsComponent={rowsComponent} />}
+            </>
+          )}
+          {page.totalPages !== 0 && (
+            <Pagination
+              page={page.currentPage}
+              count={page.totalPages}
+              perPage={8}
+              onChange={(event, value) => page.setCurrentPage(value)}
+              total={page.total}
+            />
+          )}
+          <AlternativeDisplay
+            loading={firstLoading}
+            optionIndexes={optionTypeIndexes}
+            filteredIndexes={filteredIndexes}
+          />
+        </Card>
+      </Wrapper>
     </>
   )
 }
