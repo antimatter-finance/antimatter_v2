@@ -50,7 +50,7 @@ export const tabs: Tab[] = [
       { title: 'Liquidity', route: '/option_creation/liquidity' }
     ]
   },
-  { title: 'Governance', link: 'https://governance.antimatter.finance' },
+  { title: 'Governance', link: 'https://gov.antimatter.finance' },
   { title: 'Calculator', route: 'calculator' },
   // { title: 'Farm', route: 'farm' },
   // {
