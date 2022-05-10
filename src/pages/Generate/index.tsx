@@ -79,28 +79,28 @@ export default function Generate({
     chainId ? ANTIMATTER_ADDRESS : undefined
   )
 
-  const balanceA = useTokenBalance(account ?? undefined, option?.call?.token)
-  const balanceB = useTokenBalance(account ?? undefined, option?.put?.token)
+  const balanceCur = useTokenBalance(account ?? undefined, option?.currency ?? undefined)
+  const balanceUnd = useTokenBalance(account ?? undefined, option?.underlying ?? undefined)
 
   const error = useMemo(() => {
-    if (balanceA && balanceB && delta && option?.callToken && option?.putToken) {
-      const callAmount = delta.dUnd.toString()[0] === '-' ? undefined : new TokenAmount(option.callToken, delta.dUnd)
-      const putAmount = delta.dCur.toString()[0] === '-' ? undefined : new TokenAmount(option.putToken, delta.dCur)
-      if (callAmount && putAmount && balanceA.lessThan(callAmount) && balanceB.lessThan(putAmount)) {
+    if (balanceCur && balanceUnd && delta && option?.callToken && option?.putToken) {
+      const undAmount = delta.dUnd.toString()[0] === '-' ? undefined : new TokenAmount(option.callToken, delta.dUnd)
+      const curAmount = delta.dCur.toString()[0] === '-' ? undefined : new TokenAmount(option.putToken, delta.dCur)
+      if (undAmount && curAmount && balanceCur.lessThan(curAmount) && balanceUnd.lessThan(undAmount)) {
         return `Insufficient ${option.underlying?.symbol} and ${option.currency?.symbol} balance`
       }
-      if (callAmount && balanceA.lessThan(callAmount)) {
+      if (undAmount && balanceUnd.lessThan(undAmount)) {
         return 'Insufficient ' + option.underlying?.symbol + ' balance'
       }
-      if (putAmount && balanceB.lessThan(putAmount)) {
+      if (curAmount && balanceCur.lessThan(curAmount)) {
         return 'Insufficient ' + option.currency?.symbol + ' balance'
       }
     }
     return null
     /* eslint-disable react-hooks/exhaustive-deps*/
   }, [
-    balanceA,
-    balanceB,
+    balanceCur,
+    balanceUnd,
     delta,
     option?.callToken,
     option?.currency?.symbol,
@@ -245,7 +245,12 @@ export default function Generate({
               label="Option Type"
               content={
                 <RowFixed>
-                  <CurrencyLogo currency={option?.underlying ?? undefined} size="17px" style={{ marginRight: 12 }} />
+                  <CurrencyLogo
+                    currency={option?.underlying ?? undefined}
+                    size="17px"
+                    style={{ marginRight: 12 }}
+                    currencySymbol={option?.underlying?.symbol}
+                  />
                   {optionName}
                 </RowFixed>
               }
