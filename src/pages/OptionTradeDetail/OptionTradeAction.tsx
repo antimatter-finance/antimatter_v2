@@ -15,6 +15,7 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { NavLink } from 'react-router-dom'
 import { Typography } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/svg/arrow_left.svg'
+import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -76,7 +77,7 @@ export default function OptionTradeAction({ optionId }: { optionId?: string }) {
   //const { chainId } = useActiveWeb3React()
   // const [tab, setTab] = useState(TABS.SWAP)
   const option = useOption(optionId)
-  // const theme = useTheme()
+  const theme = useTheme()
   // const history = useHistory()
   //const currencyA = chainId === ChainId.MAINNET ? USDT : chainId && WETH[chainId]
   //const currencyB = useCurrency(addressA)
@@ -92,7 +93,7 @@ export default function OptionTradeAction({ optionId }: { optionId?: string }) {
     <>
       {optionId ? (
         <Wrapper>
-          <RowBetween style={{ padding: '27px 0', maxWidth: '1110px' }}>
+          <RowBetween style={{ padding: '27px 0', maxWidth: theme.maxContentWidth }}>
             <NavLink to={'/option_trading'} style={{ textDecoration: 'none', padding: '0 20px' }}>
               <ArrowLeft />
               <Typography component="span" color="#000000" fontSize={{ xs: 12, md: 14 }} ml={'16px'}>
