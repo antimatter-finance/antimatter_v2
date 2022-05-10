@@ -22,7 +22,7 @@ export const Popup = styled.div`
   display: inline-block;
   width: 100%;
   padding: 1em;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: #ffffff;
   position: relative;
   border-radius: 4px;
   padding: 20px;
@@ -42,7 +42,7 @@ const Fader = styled.div`
   left: 0px;
   width: 100%;
   height: 2px;
-  background-color: ${({ theme }) => theme.bg5};
+  background-color: ${({ theme }) => theme.primary1};
 `
 
 const AnimatedFader = animated(Fader)

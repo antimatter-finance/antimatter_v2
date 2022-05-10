@@ -178,7 +178,7 @@ export default function OptionTrade() {
         onClick={() => {
           // if (!chainId) return
           // if (option.chainId === chainId) {
-          history.push(`/option_trading/${option.chainId}/${option.id}`)
+          history.push(`/option_trading/${option.chainId}/${option.optionIndex}`)
           // } else {
           //   switchChainCallback({ id: option.chainId, hex: toHex(option.chainId) }, library, account)
           // }
@@ -232,7 +232,7 @@ export default function OptionTrade() {
                           key={option.id + option.chainId}
                           buttons={
                             <ButtonPrimary
-                              onClick={() => history.push(`/option_trading/${option.chainId}/${option.id}`)}
+                              onClick={() => history.push(`/option_trading/${option.chainId}/${option.optionIndex}`)}
                             >
                               Trade
                             </ButtonPrimary>
