@@ -42,9 +42,6 @@ export const useStyles = makeStyles(theme => ({
       fontSize: '16px',
       borderBottom: 'none',
       padding: '14px 20px',
-      '& svg': {
-        marginRight: 8
-      },
       '&:first-child': {
         borderTopLeftRadius: 16,
         borderBottomLeftRadius: 16

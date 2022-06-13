@@ -27,6 +27,7 @@ const GraphWrapper = styled.div`
   background: #ffffff;
   padding: 32px 24px;
   border-radius: 20px;
+  overflow: hidden;
 `
 
 const Chart = styled.div`
@@ -69,9 +70,8 @@ const Chart = styled.div`
 // `
 
 const CurrentPrice = styled.div`
-  position: absolute;
-  right: 23px;
-  top: 42px;
+  margin-left: auto;
+  text-align: right;
 `
 
 export default function OptionSwap({
@@ -297,10 +297,16 @@ export default function OptionSwap({
         <Grid item xs={12} md={8}>
           <GraphWrapper>
             {graphLoading && <NetworkPendingSpinner paddingTop="0" />}
+
+            {/* <ButtonGroup> */}
+            {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
+            <TYPE.body fontWeight="700" fontSize={24} marginBottom={24}>
+              {currentTab} Token
+            </TYPE.body>
             <CurrentPrice>
               <TYPE.gray fontSize={16} fontWeight={400}>
                 Current price:{' '}
-                <span style={{ color: '#252525', marginLeft: '10px' }}>
+                <span style={{ color: '#252525', marginLeft: '10px', maxWidth: '100%', wordBreak: 'break-all' }}>
                   $
                   {currentTab === OptionField.CALL
                     ? priceCall
@@ -312,11 +318,6 @@ export default function OptionSwap({
                 </span>
               </TYPE.gray>
             </CurrentPrice>
-            {/* <ButtonGroup> */}
-            {/* <Button isActive={isMarketPriceChart} onClick={handleMarketPriceChart} style={{ display: 'none' }}></Button> */}
-            <TYPE.body fontWeight="700" fontSize={24} marginBottom={24}>
-              {currentTab} Token
-            </TYPE.body>
             {/* <Button isActive={!isMarketPriceChart} onClick={handleModalChart}>
               Price Modeling Prediction
             </Button> */}
@@ -330,8 +331,8 @@ export default function OptionSwap({
               <Grid container rowSpacing={9}>
                 {optionInformation &&
                   Object.keys(optionInformation).map((key, idx) => (
-                    <Grid key={idx} item xs={6}>
-                      <Typography fontSize={16} lineHeight="auto">
+                    <Grid key={idx} item xs={12} md={6}>
+                      <Typography fontSize={16} lineHeight="auto" sx={{ maxWidth: '100%', wordBreak: 'break-all' }}>
                         <span style={{ opacity: 0.4, marginRight: 4 }}>{key}: </span>
                         {optionInformation[key]}
                       </Typography>
