@@ -28,7 +28,7 @@ export default function TradePrice({ currencyAmount }: TradePriceProps) {
     >
       {currencyAmount ? (
         <>
-          ~ {currencyAmount.toFixed(8).toString() ?? '-'}{' '}
+          ~ {currencyAmount.toFixed(6) ?? '-'}{' '}
           {currencyAmount.currency === ETHER ? Symbol[chainId ?? 1] : currencyAmount.currency.symbol}
         </>
       ) : (
